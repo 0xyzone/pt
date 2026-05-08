@@ -21,8 +21,10 @@ class TournamentsTable
     {
         return $table
             ->columns([
-                ImageColumn::make('logo_image'),
-                ImageColumn::make('banner_image'),
+                ImageColumn::make('logo_image')
+                ->disk('public'),
+                ImageColumn::make('banner_image')
+                ->disk('public'),
                 TextColumn::make('name')
                     ->searchable(),
                 SelectColumn::make('status')
