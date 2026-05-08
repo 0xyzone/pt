@@ -52,6 +52,7 @@ class EditTournamentSetting extends Page
                     Repeater::make('tournamentSettingPlacementPoints')
                         ->relationship()
                         ->columns(2)
+                        ->grid(2)
                         ->label('Placement Points')
                         ->table([
                             TableColumn::make('Placement'),
