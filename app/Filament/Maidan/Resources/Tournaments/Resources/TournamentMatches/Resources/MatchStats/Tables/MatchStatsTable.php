@@ -4,10 +4,11 @@ namespace App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches\
 
 use App\Models\MatchStat;
 use App\Models\TournamentSetting;
-use Filament\Tables\Actions\Action;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TextInputColumn;
@@ -146,11 +147,12 @@ class MatchStatsTable
             ])
             ->recordActions([
                 // EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                // BulkActionGroup::make([
+                //     DeleteBulkAction::make(),
+                // ]),
             ]);
     }
 
