@@ -3,15 +3,16 @@
 namespace App\Filament\Maidan\Resources\Tournaments\Tables;
 
 use App\Filament\Maidan\Resources\Tournaments\TournamentResource;
+use App\Models\Tournament;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class TournamentsTable
@@ -20,24 +21,21 @@ class TournamentsTable
     {
         return $table
             ->columns([
-                TextColumn::make('name')
-                    ->searchable(),
-                TextColumn::make('start_date')
-                    ->date()
-                    ->sortable(),
-                TextColumn::make('end_date')
-                    ->date()
-                    ->sortable(),
-                TextColumn::make('location')
-                    ->searchable(),
-                TextColumn::make('status')
-                    ->badge(),
                 ImageColumn::make('logo_image'),
                 ImageColumn::make('banner_image'),
-                TextColumn::make('contact_email')
+                TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('discord_link')
-                    ->searchable(),
+                SelectColumn::make('status')
+                    ->options([
+                        'upcoming' => 'Upcoming',
+                        'ongoing' => 'Ongoing',
+                        'completed' => 'Completed',
+                    ]),
+                    ToggleColumn::make('is_active')
+                    ->label('Activate?')
+                    ->beforeStateUpdated(function (Tournament $record) {
+                        Tournament::where('user_id', auth()->id())->where('id', '!=', $record->id)->update(['is_active' => false]);
+                    }),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

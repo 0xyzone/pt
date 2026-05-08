@@ -35,7 +35,9 @@ class MatchStatsTable
                             $record->update(['alive' => 0]);
                         }
                     })
-                    ->alignCenter(),
+                    ->alignCenter()
+                    ->badge()
+                    ->color('danger'),
                 TextColumn::make('alive')
                     ->alignCenter()
                     ->color('success'),
@@ -49,7 +51,9 @@ class MatchStatsTable
                             $record->update(['alive' => 4]);
                         };
                     })
-                    ->alignCenter(),
+                    ->alignCenter()
+                    ->badge()
+                    ->color('success'),
                 TextColumn::make('decrease_kills')
                     ->label('')
                     ->getStateUsing(fn() => '-')
@@ -65,12 +69,16 @@ class MatchStatsTable
                             'points' => static::calculatePoints($record)
                         ]);
                     })
-                    ->alignCenter(),
+                    ->alignCenter()
+                    ->badge()
+                    ->color('danger'),
                 TextColumn::make('kills')
                     ->alignCenter()
                     ->color('danger'),
                 TextColumn::make('increase_kills')
                     ->label('')
+                    ->badge()
+                    ->color('success')
                     ->getStateUsing(fn() => '+')
                     ->action(function (MatchStat $record) {
                         if ($record->kills < 100) { // Assuming a maximum of 100 kills
@@ -93,12 +101,26 @@ class MatchStatsTable
                             return [];
                         }
 
-                        return $tournamentSetting->tournamentSettingPlacementPoints
+                        $options = $tournamentSetting->tournamentSettingPlacementPoints
                             ->pluck('placement', 'placement')
                             ->toArray();
+                        // This adds 0 to the beginning of the associative array
+                        return [0 => '0'] + $options;
+                    })->disableOptionWhen(function ($value, MatchStat $record) {
+                        // Never disable '0' (multiple teams can be unranked)
+                        if ($value == 0) {
+                            return false;
+                        }
+
+                        // 2. Check if this placement is already taken by another team in the same match
+                        return MatchStat::where('tournament_match_id', $record->tournament_match_id)
+                            ->where('id', '!=', $record->id) // Exclude current row
+                            ->where('placement', $value)
+                            ->exists();
                     })
                     ->alignCenter()
                     ->grow(false)
+                    ->default(0)
                     ->afterStateUpdated(function (MatchStat $record) {
                         $record->update(['points' => static::calculatePoints($record)]);
                     }),
@@ -123,7 +145,7 @@ class MatchStatsTable
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                // EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
