@@ -9,6 +9,7 @@ use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Page;
@@ -52,6 +53,10 @@ class EditTournamentSetting extends Page
                         ->relationship()
                         ->columns(2)
                         ->label('Placement Points')
+                        ->table([
+                            TableColumn::make('Placement'),
+                            TableColumn::make('Points'),
+                        ])
                         ->schema([
                             TextInput::make('placement')
                                 ->label('Position')
