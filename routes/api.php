@@ -8,4 +8,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('{user_id}', [ApiController::class, 'getAll']);
+Route::prefix('{user_id}')->group( function () {
+    Route::get('/', [ApiController::class, 'getAll']);
+    Route::get('/activeMatch', [ApiController::class, 'activeMatch']);
+});
