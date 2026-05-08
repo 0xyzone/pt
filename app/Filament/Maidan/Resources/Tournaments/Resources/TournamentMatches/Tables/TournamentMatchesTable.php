@@ -6,6 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class TournamentMatchesTable
@@ -27,7 +28,7 @@ class TournamentMatchesTable
                 TextColumn::make('map')
                     ->searchable()
                     ->badge()
-                    ->color(fn ($state) => match ($state) {
+                    ->color(fn($state) => match ($state) {
                         'Erangel' => 'primary',
                         'Miramar' => 'success',
                         'Sanhok' => 'warning',
@@ -35,7 +36,13 @@ class TournamentMatchesTable
                         'Karakin' => 'danger',
                         default => null,
                     })
-                    ->formatStateUsing(fn ($state) => ucfirst($state)),
+                    ->formatStateUsing(fn($state) => ucfirst($state)),
+                ToggleColumn::make('is_active')
+                    ->label('Activate?')
+                    ->beforeStateUpdated(function ($record) {
+                        $record->tournament->tournamentMatches()->update(['is_active' => false]);
+                        $record->update(['is_active' => true]);
+                    }),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
