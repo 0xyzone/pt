@@ -18,7 +18,7 @@
             @foreach ($activeMatch->matchStats->sortByDesc(['points']) as $match)
             @php
             $alive = $match->alive;
-            if ($alive === 0) {
+            if ($alive === 4) {
             $bgColor = "color-mix(in oklab, var(--color-red-600) 50%, #ffffff)";
             } else {
             $bgColor = "#ffffff";
