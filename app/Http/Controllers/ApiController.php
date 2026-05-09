@@ -24,7 +24,7 @@ class ApiController extends Controller
     {
         $activeMatch = TournamentMatch::whereHas('tournament', function ($query) use ($user_id) {
             $query->where('user_id', $user_id)->where('is_active', true);
-        })->where('is_active', true)->with('matchStats')->first();
+        })->where('is_active', true)->with(['matchStats', 'tournament', 'tournament.tournamentTeams'])->first();
 
         return response()->json($activeMatch);
     }
