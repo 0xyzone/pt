@@ -16,8 +16,16 @@
         </thead>
         <tbody>
             @foreach ($activeMatch->matchStats->sortByDesc(['points']) as $match)
-            <tr class="text-center">
-                <td class="uppercase pr-3 font-bold border border-neutral-300 py-1.5 relative overflow-hidden {{ $match->alive === 0 ? 'bg-red-300' : 'bg-white' }}">
+            @php
+            $alive = $match->alive;
+            if ($alive === 0) {
+            $bgColor = "color-mix(in oklab, var(--color-red-600) /* oklch(57.7% 0.245 27.325) */ 40%";
+            } else {
+            $bgColor = "white";
+            }
+            @endphp
+            <tr class="text-center" style="background-color: '{{ $bgColor }}';">
+                <td class="uppercase pr-3 font-bold border bg-red-600/40 border-neutral-300 py-1.5 relative overflow-hidden">
                     @if ($match->tournamentTeam->logo_image)
                     <img src="{{ asset('storage/' . $match->tournamentTeam->logo_image) }}" alt="{{ $activeMatch->tournamentTeam?->name . ' logo' }}" class="w-32 rotate-4 -top-10 -left-10 object-cover absolute mask-r-from-20% mask-r-to-80%">
                     @else
@@ -32,7 +40,7 @@
                         @endif
                     </div>
                 </td>
-                <td class="align-middle border border-neutral-300 {{ $match->alive === 0 ? 'bg-red-300' : 'bg-white' }}">
+                <td class="align-middle border border-neutral-300">
                     <div class="flex items-center justify-center">
                         @for($i = 0; $i < $match->alive; $i++)
                             <span class="inline-block w-2 h-6 bg-green-500 rounded-sm mr-1"></span>
@@ -42,7 +50,7 @@
                                 @endfor
                     </div>
                 </td>
-                <td class="font-bold border border-neutral-300 text-2xl {{ $match->alive === 0 ? 'bg-red-300' : 'bg-white' }}">
+                <td class="font-bold border border-neutral-300 text-2xl">
                     {{ $match->points }}
                 </td>
             </tr>
