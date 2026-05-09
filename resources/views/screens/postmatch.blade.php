@@ -48,6 +48,7 @@
                             @for($i = 0; $i < 4 - $match->alive; $i++)
                                 <span class="inline-block w-2 h-6 bg-gray-400 rounded-sm mr-1"></span>
                                 @endfor
+                                {{ $match->alive }}
                     </div>
                 </td>
                 <td class="font-bold border border-neutral-300 text-2xl">
