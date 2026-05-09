@@ -18,7 +18,7 @@
             @foreach ($activeMatch->matchStats->sortByDesc(['points']) as $match)
             @php
             $alive = $match->alive;
-            if ($alive === 0) {
+            if ($alive < 1) {
             $bgColor = "bg-red-600/40";
             } else {
             $bgColor = "bg-white";
