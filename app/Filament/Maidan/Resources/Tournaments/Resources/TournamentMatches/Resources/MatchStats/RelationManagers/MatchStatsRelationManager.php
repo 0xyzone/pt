@@ -31,6 +31,10 @@ class MatchStatsRelationManager extends RelationManager
                         }
                     })
                     ->visible(fn() => $this->ownerRecord->matchStats()->count() === 0),
+                    Action::make('view_screen')
+                    ->url(fn() => route('screens.postmatch', ['user_id' => auth()->id()]))
+                    ->openUrlInNewTab()
+                    ->visible(fn() => $this->ownerRecord->is_active)
             ]);
     }
 }

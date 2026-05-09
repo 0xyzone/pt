@@ -16,6 +16,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -50,6 +51,9 @@ class ManageTournamentMatches extends ManageRelatedRecords
                     ])
                     ->default('erangle')
                     ->required(),
+                Toggle::make('is_active')
+                    ->label('Active Match')
+                    ->default(false)
             ]);
     }
 

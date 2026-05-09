@@ -90,7 +90,9 @@ class TournamentTeamsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()
+                ->keyBindings(['ctrl+n'])
+                ->label('Add Team (Ctrl + N)'),
                 // AssociateAction::make(),
             ])
             ->recordActions([

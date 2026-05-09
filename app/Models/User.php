@@ -55,4 +55,16 @@ class User extends Authenticatable implements MustVerifyEmail, HasPasskeys, Fila
         }
         return false;
     }
+
+    public function getActiveMatch()
+    {
+        $activeMatch = TournamentMatch::whereHas('tournament', function ($query) {
+            $query->where('user_id', $this->id)->where('is_active', true);
+        })->where('is_active', true)->with(['matchStats', 'tournament', 'tournament.tournamentTeams'])->first();
+        if (!$activeMatch) {
+            abort(404, 'No active match found for this user.');
+        }
+
+        return $activeMatch;
+    }
 }

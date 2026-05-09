@@ -7,6 +7,7 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 
 class TournamentMatchForm
@@ -39,6 +40,11 @@ class TournamentMatchForm
                     ])
                     ->default('erangle')
                     ->required(),
-            ]);
+                Toggle::make('is_active')
+                    ->label('Active Match')
+                    ->default(false)
+                    ->inline(false)
+                    ->disabled()
+            ])->columns(3);
     }
 }

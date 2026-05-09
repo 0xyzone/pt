@@ -12,6 +12,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^3.0",
         "marcelweidum/filament-passkeys": "^3.0",
+        "pusher/pusher-php-server": "^7.2",
         "rarq/filament-quick-notes": "^1.0",
         "waad/filament-import-wizard": "^1.0"
     },
