@@ -18,13 +18,8 @@
             @foreach ($activeMatch->matchStats->sortByDesc(['points']) as $match)
             @php
             $alive = $match->alive;
-            if ($alive < 1) {
-            $bgColor = "bg-red-600/40";
-            } else {
-            $bgColor = "bg-white";
-            }
             @endphp
-            <tr class="text-center {{ $bgColor }}">
+            <tr class="text-center {{ $alive === 0 ? 'bg-red-300' : 'bg-white' }}">
                 <td class="uppercase pr-3 font-bold border border-neutral-300 py-1.5 relative overflow-hidden">
                     @if ($match->tournamentTeam->logo_image)
                     <img src="{{ asset('storage/' . $match->tournamentTeam->logo_image) }}" alt="{{ $activeMatch->tournamentTeam?->name . ' logo' }}" class="w-32 rotate-4 -top-10 -left-10 object-cover absolute mask-r-from-20% mask-r-to-80%">
