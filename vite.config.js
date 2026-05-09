@@ -1,18 +1,26 @@
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
-import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from "vite";
+import laravel from "laravel-vite-plugin";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js', 'resources/css/filament/maidan/theme.css'],
+            input: [
+                "resources/css/app.css",
+                "resources/js/app.js",
+                "resources/css/filament/maidan/theme.css",
+            ],
             refresh: true,
         }),
         tailwindcss(),
     ],
     server: {
         watch: {
-            ignored: ['**/storage/framework/views/**'],
+            ignored: ["**/storage/framework/views/**"],
         },
+    },
+    build: {
+        // Attempting to force a more stable build path
+        minify: "terser", // Switching from 'esbuild' to 'terser' sometimes bypasses the panic
     },
 });
