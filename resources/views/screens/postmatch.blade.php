@@ -19,13 +19,13 @@
             @php
             $alive = $match->alive;
             if ($alive === 0) {
-            $bgColor = "color-mix(in oklab, var(--color-red-600) /* oklch(57.7% 0.245 27.325) */ 40%";
+            $bgColor = "color-mix(in oklab, var(--color-red-600) 50%, #ffffff)";
             } else {
-            $bgColor = "white";
+            $bgColor = "#ffffff";
             }
             @endphp
-            <tr class="text-center" style="background-color: '{{ $bgColor }}';">
-                <td class="uppercase pr-3 font-bold border bg-red-600/40 border-neutral-300 py-1.5 relative overflow-hidden">
+            <tr class="text-center" style="background-color: {{ $bgColor }};">
+                <td class="uppercase pr-3 font-bold border border-neutral-300 py-1.5 relative overflow-hidden">
                     @if ($match->tournamentTeam->logo_image)
                     <img src="{{ asset('storage/' . $match->tournamentTeam->logo_image) }}" alt="{{ $activeMatch->tournamentTeam?->name . ' logo' }}" class="w-32 rotate-4 -top-10 -left-10 object-cover absolute mask-r-from-20% mask-r-to-80%">
                     @else
