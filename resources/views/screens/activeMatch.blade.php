@@ -106,9 +106,7 @@
                         {{-- Card Body --}}
                         <div style="padding:12px 14px; display:flex; flex-direction:column; gap:10px;">
                             <div style="display:flex; align-items:center; gap:10px;">
-                                <div style="width:40px; height:40px; background:#fff; border-radius:3px; padding:4px; flex-shrink:0; border-bottom:3px solid rgba(0,0,0,0.3);">
-                                    <img src="{{ $match->tournamentTeam->logo_image ? asset('storage/' . $match->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" style="width:100%; height:100%; object-fit:contain;">
-                                </div>
+                                <img src="{{ $match->tournamentTeam->logo_image ? asset('storage/' . $match->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" style="width:40px; height:40px; object-fit:contain; flex-shrink:0;">
                                 <div style="flex:1; overflow:hidden; display:flex; flex-direction:column; gap:5px;">
                                     <span style="font-size:20px; font-weight:900; text-transform:uppercase; color:#fff; letter-spacing:-0.05em; line-height:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $match->tournamentTeam->short_name }}</span>
                                     <div style="display:flex; gap:4px;">
@@ -192,15 +190,15 @@
                 const view = getCurrentView();
 
                 if (view === 'cards') {
-                    // Cards view: appear BELOW the cards (cards end ~280px)
-                    toasterWrapper.style.top = '340px';
+                    // Cards view: appear well BELOW the cards
+                    toasterWrapper.style.top = '280px';
                     toasterWrapper.style.opacity = '0';
                     requestAnimationFrame(() => {
-                        toasterWrapper.style.top = '380px';
+                        toasterWrapper.style.top = '300px';
                         toasterWrapper.style.opacity = '1';
                     });
                     setTimeout(() => {
-                        toasterWrapper.style.top = '340px';
+                        toasterWrapper.style.top = '280px';
                         toasterWrapper.style.opacity = '0';
                         setTimeout(() => { isProcessing = false; processQueue(); }, 800);
                     }, 5500);
