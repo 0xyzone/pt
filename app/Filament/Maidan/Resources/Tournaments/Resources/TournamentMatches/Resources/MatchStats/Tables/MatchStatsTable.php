@@ -35,7 +35,9 @@ class MatchStatsTable
                             $record->update(['alive' => $newAlive]);
 
                             if ($newAlive === 0) {
-                                broadcast(new \App\Events\TeamEliminated(
+                                $record->load('tournamentTeam');
+                                \Illuminate\Support\Facades\Log::info("Auto-triggering elimination for Team: " . $record->tournamentTeam->name);
+                                event(new \App\Events\TeamEliminated(
                                     $record->tournamentTeam->name,
                                     $record->tournamentTeam->logo_image,
                                     $record->tournament_match_id
@@ -154,7 +156,9 @@ class MatchStatsTable
                     ->icon('heroicon-o-bell-alert')
                     ->color('danger')
                     ->action(function (MatchStat $record) {
-                        broadcast(new \App\Events\TeamEliminated(
+                        $record->load('tournamentTeam');
+                        \Illuminate\Support\Facades\Log::info("Manual-triggering elimination for Team: " . $record->tournamentTeam->name);
+                        event(new \App\Events\TeamEliminated(
                             $record->tournamentTeam->name,
                             $record->tournamentTeam->logo_image,
                             $record->tournament_match_id
