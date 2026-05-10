@@ -22,12 +22,12 @@ class TournamentMatchForm
                     ->required(),
                 TextInput::make('name')
                     ->required(),
-                // DatePicker::make('match_date')
-                // ->native(false),
-                // TimePicker::make('match_time')
-                // // ->native(false)
-                // ->seconds(false)
-                // ->displayFormat('h:i A'),
+                DatePicker::make('match_date')
+                ->native(false),
+                TimePicker::make('match_time')
+                // ->native(false)
+                ->seconds(false)
+                ->displayFormat('h:i A'),
                 Select::make('map')
                     ->options([
                         'erangle' => 'Erangle',
@@ -49,6 +49,7 @@ class TournamentMatchForm
                     ->label('Is Completed')
                     ->default(false)
                     ->inline(false)
-            ])->columns(3);
+                    ->live()
+            ])->columns(4);
     }
 }

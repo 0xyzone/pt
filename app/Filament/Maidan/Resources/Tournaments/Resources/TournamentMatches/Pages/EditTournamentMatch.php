@@ -16,4 +16,9 @@ class EditTournamentMatch extends EditRecord
             DeleteAction::make(),
         ];
     }
+
+    protected function afterSave(): void
+    {
+        broadcast(new \App\Events\TournamentMatchUpdated($this->record));
+    }
 }

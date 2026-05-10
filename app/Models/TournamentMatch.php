@@ -11,6 +11,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class TournamentMatch extends Model
 {
     protected $guarded = [];
+
+    protected static function booted()
+    {
+        static::saved(function ($match) {
+            if ($match->tournament) {
+                broadcast(new \App\Events\TournamentMatchUpdated($match));
+            }
+        });
+    }
+
     /**
      * Get the tournament that owns the TournamentMatch
      *

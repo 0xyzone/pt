@@ -63,14 +63,27 @@
         document.addEventListener("DOMContentLoaded", function () {
             // Listen to the Director's Control Panel Actions
             Echo.channel('user-screens.{{ $user->id }}')
-                .listen('ObsViewSwitched', (e) => {
-                    loadView(e.viewName);
+                .listen('.ObsViewSwitched', (e) => {
+                    console.log('ObsViewSwitched received:', e);
+                    if (e.viewName === 'refresh') {
+                        loadView(currentViewName);
+                    } else {
+                        loadView(e.viewName);
+                    }
+                })
+                .listen('.MatchStatsUpdated', (e) => {
+                    console.log('MatchStatsUpdated received (User Channel):', e);
+                    loadView(currentViewName);
+                })
+                .listen('.TournamentMatchUpdated', (e) => {
+                    console.log('TournamentMatchUpdated received:', e);
+                    loadView(currentViewName);
                 });
 
             // Listen to Match Stats dynamically updating in the background!
             if ('{{ $activeMatch->id ?? "" }}') {
                 Echo.channel('active-match.{{ $activeMatch->id }}')
-                    .listen('MatchStatsUpdated', (e) => {
+                    .listen('.MatchStatsUpdated', (e) => {
                         // If we are currently showing a stats view, transparently re-fetch it identically
                         if(currentViewName !== 'empty') {
                             loadView(currentViewName);

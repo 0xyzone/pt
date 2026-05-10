@@ -2,26 +2,25 @@
 
 namespace App\Events;
 
+use App\Models\TournamentMatch;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ObsViewSwitched implements ShouldBroadcastNow
+class TournamentMatchUpdated implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $userId;
-    public $viewName;
+    public $match;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($userId, $viewName)
+    public function __construct(TournamentMatch $match)
     {
-        $this->userId = $userId;
-        $this->viewName = $viewName;
+        $this->match = $match;
     }
 
     /**
@@ -32,12 +31,12 @@ class ObsViewSwitched implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new Channel('user-screens.' . $this->userId),
+            new Channel('user-screens.' . $this->match->tournament->user_id),
         ];
     }
 
     public function broadcastAs(): string
     {
-        return 'ObsViewSwitched';
+        return 'TournamentMatchUpdated';
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches\Tables;
 
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -42,9 +43,13 @@ class TournamentMatchesTable
                     ->beforeStateUpdated(function ($record) {
                         $record->tournament->tournamentMatches()->update(['is_active' => false]);
                         $record->update(['is_active' => true]);
+                        broadcast(new \App\Events\TournamentMatchUpdated($record));
                     }),
                 ToggleColumn::make('is_completed')
-                    ->label('Completed?'),
+                    ->label('Completed')
+                    ->afterStateUpdated(function ($record) {
+                        broadcast(new \App\Events\TournamentMatchUpdated($record));
+                    }),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -53,6 +58,23 @@ class TournamentMatchesTable
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->actions([
+                Action::make('complete')
+                    ->label(fn($record) => $record->is_completed ? 'Completed' : 'Mark Complete')
+                    ->icon(fn($record) => $record->is_completed ? 'heroicon-s-check-circle' : 'heroicon-o-check-circle')
+                    ->color(fn($record) => $record->is_completed ? 'success' : 'gray')
+                    ->action(function ($record) {
+                        $record->update(['is_completed' => !$record->is_completed]);
+                        broadcast(new \App\Events\TournamentMatchUpdated($record));
+                    })
+                    ->requiresConfirmation(function ($record) {
+                        return !$record->is_completed && $record->matchStats->where('placement', 1)->count() === 0;
+                    })
+                    ->modalHeading('Winner not assigned')
+                    ->modalDescription('You are marking this match as completed, but no team has been assigned 1st place (Placement 1). Continue anyway?')
+                    ->modalSubmitActionLabel('Yes, mark as completed'),
+                EditAction::make(),
             ])
             ->filters([
                 //

@@ -32,9 +32,16 @@ class MatchStatsUpdated implements ShouldBroadcastNow
      */
     public function broadcastOn(): array
     {
-        // Broadcast on a public channel named specific to the tournament match
+        $userId = $this->matchStat->tournamentMatch->tournament->user_id;
+        
         return [
             new Channel('active-match.' . $this->matchStat->tournament_match_id),
+            new Channel('user-screens.' . $userId),
         ];
+    }
+
+    public function broadcastAs(): string
+    {
+        return 'MatchStatsUpdated';
     }
 }
