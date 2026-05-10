@@ -20,3 +20,22 @@ if (import.meta.env.VITE_PUSHER_HOST) {
 }
 
 window.Echo = new Echo(echoOptions);
+
+// Add connection logging to debug in production
+if (window.Echo.connector && window.Echo.connector.pusher) {
+    window.Echo.connector.pusher.connection.bind('state_change', function(states) {
+        console.log(`[Broadcasting] Connection state changed from ${states.previous} to ${states.current}`);
+    });
+
+    window.Echo.connector.pusher.connection.bind('connected', function () {
+        console.log('✅ [Broadcasting] Successfully connected to WebSocket server.');
+    });
+
+    window.Echo.connector.pusher.connection.bind('disconnected', function () {
+        console.warn('⚠️ [Broadcasting] Disconnected from WebSocket server.');
+    });
+
+    window.Echo.connector.pusher.connection.bind('error', function (err) {
+        console.error('❌ [Broadcasting] Connection error:', err);
+    });
+}
