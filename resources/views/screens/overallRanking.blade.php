@@ -75,7 +75,7 @@
                                     @elseif($rank === 3)
                                         <span class="text-4xl drop-shadow-[0_0_10px_rgba(217,119,6,0.6)] text-transparent bg-clip-text bg-gradient-to-b from-amber-600 to-amber-800">3</span>
                                     @else
-                                        <span class="text-2xl text-slate-500">{{ $rank }}</span>
+                                        <span class="text-2xl text-slate-200">{{ $rank }}</span>
                                     @endif
                                 </td>
                                 <td class="px-4 py-3 w-full">
@@ -114,11 +114,11 @@
                         @foreach ($rightColumn as $item)
                             @php $rank = $loop->iteration + 8; @endphp
                             <tr class="animate-row group transition-all duration-300 hover:bg-purple-900/30 border-l-4 border-l-transparent" style="animation-delay: {{ ($loop->iteration + 8) * 0.05 }}s;">
-                                <td class="px-4 py-2.5 font-black italic text-xl text-slate-500 text-center w-16">{{ $rank }}</td>
+                                <td class="px-4 py-2.5 font-black italic text-xl text-slate-200 text-center w-16">{{ $rank }}</td>
                                 <td class="px-4 py-2.5 w-full">
                                     <div class="flex items-center gap-3">
-                                        <div class="h-8 w-8 rounded bg-slate-800 border border-slate-600 flex items-center justify-center text-sm font-bold group-hover:border-purple-500/50 group-hover:text-purple-300 transition-colors text-slate-300 shadow-inner">
-                                            {{ substr($item['team']->name, 0, 1) }}
+                                        <div class="relative w-8 h-8 flex-shrink-0">
+                                            <img src="{{ $item['team']->logo_image ? asset('storage/' . $item['team']->logo_image) : asset('img/defult_team_logo.png') }}" class="w-full h-full object-contain filter drop-shadow-sm">
                                         </div>
                                         <span class="font-bold uppercase tracking-tight text-slate-200 text-sm truncate">{{ $item['team']->name }}</span>
                                     </div>
