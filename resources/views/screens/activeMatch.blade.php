@@ -142,7 +142,6 @@
                     @php $isEliminated = $match->alive == 0; @endphp
                     <div data-team-id="{{ $match->tournament_team_id }}" class="list-item glass-panel pubg-skew transition-all duration-500 {{ $isEliminated ? 'opacity-40 grayscale' : '' }}" style="border-radius:2px;">
                         <div class="pubg-unskew" style="display:flex; align-items:center; padding:8px 12px; gap:10px;">
-                            <span style="font-size:10px; font-weight:900; font-style:italic; color:rgba(250,204,21,0.5); width:14px; text-align:center;">{{ $index + 1 }}</span>
                             <img src="{{ $match->tournamentTeam->logo_image ? asset('storage/' . $match->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" style="width:24px; height:24px; object-fit:contain; flex-shrink:0;">
                             {{-- Team Name --}}
                             <span style="flex:1; font-weight:900; text-transform:uppercase; font-size:19px; line-height:1; letter-spacing:-0.03em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; {{ $isEliminated ? 'color:rgb(100,116,139); text-decoration:line-through;' : 'color:#fff;' }}">{{ $match->tournamentTeam->short_name }}</span>
