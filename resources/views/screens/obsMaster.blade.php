@@ -1,22 +1,18 @@
 <x-base>
     <!-- Master overlay container -->
-    <div id="obs-container" class="w-full h-full relative font-sans text-slate-100 bg-transparent transition-opacity duration-500">
+    <div id="obs-container" class="w-full h-full relative font-sans text-slate-100 bg-transparent transition-opacity duration-500 opacity-100">
         <!-- Intentionally empty initial view -->
     </div>
-
-    <!-- Fade Overlay for smooth transitions -->
-    <div id="obs-fade-layer" class="fixed inset-0 bg-slate-950 pointer-events-none opacity-0 transition-opacity duration-300 z-50"></div>
 
     <script type="module">
         let currentViewName = 'empty';
         
         function loadView(viewType) {
             const container = document.getElementById('obs-container');
-            const fader = document.getElementById('obs-fade-layer');
             
-            // If the view type is changing, trigger a fade animation
+            // If the view type is changing, trigger a fade animation on the container
             if(viewType !== currentViewName) {
-                fader.style.opacity = '1';
+                container.style.opacity = '0';
             }
 
             setTimeout(() => {
@@ -25,7 +21,7 @@
                 if (viewType === 'empty') {
                     // Empty state logic: totally clear the contents.
                     container.innerHTML = '';
-                    fader.style.opacity = '0';
+                    setTimeout(() => container.style.opacity = '1', 50);
                     return;
                 }
                 
@@ -52,16 +48,16 @@
                             }
                             
                             // Restore visibility
-                            fader.style.opacity = '0';
+                            setTimeout(() => container.style.opacity = '1', 50);
                         })
                         .catch(() => {
                             // Recover from failed loads
-                            fader.style.opacity = '0';
+                            container.style.opacity = '1';
                         });
                 } else {
-                    fader.style.opacity = '0';
+                    container.style.opacity = '1';
                 }
-            }, viewType !== currentViewName ? 350 : 0); // Wait for fade out if changing views
+            }, viewType !== currentViewName ? 500 : 0); // Wait for fade out if changing views
         }
 
         document.addEventListener("DOMContentLoaded", function () {

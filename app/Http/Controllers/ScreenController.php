@@ -37,6 +37,7 @@ class ScreenController extends Controller
                         'total_points' => 0,
                         'total_kills' => 0,
                         'matches_played' => 0,
+                        'total_wins' => 0,
                     ]);
                 }
 
@@ -46,6 +47,10 @@ class ScreenController extends Controller
                 
                 if ($match->is_completed) {
                     $data['matches_played'] += 1;
+                }
+                
+                if ($stat->placement == 1) {
+                    $data['total_wins'] += 1;
                 }
 
                 $teamsData->put($stat->tournament_team_id, $data);

@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ config('app.name', 'Maidan Tournament System') }}</title>
+        <title>{{ config('app.name', 'PUBG Tournament OBS Helper') }}</title>
         
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -33,29 +33,29 @@
         
         <!-- Premium Animated Glass Background Elements -->
         <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden w-full h-full">
-            <div class="absolute -top-40 -right-40 w-[600px] h-[600px] bg-cyan-600/20 blur-[130px] rounded-full bg-glow"></div>
-            <div class="absolute -bottom-60 -left-40 w-[700px] h-[700px] bg-purple-600/15 blur-[150px] rounded-full bg-glow" style="animation-duration: 14s; animation-delay: 2s;"></div>
-            <div class="absolute top-[20%] left-[30%] w-[400px] h-[400px] bg-rose-600/10 blur-[120px] rounded-full bg-glow" style="animation-duration: 18s;"></div>
+            <div class="absolute -top-40 -right-40 w-[600px] h-[600px] bg-orange-600/20 blur-[130px] rounded-full bg-glow"></div>
+            <div class="absolute -bottom-60 -left-40 w-[700px] h-[700px] bg-amber-600/15 blur-[150px] rounded-full bg-glow" style="animation-duration: 14s; animation-delay: 2s;"></div>
+            <div class="absolute top-[20%] left-[30%] w-[400px] h-[400px] bg-yellow-600/10 blur-[120px] rounded-full bg-glow" style="animation-duration: 18s;"></div>
         </div>
 
         <!-- Navigation Bar -->
         <nav class="relative z-10 w-full p-6 lg:p-8 flex justify-between items-center max-w-7xl mx-auto">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-lg flex items-center justify-center font-black text-slate-100 text-2xl shadow-[0_0_20px_rgba(6,182,212,0.4)]">
-                    M
+                <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-yellow-500 rounded-lg flex items-center justify-center font-black text-slate-100 text-2xl shadow-[0_0_20px_rgba(249,115,22,0.4)]">
+                    P
                 </div>
                 <span class="text-3xl font-black italic tracking-tighter uppercase text-slate-100 drop-shadow-md">
-                    Maidan
+                    PUBG HUD
                 </span>
             </div>
             
             <div class="flex items-center gap-4">
                 @auth
-                    <a href="{{ url('/maidan') }}" class="px-6 py-2.5 bg-slate-900 hover:bg-gradient-to-r hover:from-cyan-600 hover:to-purple-600 border border-slate-700 hover:border-transparent text-slate-200 font-black uppercase tracking-widest text-xs transition-all duration-300 rounded-lg shadow-lg hover:shadow-[0_0_25px_rgba(6,182,212,0.5)]">
+                    <a href="{{ url('/maidan') }}" class="px-6 py-2.5 bg-slate-900 hover:bg-gradient-to-r hover:from-orange-500 hover:to-amber-500 border border-slate-700 hover:border-transparent text-slate-200 font-black uppercase tracking-widest text-xs transition-all duration-300 rounded-lg shadow-lg hover:shadow-[0_0_25px_rgba(249,115,22,0.5)]">
                         Dashboard
                     </a>
                 @else
-                    <a href="{{ url('/maidan/login') }}" class="px-6 py-2.5 bg-slate-900 hover:bg-gradient-to-r hover:from-cyan-600 hover:to-purple-600 border border-slate-700 hover:border-transparent text-slate-200 font-black uppercase tracking-widest text-xs transition-all duration-300 rounded-lg shadow-lg hover:shadow-[0_0_25px_rgba(6,182,212,0.5)]">
+                    <a href="{{ url('/maidan/login') }}" class="px-6 py-2.5 bg-slate-900 hover:bg-gradient-to-r hover:from-orange-500 hover:to-amber-500 border border-slate-700 hover:border-transparent text-slate-200 font-black uppercase tracking-widest text-xs transition-all duration-300 rounded-lg shadow-lg hover:shadow-[0_0_25px_rgba(249,115,22,0.5)]">
                         Admin Login
                     </a>
                 @endauth
@@ -66,22 +66,22 @@
         <main class="relative z-10 flex-1 flex flex-col justify-center items-center px-6 w-full max-w-7xl mx-auto pt-10 pb-20">
             
             <div class="text-center mb-16">
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900/80 border border-cyan-500/30 text-cyan-400 font-bold uppercase tracking-[0.2em] text-xs mb-8 shadow-[0_0_15px_rgba(6,182,212,0.15)]">
-                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-                    Next-Gen Esports Integration
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900/80 border border-orange-500/30 text-orange-400 font-bold uppercase tracking-[0.2em] text-xs mb-8 shadow-[0_0_15px_rgba(249,115,22,0.15)]">
+                    <span class="w-2 h-2 rounded-full bg-orange-400 animate-pulse"></span>
+                    PUBG Mobile Match Broadcasting
                 </div>
                 
                 <h1 class="text-6xl md:text-8xl font-black italic tracking-tighter uppercase pb-2 mb-6 leading-tight">
-                    <span class="text-slate-100 drop-shadow-lg">Tournament</span> <br class="hidden md:block" />
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-rose-400 drop-shadow-[0_0_15px_rgba(168,85,247,0.3)]">Ecosystem</span>
+                    <span class="text-slate-100 drop-shadow-lg">PUBG</span> <br class="hidden md:block" />
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-400 to-red-500 drop-shadow-[0_0_15px_rgba(249,115,22,0.3)]">Tournament OBS Helper</span>
                 </h1>
                 
                 <p class="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-medium">
-                    Elevate your broadcast with real-time match statistics, live OBS overlays, and dynamic visual standings powered by the robust Maidan backend panel.
+                    Elevate your broadcast with real-time match statistics, live OBS overlays, and dynamic visual standings powered by the robust backend panel.
                 </p>
                 
                 <div class="mt-10 flex justify-center gap-6">
-                    <a href="{{ url('/maidan') }}" class="px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-black uppercase tracking-widest text-sm rounded-xl shadow-[0_0_30px_rgba(6,182,212,0.4)] hover:shadow-[0_0_40px_rgba(168,85,247,0.6)] hover:scale-105 transition-all duration-300">
+                    <a href="{{ url('/maidan') }}" class="px-8 py-4 bg-gradient-to-r from-orange-500 to-amber-600 text-white font-black uppercase tracking-widest text-sm rounded-xl shadow-[0_0_30px_rgba(249,115,22,0.4)] hover:shadow-[0_0_40px_rgba(245,158,11,0.6)] hover:scale-105 transition-all duration-300">
                         Launch Panel
                     </a>
                 </div>
@@ -89,9 +89,9 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
                 <!-- Feature 1 -->
-                <div class="bg-slate-900/60 backdrop-blur-md border border-slate-700/50 p-8 rounded-2xl hover:bg-slate-800/80 hover:border-cyan-500/70 transition-all duration-300 group shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
-                    <div class="text-cyan-400 mb-5 group-hover:scale-110 transition-transform origin-left">
-                        <svg class="w-10 h-10 drop-shadow-[0_0_10px_rgba(6,182,212,0.5)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="bg-slate-900/60 backdrop-blur-md border border-slate-700/50 p-8 rounded-2xl hover:bg-slate-800/80 hover:border-yellow-500/70 transition-all duration-300 group shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+                    <div class="text-yellow-400 mb-5 group-hover:scale-110 transition-transform origin-left">
+                        <svg class="w-10 h-10 drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                     </div>
@@ -100,9 +100,9 @@
                 </div>
                 
                 <!-- Feature 2 -->
-                <div class="bg-slate-900/60 backdrop-blur-md border border-slate-700/50 p-8 rounded-2xl hover:bg-slate-800/80 hover:border-purple-500/70 transition-all duration-300 group shadow-[0_4px_20px_rgba(0,0,0,0.5)] md:-translate-y-6">
-                    <div class="text-purple-400 mb-5 group-hover:scale-110 transition-transform origin-left">
-                        <svg class="w-10 h-10 drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="bg-slate-900/60 backdrop-blur-md border border-slate-700/50 p-8 rounded-2xl hover:bg-slate-800/80 hover:border-orange-500/70 transition-all duration-300 group shadow-[0_4px_20px_rgba(0,0,0,0.5)] md:-translate-y-6">
+                    <div class="text-orange-400 mb-5 group-hover:scale-110 transition-transform origin-left">
+                        <svg class="w-10 h-10 drop-shadow-[0_0_10px_rgba(249,115,22,0.5)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                         </svg>
                     </div>
@@ -111,9 +111,9 @@
                 </div>
 
                 <!-- Feature 3 -->
-                <div class="bg-slate-900/60 backdrop-blur-md border border-slate-700/50 p-8 rounded-2xl hover:bg-slate-800/80 hover:border-rose-500/70 transition-all duration-300 group shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
-                    <div class="text-rose-400 mb-5 group-hover:scale-110 transition-transform origin-left">
-                        <svg class="w-10 h-10 drop-shadow-[0_0_10px_rgba(244,63,94,0.5)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="bg-slate-900/60 backdrop-blur-md border border-slate-700/50 p-8 rounded-2xl hover:bg-slate-800/80 hover:border-amber-500/70 transition-all duration-300 group shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+                    <div class="text-amber-400 mb-5 group-hover:scale-110 transition-transform origin-left">
+                        <svg class="w-10 h-10 drop-shadow-[0_0_10px_rgba(245,158,11,0.5)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                         </svg>
                     </div>
@@ -127,7 +127,7 @@
         <!-- Footer -->
         <footer class="relative z-10 w-full text-center py-10 bg-slate-950/80 backdrop-blur-sm border-t border-slate-900">
             <p class="text-slate-600 text-[10px] sm:text-xs tracking-[0.3em] uppercase font-bold">
-                &copy; {{ date('Y') }} Maidan Tournament Architecture. Built on Laravel.
+                &copy; {{ date('Y') }} PUBG Tournament Ecosystem. Built on Laravel.
             </p>
         </footer>
 
