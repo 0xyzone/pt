@@ -31,7 +31,7 @@ class MatchStatsTable
                     ->disabled(fn(MatchStat $record) => $record->alive <= 0)
                     ->action(function (MatchStat $record) {
                         if ($record->alive > 0) {
-                            $record->decrement('alive');
+                            $record->update(['alive' => $record->alive - 1]);
                         } else {
                             $record->update(['alive' => 0]);
                         }
@@ -47,7 +47,7 @@ class MatchStatsTable
                     ->getStateUsing(fn() => '+')
                     ->action(function (MatchStat $record) {
                         if ($record->alive < 4) {
-                            $record->increment('alive');
+                            $record->update(['alive' => $record->alive + 1]);
                         } else {
                             $record->update(['alive' => 4]);
                         };
@@ -61,11 +61,9 @@ class MatchStatsTable
                     ->disabled(fn(MatchStat $record) => $record->kills <= 0)
                     ->action(function (MatchStat $record) {
                         if ($record->kills > 0) {
-                            $record->decrement('kills');
+                            $record->update(['kills' => $record->kills - 1]);
                         }
 
-                        // Refresh the record to get the new 'kills' value before calculating
-                        $record->refresh();
                         $record->update([
                             'points' => static::calculatePoints($record)
                         ]);
@@ -83,11 +81,9 @@ class MatchStatsTable
                     ->getStateUsing(fn() => '+')
                     ->action(function (MatchStat $record) {
                         if ($record->kills < 100) { // Assuming a maximum of 100 kills
-                            $record->increment('kills');
+                            $record->update(['kills' => $record->kills + 1]);
                         }
 
-                        // Refresh the record to get the new 'kills' value before calculating
-                        $record->refresh();
                         $record->update([
                             'points' => static::calculatePoints($record)
                         ]);

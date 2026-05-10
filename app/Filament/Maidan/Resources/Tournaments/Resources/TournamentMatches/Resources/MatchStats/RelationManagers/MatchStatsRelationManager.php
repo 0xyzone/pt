@@ -6,6 +6,7 @@ use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches\Resour
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Components\Actions;
 use Filament\Tables\Table;
 
 class MatchStatsRelationManager extends RelationManager
@@ -31,10 +32,16 @@ class MatchStatsRelationManager extends RelationManager
                         }
                     })
                     ->visible(fn() => $this->ownerRecord->matchStats()->count() === 0),
-                    Action::make('view_screen')
-                    ->url(fn() => route('screens.activematch', ['user_id' => auth()->id()]))
-                    ->openUrlInNewTab()
-                    ->visible(fn() => $this->ownerRecord->is_active)
+                    Action::make('live_score_update')
+                        ->url(fn() => route('screens.activematch', ['user_id' => auth()->id()]))
+                        ->openUrlInNewTab()
+                        ->visible(fn() => $this->ownerRecord->is_active)
+                        ->color('danger'),
+                    Action::make('post_match_result')
+                        ->url(fn() => route('screens.postmatch', ['user_id' => auth()->id()]))
+                        ->openUrlInNewTab()
+                        ->visible(fn() => $this->ownerRecord->is_active)
+                        ->color('success')
             ]);
     }
 }

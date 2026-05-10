@@ -2,6 +2,6 @@
 
 use Illuminate\Support\Facades\Broadcast;
 
-Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+Broadcast::channel('stats.{match_id}', function ($match, $match_id) {
+    return (int) $match->id === (int) $match_id;
 });

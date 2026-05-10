@@ -12,4 +12,12 @@ class ScreenController extends Controller
         $activeMatch = $user->getActiveMatch();
         return view('screens.activeMatch', compact('activeMatch'));
     }
+    
+    public function postMatch()
+    {
+        $user = User::find(request()->route('user_id'));
+        $activeMatch = $user->getActiveMatch();
+
+        return view('screens.postMatch', compact('activeMatch'));
+    }
 }

@@ -10,6 +10,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class MatchStat extends Model
 {
     /**
+     * The event map for the model.
+     *
+     * @var array
+     */
+    protected $dispatchesEvents = [
+        'saved' => \App\Events\MatchStatsUpdated::class,
+        'deleted' => \App\Events\MatchStatsUpdated::class,
+    ];
+    /**
      * Get the tournamentMatch that owns the MatchStat
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
