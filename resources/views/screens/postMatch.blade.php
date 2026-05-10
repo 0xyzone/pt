@@ -65,7 +65,8 @@
                         <tr class="bg-gradient-to-r from-slate-900/90 to-slate-800/90 text-slate-400 border-b border-orange-900/30 shadow-md">
                             <th class="w-16 px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Rank</th>
                             <th class="px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest">Team</th>
-                            <th class="w-20 px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Kills</th>
+                            <th class="w-20 px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Elims</th>
+                            <th class="w-20 px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Place Pts</th>
                             <th class="w-24 px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center text-yellow-500 drop-shadow-[0_0_5px_rgba(251,191,36,0.5)] whitespace-nowrap">Pts</th>
                         </tr>
                     </thead>
@@ -96,6 +97,7 @@
                                     </div>
                                 </td>
                                 <td class="px-4 py-3 text-center font-bold text-lg lg:text-xl text-slate-100 bg-black/10">{{ $match->kills }}</td>
+                                <td class="px-4 py-3 text-center font-bold text-lg lg:text-xl text-slate-300">{{ $match->points - $match->kills }}</td>
                                 <td class="px-4 py-3 text-center font-black text-2xl lg:text-3xl {{ $rank === 1 ? 'text-yellow-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]' : 'text-orange-400 drop-shadow-[0_0_8px_rgba(249,115,22,0.4)]' }}">{{ $match->points }}</td>
                             </tr>
                         @endforeach
@@ -110,7 +112,8 @@
                         <tr class="bg-gradient-to-r from-slate-900/90 to-slate-800/90 text-slate-400 border-b border-orange-900/30 shadow-md">
                             <th class="w-14 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Rank</th>
                             <th class="px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest">Team</th>
-                            <th class="w-16 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Kills</th>
+                            <th class="w-16 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Elims</th>
+                            <th class="w-16 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Place Pts</th>
                             <th class="w-20 px-2 lg:px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-right text-yellow-500 drop-shadow-[0_0_5px_rgba(251,191,36,0.5)] whitespace-nowrap">Pts</th>
                         </tr>
                     </thead>
@@ -128,6 +131,7 @@
                                     </div>
                                 </td>
                                 <td class="px-2 py-2.5 text-center font-bold text-sm lg:text-lg text-slate-200 bg-black/10">{{ $match->kills }}</td>
+                                <td class="px-2 py-2.5 text-center font-bold text-sm lg:text-lg text-slate-400">{{ $match->points - $match->kills }}</td>
                                 <td class="px-2 lg:px-4 py-2.5 text-right font-black text-xl lg:text-2xl text-orange-400 drop-shadow-[0_0_5px_rgba(249,115,22,0.3)] group-hover:text-orange-300 transition-colors">{{ $match->points }}</td>
                             </tr>
                         @endforeach
@@ -147,7 +151,7 @@
     <script type="module">
         document.addEventListener("DOMContentLoaded", function () {
             Echo.channel('active-match.{{ $activeMatch->id }}')
-                .listen('MatchStatsUpdated', (e) => {
+                .listen('.MatchStatsUpdated', (e) => {
                     fetch(window.location.href, { cache: 'no-store', headers: {'Cache-Control': 'no-cache'} })
                         .then(response => response.text())
                         .then(html => {

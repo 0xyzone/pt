@@ -60,7 +60,8 @@
                             <th class="px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest">Team</th>
                             <th class="w-16 px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center" title="Matches Played">Played</th>
                             <th class="w-16 px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center text-yellow-500" title="Winner Winner Chicken Dinners">WWCD</th>
-                            <th class="w-16 px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Kills</th>
+                            <th class="w-16 px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Elims</th>
+                            <th class="w-16 px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Place Pts</th>
                             <th class="w-24 px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center text-orange-400 drop-shadow-[0_0_5px_rgba(249,115,22,0.5)] whitespace-nowrap">Total pts</th>
                         </tr>
                     </thead>
@@ -93,6 +94,7 @@
                                 <td class="px-4 py-3 text-center font-bold text-base lg:text-lg text-slate-300 bg-black/20">{{ $item['matches_played'] }}</td>
                                 <td class="px-4 py-3 text-center font-black text-lg lg:text-xl text-yellow-500 bg-black/10">{{ $item['total_wins'] }}</td>
                                 <td class="px-4 py-3 text-center font-bold text-lg lg:text-xl text-slate-100">{{ $item['total_kills'] }}</td>
+                                <td class="px-4 py-3 text-center font-bold text-lg lg:text-xl text-slate-300 bg-black/10">{{ $item['total_placement_points'] }}</td>
                                 <td class="px-4 py-3 text-center font-black text-2xl lg:text-3xl {{ $rank === 1 ? 'text-yellow-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.6)]' : 'text-orange-400 drop-shadow-[0_0_10px_rgba(249,115,22,0.5)]' }}">{{ $item['total_points'] }}</td>
                             </tr>
                         @endforeach
@@ -109,7 +111,8 @@
                             <th class="px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest">Team</th>
                             <th class="w-14 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center" title="Matches Played">Pld</th>
                             <th class="w-14 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center text-yellow-500" title="WWCD">WWCD</th>
-                            <th class="w-14 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Kills</th>
+                            <th class="w-14 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Elims</th>
+                            <th class="w-14 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Place Pts</th>
                             <th class="w-20 px-2 lg:px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-right text-orange-400 drop-shadow-[0_0_5px_rgba(249,115,22,0.5)] whitespace-nowrap">Total pts</th>
                         </tr>
                     </thead>
@@ -129,6 +132,7 @@
                                 <td class="px-2 py-2.5 text-center font-bold text-xs lg:text-sm text-slate-400 bg-black/20">{{ $item['matches_played'] }}</td>
                                 <td class="px-2 py-2.5 text-center font-black text-[13px] lg:text-sm text-yellow-500 bg-black/10">{{ $item['total_wins'] }}</td>
                                 <td class="px-2 py-2.5 text-center font-bold text-sm text-slate-200">{{ $item['total_kills'] }}</td>
+                                <td class="px-2 py-2.5 text-center font-bold text-sm text-slate-400 bg-black/10">{{ $item['total_placement_points'] }}</td>
                                 <td class="px-2 lg:px-4 py-2.5 text-right font-black text-xl lg:text-2xl text-orange-400 drop-shadow-[0_0_5px_rgba(249,115,22,0.3)] group-hover:text-orange-300 transition-colors">{{ $item['total_points'] }}</td>
                             </tr>
                         @endforeach
@@ -148,7 +152,7 @@
     <script type="module">
         document.addEventListener("DOMContentLoaded", function () {
             Echo.channel('active-match.{{ $activeMatch->id }}')
-                .listen('MatchStatsUpdated', (e) => {
+                .listen('.MatchStatsUpdated', (e) => {
                     fetch(window.location.href, { cache: 'no-store', headers: {'Cache-Control': 'no-cache'} })
                         .then(response => response.text())
                         .then(html => {

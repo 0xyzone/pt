@@ -243,7 +243,7 @@
             if (initialCards) initialCards.classList.add('hud-slide-down');
 
             Echo.channel('active-match.{{ $activeMatch->id }}')
-                .listen('MatchStatsUpdated', (e) => {
+                .listen('.MatchStatsUpdated', (e) => {
                     fetch(window.location.href, { cache: 'no-store' })
                         .then(response => response.text())
                         .then(html => {
