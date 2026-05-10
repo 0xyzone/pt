@@ -85,6 +85,22 @@ class ScreenController extends Controller
         return view('screens.upcomingMatches', compact('activeMatch', 'user', 'tournament', 'matches'));
     }
 
+    public function mapScreen()
+    {
+        $user = User::findOrFail(request()->route('user_id'));
+        $activeMatch = $user->getActiveMatch();
+        $tournament = $activeMatch->tournament;
+        
+        // Retrieve all teams for the active match via matchStats, or tournament teams if match hasn't started stats yet.
+        // Usually, teams are added to matchStats when match is active.
+        $teams = $activeMatch->matchStats()->with('tournamentTeam')->get()->map->tournamentTeam;
+        if ($teams->isEmpty()) {
+            $teams = $tournament->tournamentTeams;
+        }
+        
+        return view('screens.mapScreen', compact('activeMatch', 'user', 'tournament', 'teams'));
+    }
+
     public function obsMaster()
     {
         $user = User::findOrFail(request()->route('user_id'));

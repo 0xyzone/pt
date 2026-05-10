@@ -72,6 +72,7 @@
                 <li><strong class="text-slate-300 uppercase text-[10px] tracking-wider">Main Master:</strong> Load <code class="text-rose-400 bg-slate-950 px-2 py-0.5 rounded">{{ route('screens.obsmaster', ['user_id' => $user->id]) }}</code> for Post-Match & Standings.</li>
                 <li><strong class="text-slate-300 uppercase text-[10px] tracking-wider">Elimination HUD:</strong> Load <code class="text-red-400 bg-slate-950 px-2 py-0.5 rounded">{{ route('screens.teamelimination', ['user_id' => $user->id]) }}</code> for top-center squad notifications.</li>
                 <li><strong class="text-slate-300 uppercase text-[10px] tracking-wider">Live Ranking HUD:</strong> Load <code class="text-yellow-400 bg-slate-950 px-2 py-0.5 rounded">{{ route('screens.activematch', ['user_id' => $user->id]) }}</code> for the left-side scrolling leaderboard.</li>
+                <li><strong class="text-slate-300 uppercase text-[10px] tracking-wider">Map Screen:</strong> Load <code class="text-blue-400 bg-slate-950 px-2 py-0.5 rounded">{{ route('screens.mapscreen', ['user_id' => $user->id]) }}</code> for the 1080x1080 map view with teams.</li>
                 <li>Set the Browser Source dimensions accurately. All views have transparent layers so your game source will shine through.</li>
             </ul>
         </div>

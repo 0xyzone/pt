@@ -12,6 +12,7 @@ Route::prefix('{user_id}/screens')->group( function () {
     Route::get('/overallranking', [ScreenController::class, 'overallRanking'])->name('screens.overallranking');
     Route::get('/teamelimination', [ScreenController::class, 'teamElimination'])->name('screens.teamelimination');
     Route::get('/upcomingmatches', [ScreenController::class, 'upcomingMatches'])->name('screens.upcomingmatches');
+    Route::get('/mapscreen', [ScreenController::class, 'mapScreen'])->name('screens.mapscreen');
     
     // OBS Overlays and Control Panel
     Route::get('/obs-master', [ScreenController::class, 'obsMaster'])->name('screens.obsmaster');
