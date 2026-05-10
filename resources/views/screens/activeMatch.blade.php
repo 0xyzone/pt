@@ -57,21 +57,21 @@
                     <div class="bg-yellow-400 px-36 py-6 mb-10 pubg-skew shadow-[0_0_80px_rgba(250,204,21,0.4)]">
                         <div class="pubg-unskew flex flex-col items-center">
                             <span class="text-black text-xl font-black uppercase tracking-[0.4em] mb-1">Winner Winner</span>
-                            <span class="text-black text-6xl font-black italic uppercase tracking-tighter">Chicken Dinner</span>
+                            <span class="text-black text-6xl font-black uppercase tracking-widest">Chicken Dinner</span>
                         </div>
                     </div>
                     <div class="glass-panel p-10 flex flex-col items-center border-t-8 border-yellow-400 shadow-2xl" style="width:550px;">
-                        <div class="w-44 h-44 bg-white/5 rounded-full p-8 border-4 border-yellow-400/50 mb-8 flex items-center justify-center">
-                            <img src="{{ $winner->tournamentTeam->logo_image ? asset('storage/' . $winner->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" class="w-full h-full object-contain">
+                        <div class="w-44 h-44 bg-white/5 rounded-full mb-10">
+                            <img src="{{ $winner->tournamentTeam->logo_image ? asset('storage/' . $winner->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" class="w-44 aspect-square object-fill">
                         </div>
-                        <h2 class="text-7xl font-black italic uppercase text-white tracking-tighter mb-6">{{ $winner->tournamentTeam->name }}</h2>
+                        <h2 class="text-7xl font-black italic uppercase text-white tracking-widest mb-6">{{ $winner->tournamentTeam->name }}</h2>
                         <div class="flex gap-16 mt-2">
                             <div class="flex flex-col items-center">
-                                <span class="text-yellow-400 text-xs font-black uppercase tracking-widest mb-2">Total Kills</span>
+                                <span class="text-yellow-400 text-2xl font-black uppercase tracking-widest mb-2">Total Kills</span>
                                 <span class="text-5xl font-black text-white italic leading-none">{{ $winner->kills }}</span>
                             </div>
                             <div class="flex flex-col items-center">
-                                <span class="text-yellow-400 text-xs font-black uppercase tracking-widest mb-2">Match Points</span>
+                                <span class="text-yellow-400 text-2xl font-black uppercase tracking-widest mb-2">Match Points</span>
                                 <span class="text-5xl font-black text-white italic leading-none">{{ $winner->points }}</span>
                             </div>
                         </div>
