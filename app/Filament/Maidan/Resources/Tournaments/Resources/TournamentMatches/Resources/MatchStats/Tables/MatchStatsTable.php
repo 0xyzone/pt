@@ -31,9 +31,16 @@ class MatchStatsTable
                     ->disabled(fn(MatchStat $record) => $record->alive <= 0)
                     ->action(function (MatchStat $record) {
                         if ($record->alive > 0) {
-                            $record->update(['alive' => $record->alive - 1]);
-                        } else {
-                            $record->update(['alive' => 0]);
+                            $newAlive = $record->alive - 1;
+                            $record->update(['alive' => $newAlive]);
+
+                            if ($newAlive === 0) {
+                                broadcast(new \App\Events\TeamEliminated(
+                                    $record->tournamentTeam->name,
+                                    $record->tournamentTeam->logo_image,
+                                    $record->tournament_match_id
+                                ));
+                            }
                         }
                     })
                     ->alignCenter()
