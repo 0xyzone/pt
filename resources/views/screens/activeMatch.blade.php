@@ -41,8 +41,8 @@
                 <img id="toaster-logo" src="" style="width:100%; height:100%; object-fit:contain;">
             </div>
             <div style="display:flex; flex-direction:column;">
-                <span style="color:#ef4444; font-size:12px; font-weight:900; letter-spacing:0.3em; text-transform:uppercase;">Squad Eliminated</span>
-                <span id="toaster-team-name" style="font-size:32px; font-weight:900; font-style:italic; text-transform:uppercase; color:#fff; letter-spacing:-0.03em; line-height:1;"></span>
+                <span style="color:#ef4444; font-size:14px; font-weight:900; letter-spacing:0.4em; text-transform:uppercase;">Squad Eliminated</span>
+                <span id="toaster-team-name" style="font-size:36px; font-weight:900; font-style:italic; text-transform:uppercase; color:#fff; letter-spacing:-0.04em; line-height:1;"></span>
             </div>
         </div>
     </div>
@@ -108,7 +108,7 @@
                             <div style="display:flex; align-items:center; gap:10px;">
                                 <img src="{{ $match->tournamentTeam->logo_image ? asset('storage/' . $match->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" style="width:40px; height:40px; object-fit:contain; flex-shrink:0;">
                                 <div style="flex:1; overflow:hidden; display:flex; flex-direction:column; gap:5px;">
-                                    <span style="font-size:20px; font-weight:900; text-transform:uppercase; color:#fff; letter-spacing:-0.05em; line-height:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $match->tournamentTeam->short_name }}</span>
+                                    <span style="font-size:24px; font-weight:900; font-style:italic; text-transform:uppercase; color:#fff; letter-spacing:-0.05em; line-height:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $match->tournamentTeam->short_name }}</span>
                                     <div style="display:flex; gap:4px;">
                                         @for($i = 0; $i < 4; $i++)
                                             <div class="{{ $i < $match->alive ? 'pip-alive' : 'pip-dead' }}" style="width:10px; height:14px; border-radius:2px; transform:skewX(-12deg);"></div>
@@ -118,8 +118,14 @@
                             </div>
 
                             <div style="display:flex; align-items:flex-end; justify-content:space-between; padding-top:8px; border-top:1px solid rgba(255,255,255,0.05);">
-                                <span style="font-size:20px; font-weight:900; color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.1em;">Score</span>
-                                <span style="font-size:36px; font-weight:900; font-style:italic; color:#facc15; line-height:1;">{{ $match->points }}</span>
+                                <div style="display:flex; flex-direction:column;">
+                                    <span style="font-size:16px; font-weight:900; color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.1em;">Kills</span>
+                                    <span style="font-size:36px; font-weight:900; font-style:bold; color:#fff; line-height:1;">{{ $match->kills }}</span>
+                                </div>
+                                <div style="display:flex; flex-direction:column; align-items:flex-end;">
+                                    <span style="font-size:16px; font-weight:900; color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.1em;">Points</span>
+                                    <span style="font-size:36px; font-weight:900; font-style:bold; color:#facc15; line-height:1;">{{ $match->points }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -137,6 +143,17 @@
                     </div>
                 </div>
 
+                {{-- Column Headers --}}
+                <div class="pubg-skew" style="display:flex; align-items:center; padding:4px 12px; gap:10px;">
+                    <div class="pubg-unskew" style="display:flex; align-items:center; width:100%; gap:10px;">
+                        <span style="width:24px; flex-shrink:0;"></span>
+                        <span style="flex:1; font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:0.1em; color:rgba(255, 255, 255, 0.4);">Team</span>
+                        <span style="font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:0.05em; color:rgba(255, 255, 255, 0.4); width:38px; text-align:center;">Alive</span>
+                        <span style="font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:0.05em; color:rgba(255, 255, 255, 0.4); width:30px; text-align:center;">Kills</span>
+                        <span style="font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:0.05em; color:rgba(255, 255, 255, 0.4); width:40px; text-align:right;">Pts</span>
+                    </div>
+                </div>
+
                 <div style="display:flex; flex-direction:column; gap:2px;" id="live-standings">
                     @foreach ($allStats as $index => $match)
                     @php $isEliminated = $match->alive == 0; @endphp
@@ -144,17 +161,19 @@
                         <div class="pubg-unskew" style="display:flex; align-items:center; padding:8px 12px; gap:10px;">
                             <img src="{{ $match->tournamentTeam->logo_image ? asset('storage/' . $match->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" style="width:24px; height:24px; object-fit:contain; flex-shrink:0;">
                             {{-- Team Name --}}
-                            <span style="flex:1; font-weight:900; text-transform:uppercase; font-size:19px; line-height:1; letter-spacing:-0.03em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; {{ $isEliminated ? 'color:rgb(100,116,139); text-decoration:line-through;' : 'color:#fff;' }}">{{ $match->tournamentTeam->short_name }}</span>
+                            <span style="flex:1; font-weight:900; font-style:italic; text-transform:uppercase; font-size:20px; line-height:1; letter-spacing:-0.03em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; {{ $isEliminated ? 'color:rgba(255,255,255,0.2); text-decoration:line-through;' : 'color:#fff;' }}">{{ $match->tournamentTeam->short_name }}</span>
                             {{-- Alive pips (centered between name and points) --}}
-                            @if(!$isEliminated)
-                            <div style="display:flex; gap:2px; flex-shrink:0;">
-                                @for($i = 0; $i < 4; $i++)
-                                    <div class="{{ $i < $match->alive ? 'pip-alive' : 'pip-dead' }}" style="width:7px; height:11px; border-radius:1px;"></div>
-                                @endfor
+                            <div style="display:flex; gap:2px; flex-shrink:0; width:38px; justify-content:center;">
+                                @if(!$isEliminated)
+                                    @for($i = 0; $i < 4; $i++)
+                                        <div class="{{ $i < $match->alive ? 'pip-alive' : 'pip-dead' }}" style="width:7px; height:11px; border-radius:1px;"></div>
+                                    @endfor
+                                @endif
                             </div>
-                            @endif
+                            {{-- Kills --}}
+                            <span style="font-weight:900; font-style:italic; font-size:18px; color:rgba(255,255,255,0.6); width:30px; text-align:center; line-height:1;">{{ $match->kills }}</span>
                             {{-- Points --}}
-                            <span style="font-weight:900; font-style:italic; font-size:24px; color:#facc15; width:38px; text-align:right; line-height:1;">{{ $match->points }}</span>
+                            <span style="font-weight:900; font-style:italic; font-size:24px; color:#facc15; width:40px; text-align:right; line-height:1;">{{ $match->points }}</span>
                         </div>
                     </div>
                     @endforeach
