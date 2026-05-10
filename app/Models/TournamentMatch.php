@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TournamentMatch extends Model
 {
+    protected $guarded = [];
     /**
      * Get the tournament that owns the TournamentMatch
      *

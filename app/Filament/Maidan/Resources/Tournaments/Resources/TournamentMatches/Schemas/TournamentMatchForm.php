@@ -44,7 +44,11 @@ class TournamentMatchForm
                     ->label('Active Match')
                     ->default(false)
                     ->inline(false)
-                    ->disabled()
+                    ->disabled(),
+                Toggle::make('is_completed')
+                    ->label('Is Completed')
+                    ->default(false)
+                    ->inline(false)
             ])->columns(3);
     }
 }

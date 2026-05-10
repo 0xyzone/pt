@@ -43,6 +43,8 @@ class TournamentMatchesTable
                         $record->tournament->tournamentMatches()->update(['is_active' => false]);
                         $record->update(['is_active' => true]);
                     }),
+                ToggleColumn::make('is_completed')
+                    ->label('Completed?'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
