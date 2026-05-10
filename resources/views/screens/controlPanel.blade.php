@@ -68,11 +68,11 @@
 
         <div class="mt-12 bg-slate-900/60 p-6 rounded-2xl border border-slate-800/50 w-full shadow-lg">
             <h3 class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2 border-b border-slate-800 pb-2">Director Instructions</h3>
-            <ul class="text-slate-500 text-sm list-disc pl-4 space-y-1">
-                <li>Load <code class="text-rose-400 bg-slate-950 px-2 py-0.5 rounded">{{ route('screens.obsmaster', ['user_id' => $user->id]) }}</code> directly into OBS as a Browser Source.</li>
-                <li>Set the Browser Source dimensions accurately, and use the Control Panel above to switch layouts live.</li>
-                <li>Because the views have transparent layers, your OBS background source (below the web browser source) will shine through.</li>
-                <li>Live calculations dynamically update instantly even while selected via WebSockets.</li>
+            <ul class="text-slate-500 text-sm list-disc pl-4 space-y-2">
+                <li><strong class="text-slate-300 uppercase text-[10px] tracking-wider">Main Master:</strong> Load <code class="text-rose-400 bg-slate-950 px-2 py-0.5 rounded">{{ route('screens.obsmaster', ['user_id' => $user->id]) }}</code> for Post-Match & Standings.</li>
+                <li><strong class="text-slate-300 uppercase text-[10px] tracking-wider">Elimination HUD:</strong> Load <code class="text-red-400 bg-slate-950 px-2 py-0.5 rounded">{{ route('screens.teamelimination', ['user_id' => $user->id]) }}</code> for top-center squad notifications.</li>
+                <li><strong class="text-slate-300 uppercase text-[10px] tracking-wider">Live Ranking HUD:</strong> Load <code class="text-yellow-400 bg-slate-950 px-2 py-0.5 rounded">{{ route('screens.activematch', ['user_id' => $user->id]) }}</code> for the left-side scrolling leaderboard.</li>
+                <li>Set the Browser Source dimensions accurately. All views have transparent layers so your game source will shine through.</li>
             </ul>
         </div>
     </div>

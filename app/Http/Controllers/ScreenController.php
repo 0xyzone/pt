@@ -66,6 +66,13 @@ class ScreenController extends Controller
         return view('screens.overallRanking', compact('tournament', 'rankings', 'activeMatch'));
     }
 
+    public function teamElimination()
+    {
+        $user = User::findOrFail(request()->route('user_id'));
+        $activeMatch = $user->getActiveMatch();
+        return view('screens.teamElimination', compact('activeMatch', 'user'));
+    }
+
     public function obsMaster()
     {
         $user = User::findOrFail(request()->route('user_id'));

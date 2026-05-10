@@ -1,62 +1,86 @@
 <x-base>
-    <table class="table-auto border-collapse border border-neutral-300">
-        <thead>
-            <!-- Title Row -->
-            <tr class="bg-gray-500">
-                <th colspan="3" class="text-2xl font-bold text-center uppercase text-white">
-                    <p>{{ $activeMatch->name }}</p>
-                </th>
-            </tr>
-            <!-- Header Row -->
-            <tr class="bg-black text-white font-bold text-center">
-                <th class="text-right pr-3 w-4/12 py-2">Team</th>
-                <th class="w-1/6 py-2">Alive</th>
-                <th class="w-1/12 py-2">Points</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($activeMatch->matchStats->sortByDesc(['points']) as $match)
+    <style>
+        .pubg-skew { transform: skewX(-10deg); }
+        .pubg-unskew { transform: skewX(10deg); }
+        .dead-team { filter: grayscale(100%); opacity: 0.75; }
+    </style>
+    
+    <!-- Top Left Widget Container for Live Broadcast HUD -->
+    <div class="fixed top-10 left-10 w-[360px] font-sans text-slate-100 z-50 flex flex-col gap-1.5">
+        
+        <!-- Header -->
+        <div class="relative w-full bg-gradient-to-r from-yellow-500 to-orange-600 pubg-skew rounded-sm shadow-[0_0_15px_rgba(245,158,11,0.5)] border-l-4 border-yellow-300">
+            <div class="px-4 py-2 flex justify-between items-center pubg-unskew">
+                <span class="font-black italic uppercase tracking-wider text-slate-900 drop-shadow-sm text-xl">
+                    Live Updates
+                </span>
+                <span class="font-bold text-[10px] uppercase tracking-[0.2em] text-orange-950 bg-yellow-400 px-2 py-0.5 rounded-sm shadow-inner drop-shadow-md">
+                    {{ $activeMatch->name }}
+                </span>
+            </div>
+        </div>
+
+        <!-- Header Columns -->
+        <div class="flex items-center px-4 py-2 bg-slate-900/80 backdrop-blur-md rounded-sm border-y border-slate-700/50 mt-1 mb-1 pubg-skew shadow-lg">
+            <div class="pubg-unskew flex w-full text-xs font-bold uppercase tracking-[0.15em] text-slate-400">
+                <div class="w-24 pl-1">Team</div>
+                <div class="flex-1 text-center">Status</div>
+                <div class="w-14 text-right pr-1 text-yellow-500 drop-shadow-[0_0_2px_rgba(250,204,21,0.8)]">Pts</div>
+            </div>
+        </div>
+
+        <!-- Teams List -->
+        <div class="flex flex-col gap-1.5 w-full" id="live-standings">
+            @foreach ($activeMatch->matchStats->sortByDesc(['points'])->values() as $index => $match)
             @php
-            $alive = $match->alive;
-            if ($alive == 0) {
-            $bgColor = "color-mix(in oklab, var(--color-red-600) 50%, #ffffff)";
-            } else {
-            $bgColor = "#ffffff";
-            }
+                $isEliminated = $match->alive == 0;
+                $isTop3 = $index < 3;
             @endphp
-            <tr class="text-center" style="background-color: {{ $bgColor }};">
-                <td class="uppercase pr-3 font-bold border border-neutral-300 py-1.5 relative overflow-hidden">
-                    @if ($match->tournamentTeam->logo_image)
-                    <img src="{{ asset('storage/' . $match->tournamentTeam->logo_image) }}" alt="{{ $activeMatch->tournamentTeam?->name . ' logo' }}" class="w-32 rotate-4 -top-10 -left-10 object-cover absolute mask-r-from-20% mask-r-to-80%">
-                    @else
-                    <img src="{{ asset('img/defult_team_logo.png') }}" alt="" class="w-32 rotate-4 -top-10 -left-10 object-cover absolute mask-r-from-20% mask-r-to-80%">
-                    @endif
-                    <div class="flex gap-2 items-center justify-end">
-                        <p class="text-2xl">{{ $match->tournamentTeam->short_name }}</p>
-                        @if ($match->tournamentTeam->logo_image)
-                        <img src="{{ asset('storage/' . $match->tournamentTeam->logo_image) }}" alt="{{ $activeMatch->tournamentTeam?->name . ' logo' }}" class="w-6 h-6 object-cover">
+            
+            <div data-team-id="{{ $match->tournament_team_id }}" class="list-item relative w-full bg-slate-900/85 backdrop-blur-md border border-slate-700/50 rounded-sm pubg-skew transition-colors duration-300 {{ $isEliminated ? 'border-red-900/40 bg-red-950/40 shadow-none' : ($isTop3 ? 'border-yellow-600/40 shadow-[0_4px_15px_rgba(0,0,0,0.5)]' : 'shadow-lg border-slate-600/30') }}">
+                
+                @if($isEliminated)
+                    <!-- Red elimination overlay -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-red-600/10 to-transparent pointer-events-none rounded-sm"></div>
+                @endif
+                
+                <div class="flex items-center px-3 py-1.5 pubg-unskew {{ $isEliminated ? 'dead-team text-slate-500' : 'text-slate-100' }}">
+                    
+                    <!-- Team Logo & Name -->
+                    <div class="flex items-center gap-2.5 w-24">
+                        <div class="w-7 h-7 flex-shrink-0 relative {{ !$isEliminated ? 'drop-shadow-[0_0_3px_rgba(255,255,255,0.4)]' : '' }}">
+                            <img src="{{ $match->tournamentTeam->logo_image ? asset('storage/' . $match->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" class="w-full h-full object-contain">
+                        </div>
+                        <span class="font-black uppercase tracking-tight text-base truncate {{ $isEliminated ? 'text-red-400/80 line-through decoration-red-600/60' : ($isTop3 ? 'text-yellow-400' : 'text-slate-100') }}">
+                            {{ $match->tournamentTeam->short_name }}
+                        </span>
+                    </div>
+
+                    <!-- ALIVE PIPS -->
+                    <div class="flex-1 flex justify-center items-center gap-1.5">
+                        @if($isEliminated)
+                            <span class="text-[9px] font-black text-red-500 tracking-[0.25em] uppercase italic px-2 py-0.5 border border-red-500/30 bg-red-500/10 rounded-sm">Eliminated</span>
                         @else
-                        <img src="{{ asset('img/defult_team_logo.png') }}" alt="" class="w-6 h-6 object-cover">
+                            @for($i = 0; $i < 4; $i++)
+                                @if($i < $match->alive)
+                                    <div class="w-2.5 h-4 bg-yellow-400 rounded-sm shadow-[0_0_8px_rgba(250,204,21,0.7)] skew-x-[-15deg]"></div>
+                                @else
+                                    <div class="w-2.5 h-4 bg-slate-700/60 rounded-sm border border-slate-600 skew-x-[-15deg] shadow-inner"></div>
+                                @endif
+                            @endfor
                         @endif
                     </div>
-                </td>
-                <td class="align-middle border border-neutral-300">
-                    <div class="flex items-center justify-center">
-                        @for($i = 0; $i < $match->alive; $i++)
-                            <span class="inline-block w-2 h-6 bg-green-500 rounded-sm mr-1"></span>
-                            @endfor
-                            @for($i = 0; $i < 4 - $match->alive; $i++)
-                                <span class="inline-block w-2 h-6 bg-gray-400 rounded-sm mr-1"></span>
-                                @endfor
+
+                    <!-- POINTS -->
+                    <div class="w-14 text-right pr-1 font-black italic text-2xl {{ $isEliminated ? 'text-red-400/80' : 'text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.6)]' }}">
+                        {{ $match->points }}
                     </div>
-                </td>
-                <td class="font-bold border border-neutral-300 text-2xl">
-                    {{ $match->points }}
-                </td>
-            </tr>
+                </div>
+            </div>
             @endforeach
-        </tbody>
-    </table>
+        </div>
+        
+    </div>
 
     <script type="module">
         document.addEventListener("DOMContentLoaded", function () {
@@ -67,10 +91,45 @@
                         .then(html => {
                             const parser = new DOMParser();
                             const doc = parser.parseFromString(html, 'text/html');
-                            const newTbody = doc.querySelector('table tbody');
+                            const newList = doc.getElementById('live-standings');
                             
-                            if (newTbody) {
-                                document.querySelector('table tbody').innerHTML = newTbody.innerHTML;
+                            if (newList) {
+                                const currentList = document.getElementById('live-standings');
+                                
+                                // 1. Set up FLIP animation - Measure First
+                                const oldChildren = Array.from(currentList.querySelectorAll('.list-item'));
+                                const oldRects = new Map();
+                                oldChildren.forEach(child => {
+                                    const teamId = child.getAttribute('data-team-id');
+                                    if(teamId) oldRects.set(teamId, child.getBoundingClientRect());
+                                });
+
+                                // 2. Perform swap DOM update
+                                currentList.innerHTML = newList.innerHTML;
+
+                                // 3. Measure Last & Invert transforms
+                                const newChildren = Array.from(currentList.querySelectorAll('.list-item'));
+                                newChildren.forEach(child => {
+                                    const teamId = child.getAttribute('data-team-id');
+                                    if(teamId && oldRects.has(teamId)) {
+                                        const oldRect = oldRects.get(teamId);
+                                        const newRect = child.getBoundingClientRect();
+                                        const deltaY = oldRect.top - newRect.top;
+
+                                        if(deltaY !== 0) {
+                                            child.style.transform = `translateY(${deltaY}px)`;
+                                            child.style.transition = 'none';
+
+                                            // 4. Play fluid animation
+                                            requestAnimationFrame(() => {
+                                                requestAnimationFrame(() => {
+                                                    child.style.transform = '';
+                                                    child.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+                                                });
+                                            });
+                                        }
+                                    }
+                                });
                             }
                         });
                 });

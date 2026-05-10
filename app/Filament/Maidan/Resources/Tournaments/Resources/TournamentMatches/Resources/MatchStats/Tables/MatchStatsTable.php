@@ -8,7 +8,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Actions\Action;
+use Filament\Actions\Action;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TextInputColumn;
@@ -142,7 +142,17 @@ class MatchStatsTable
                 //
             ])
             ->recordActions([
-                // EditAction::make(),
+                Action::make('trigger_elimination')
+                    ->label('Elim')
+                    ->icon('heroicon-o-bell-alert')
+                    ->color('danger')
+                    ->action(function (MatchStat $record) {
+                        broadcast(new \App\Events\TeamEliminated(
+                            $record->tournamentTeam->name,
+                            $record->tournamentTeam->logo_image,
+                            $record->tournament_match_id
+                        ));
+                    }),
                 DeleteAction::make(),
             ])
             ->toolbarActions([

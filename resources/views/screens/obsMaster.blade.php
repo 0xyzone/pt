@@ -1,6 +1,6 @@
 <x-base>
     <!-- Master overlay container -->
-    <div id="obs-container" class="w-full h-full relative font-sans text-slate-100 bg-transparent transition-opacity duration-500 opacity-100">
+    <div id="obs-container" class="w-full h-full relative font-sans text-slate-100 bg-transparent transition-opacity duration-500 opacity-100 z-10">
         <!-- Intentionally empty initial view -->
     </div>
 
