@@ -1,9 +1,20 @@
-<x-base>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Screen</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="bg-transparent">
+
     <!-- Background styling for control panel specifically, distinct from OBS overlay -->
-    <div class="min-h-screen bg-slate-950 p-6 md:p-12 font-sans text-slate-100 flex flex-col items-center max-w-4xl mx-auto">
+    <div class="min-h-screen bg-slate-950 p-6 md:p-12 font-sans text-slate-100 flex flex-col items-center w-full">
         
         <div class="text-center w-full mb-10">
-            <h1 class="text-4xl md:text-5xl font-black italic tracking-tighter uppercase drop-shadow-md pb-2 text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-rose-600">
+            <h1 class="text-4xl md:text-5xl font-black italic tracking-tighter uppercase drop-shadow-md pb-2 text-transparent bg-clip-text bg-linear-to-r from-red-500 to-rose-600">
                 OBS Director Console
             </h1>
             <p class="text-slate-400 font-bold uppercase tracking-[0.2em] text-sm mt-3 border border-slate-800 bg-slate-900 rounded-lg py-2 inline-block px-4">
@@ -58,11 +69,12 @@
         <div class="mt-12 bg-slate-900/60 p-6 rounded-2xl border border-slate-800/50 w-full shadow-lg">
             <h3 class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2 border-b border-slate-800 pb-2">Director Instructions</h3>
             <ul class="text-slate-500 text-sm list-disc pl-4 space-y-1">
-                <li>Load <code class="text-rose-400 bg-slate-950 px-2 py-0.5 rounded">/{{$user->id}}/screens/obs-master</code> directly into OBS as a Browser Source.</li>
+                <li>Load <code class="text-rose-400 bg-slate-950 px-2 py-0.5 rounded">{{ route('screens.obsmaster', ['user_id' => $user->id]) }}</code> directly into OBS as a Browser Source.</li>
                 <li>Set the Browser Source dimensions accurately, and use the Control Panel above to switch layouts live.</li>
                 <li>Because the views have transparent layers, your OBS background source (below the web browser source) will shine through.</li>
                 <li>Live calculations dynamically update instantly even while selected via WebSockets.</li>
             </ul>
         </div>
     </div>
-</x-base>
+</body>
+</html>

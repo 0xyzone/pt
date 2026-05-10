@@ -4,6 +4,7 @@ namespace App\Filament\Maidan\Resources\Tournaments\Pages;
 
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches\TournamentMatchResource;
 use BackedEnum;
+use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Support\Icons\Heroicon;
@@ -18,6 +19,11 @@ class ListTournamentMatches extends ListRecords
     {
         return [
             CreateAction::make(),
+            Action::make('Overall Ranking')
+                ->url(fn() => route('screens.overallranking', ['user_id' => auth()->id()]))
+                ->openUrlInNewTab()
+                ->visible(fn() => \App\Models\Tournament::where('user_id', auth()->id())->where('is_active', true)->exists())
+                ->color('info')
         ];
     }
 }
