@@ -108,7 +108,7 @@
                             <div style="display:flex; align-items:center; gap:10px;">
                                 <img src="{{ $match->tournamentTeam->logo_image ? asset('storage/' . $match->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" style="width:40px; height:40px; object-fit:contain; flex-shrink:0;">
                                 <div style="flex:1; overflow:hidden; display:flex; flex-direction:column; gap:5px;">
-                                    <span style="font-size:24px; font-weight:900; font-style:italic; text-transform:uppercase; color:#fff; letter-spacing:-0.05em; line-height:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $match->tournamentTeam->short_name }}</span>
+                                    <span style="font-size:24px; font-weight:900; text-transform:uppercase; color:#fff; letter-spacing:0.25em; line-height:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $match->tournamentTeam->short_name }}</span>
                                     <div style="display:flex; gap:4px;">
                                         @for($i = 0; $i < 4; $i++)
                                             <div class="{{ $i < $match->alive ? 'pip-alive' : 'pip-dead' }}" style="width:10px; height:14px; border-radius:2px; transform:skewX(-12deg);"></div>
@@ -136,7 +136,7 @@
         @else
             {{-- ========== BOTTOM-RIGHT LIST VIEW ========== --}}
             <div id="side-list-container" style="position:fixed; bottom:30px; right:30px; width:245px; display:flex; flex-direction:column; gap:3px; z-index:40;">
-                <div class="bg-yellow-400 py-2 px-4 pubg-skew shadow-xl" style="border-top:2px solid rgba(0,0,0,0.2);">
+                <div class="bg-yellow-400 py-0.5 px-4 pubg-skew shadow-xl" style="border-top:2px solid rgba(0,0,0,0.2);">
                     <div class="pubg-unskew flex justify-between items-center">
                         <span class="font-black italic uppercase text-lg text-black">Live Standings</span>
                         <span class="text-lg font-black text-black/50 italic">{{ $aliveTeamsCount }} Teams</span>
@@ -147,10 +147,10 @@
                 <div class="pubg-skew" style="display:flex; align-items:center; padding:4px 12px; gap:10px;">
                     <div class="pubg-unskew" style="display:flex; align-items:center; width:100%; gap:10px;">
                         <span style="width:24px; flex-shrink:0;"></span>
-                        <span style="flex:1; font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:0.1em; color:rgba(255, 255, 255, 0.4);">Team</span>
-                        <span style="font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:0.05em; color:rgba(255, 255, 255, 0.4); width:38px; text-align:center;">Alive</span>
-                        <span style="font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:0.05em; color:rgba(255, 255, 255, 0.4); width:30px; text-align:center;">Kills</span>
-                        <span style="font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:0.05em; color:rgba(255, 255, 255, 0.4); width:40px; text-align:right;">Pts</span>
+                        <span style="flex:1; font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:0.1em; color:rgb(28, 28, 28);">Team</span>
+                        <span style="font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:0.05em; color:rgb(28, 28, 28); width:38px; text-align:center;">Alive</span>
+                        <span style="font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:0.05em; color:rgb(28, 28, 28); width:30px; text-align:center;">Kills</span>
+                        <span style="font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:0.05em; color:rgb(28, 28, 28); width:40px; text-align:center;">Pts</span>
                     </div>
                 </div>
 
@@ -161,7 +161,7 @@
                         <div class="pubg-unskew" style="display:flex; align-items:center; padding:8px 12px; gap:10px;">
                             <img src="{{ $match->tournamentTeam->logo_image ? asset('storage/' . $match->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" style="width:24px; height:24px; object-fit:contain; flex-shrink:0;">
                             {{-- Team Name --}}
-                            <span style="flex:1; font-weight:900; font-style:italic; text-transform:uppercase; font-size:20px; line-height:1; letter-spacing:-0.03em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; {{ $isEliminated ? 'color:rgba(255,255,255,0.2); text-decoration:line-through;' : 'color:#fff;' }}">{{ $match->tournamentTeam->short_name }}</span>
+                            <span style="flex:1; font-weight:900; text-transform:uppercase; font-size:20px; line-height:1; letter-spacing:0.1em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; {{ $isEliminated ? 'color:rgba(255,255,255,0.2); text-decoration:line-through;' : 'color:#fff;' }}">{{ $match->tournamentTeam->short_name }}</span>
                             {{-- Alive pips (centered between name and points) --}}
                             <div style="display:flex; gap:2px; flex-shrink:0; width:38px; justify-content:center;">
                                 @if(!$isEliminated)
@@ -171,9 +171,9 @@
                                 @endif
                             </div>
                             {{-- Kills --}}
-                            <span style="font-weight:900; font-style:italic; font-size:18px; color:rgba(255,255,255,0.6); width:30px; text-align:center; line-height:1;">{{ $match->kills }}</span>
+                            <span style="font-weight:900; font-size:18px; color:rgba(255,255,255,0.6); width:30px; text-align:center; line-height:1;">{{ $match->kills }}</span>
                             {{-- Points --}}
-                            <span style="font-weight:900; font-style:italic; font-size:24px; color:#facc15; width:40px; text-align:right; line-height:1;">{{ $match->points }}</span>
+                            <span style="font-weight:900; font-size:24px; color:#facc15; width:40px; text-align:center; line-height:1;">{{ $match->points }}</span>
                         </div>
                     </div>
                     @endforeach
