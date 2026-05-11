@@ -315,6 +315,19 @@
                     // so getCurrentView() detects the correct view
                     setTimeout(() => processQueue(), 1500);
                 });
+
+            Echo.channel('user-screens.' + {{ $activeMatch->tournament->user_id }})
+                .listen('.ActiveMatchVisibilityToggled', (e) => {
+                    console.log('Visibility Toggled:', e);
+                    const hudRoot = document.getElementById('hud-root');
+                    if (hudRoot) {
+                        hudRoot.style.transition = 'opacity 0.5s ease-in-out';
+                        hudRoot.style.opacity = e.isVisible ? '1' : '0';
+                        setTimeout(() => {
+                            hudRoot.style.visibility = e.isVisible ? 'visible' : 'hidden';
+                        }, e.isVisible ? 0 : 500);
+                    }
+                });
         });
     </script>
 </x-base>

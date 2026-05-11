@@ -121,4 +121,12 @@ class ScreenController extends Controller
         broadcast(new \App\Events\ObsViewSwitched($userId, $viewName));
         return back()->with('status', 'View switched to ' . $viewName);
     }
+
+    public function toggleActiveMatchVisibility()
+    {
+        $userId = request()->route('user_id');
+        $isVisible = request()->input('visible') == '1';
+        broadcast(new \App\Events\ActiveMatchVisibilityToggled($userId, $isVisible));
+        return back()->with('status', 'Active Match visibility toggled to ' . ($isVisible ? 'Visible' : 'Hidden'));
+    }
 }
