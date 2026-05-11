@@ -21,4 +21,11 @@ class EditTournamentMatch extends EditRecord
     {
         broadcast(new \App\Events\TournamentMatchUpdated($this->record));
     }
+
+    protected function getListeners(): array
+    {
+        return [
+            'refreshTournamentMatchForm' => '$refresh',
+        ];
+    }
 }

@@ -25,6 +25,9 @@ class MatchStatsTable
                     ->label('Team')
                     ->columnSpan(4)
                     ->grow(),
+                TextColumn::make('tournamentTeam.short_name')
+                    ->label('Short Name')
+                    ->alignCenter(),
                 TextColumn::make('decrease_alive')
                     ->label('')
                     ->getStateUsing(fn() => '-')
@@ -134,6 +137,9 @@ class MatchStatsTable
                     ->beforeStateUpdated(function (MatchStat $record) {
                         MatchStat::where('tournament_match_id', $record->tournament_match_id)
                             ->update(['is_winner' => false]);
+                    })
+                    ->afterStateUpdated(function ($livewire) {
+                        $livewire->dispatch('refreshTournamentMatchForm');
                     }),
                 TextColumn::make('points')
                     ->numeric()

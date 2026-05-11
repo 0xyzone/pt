@@ -47,6 +47,7 @@ class TournamentMatchesTable
                     }),
                 ToggleColumn::make('is_completed')
                     ->label('Completed')
+                    ->disabled(fn ($record) => !$record->matchStats()->where('is_winner', true)->exists())
                     ->afterStateUpdated(function ($record) {
                         broadcast(new \App\Events\TournamentMatchUpdated($record));
                     }),
@@ -64,6 +65,7 @@ class TournamentMatchesTable
                     ->label(fn($record) => $record->is_completed ? 'Completed' : 'Mark Complete')
                     ->icon(fn($record) => $record->is_completed ? 'heroicon-s-check-circle' : 'heroicon-o-check-circle')
                     ->color(fn($record) => $record->is_completed ? 'success' : 'gray')
+                    ->disabled(fn ($record) => !$record->is_completed && !$record->matchStats()->where('is_winner', true)->exists())
                     ->action(function ($record) {
                         $record->update(['is_completed' => !$record->is_completed]);
                         broadcast(new \App\Events\TournamentMatchUpdated($record));

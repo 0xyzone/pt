@@ -50,6 +50,9 @@ class TournamentMatchForm
                     ->default(false)
                     ->inline(false)
                     ->live()
+                    ->disabled(fn ($record) => $record && !$record->matchStats()->where('is_winner', true)->exists())
+                    ->hint(fn ($record) => $record && !$record->matchStats()->where('is_winner', true)->exists() ? 'Please declare a winner in match stats first.' : null)
+                    ->hintColor('danger'),
             ])->columns(4);
     }
 }
