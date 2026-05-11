@@ -37,12 +37,12 @@
     <!-- ELIMINATION TOASTER (Outside hud-root, position controlled by JS) -->
     <div id="elimination-toaster" style="position:fixed; left:50%; transform:translateX(-50%); top:-120px; z-index:300; transition:all 0.7s ease-in-out; opacity:0; pointer-events:none;">
         <div class="glass-panel shadow-2xl" style="display:flex; align-items:center; gap:16px; padding:14px 24px; border-bottom:5px solid #dc2626; min-width:440px; border-radius:0 0 8px 8px;">
-            <div style="width:52px; height:52px; background:#fff; border-radius:6px; display:flex; align-items:center; justify-content:center; padding:6px; flex-shrink:0; border:3px solid #dc2626;">
-                <img id="toaster-logo" src="" style="width:100%; height:100%; object-fit:contain;">
+            <div style="width:52px; height:52px; background:#fff; border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0; border:3px solid #dc2626;">
+                <img id="toaster-logo" src="" style="width:100%; height:100%; object-fit:cover;">
             </div>
             <div style="display:flex; flex-direction:column;">
                 <span style="color:#ef4444; font-size:14px; font-weight:900; letter-spacing:0.4em; text-transform:uppercase;">Squad Eliminated</span>
-                <span id="toaster-team-name" style="font-size:36px; font-weight:900; font-style:italic; text-transform:uppercase; color:#fff; letter-spacing:-0.04em; line-height:1;"></span>
+                <span id="toaster-team-name" style="font-size:36px; font-weight:900; font-style:italic; text-transform:uppercase; color:#fff; letter-spacing:0.1em; line-height:1;"></span>
             </div>
         </div>
     </div>
