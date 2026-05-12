@@ -102,6 +102,7 @@ class MatchStatsTable
                     })
                     ->alignCenter(),
                 SelectColumn::make('placement')
+                    ->sortable()
                     ->disablePlaceholderSelection()
                     ->options(function (MatchStat $record) {
                         $tournamentSetting = $record->tournamentMatch?->tournament?->tournamentSettings->first();
