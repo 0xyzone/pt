@@ -92,6 +92,19 @@
             </form>
         </div>
 
+        <!-- REFRESH ALL SCREENS -->
+        <div class="w-full mt-6">
+            <form action="{{ route('screens.refresh', ['user_id' => $user->id]) }}" method="POST">
+                @csrf
+                <button type="submit" class="w-full py-6 flex items-center justify-center gap-3 bg-indigo-900/20 hover:bg-indigo-900/40 border border-indigo-500/30 hover:border-indigo-500 rounded-2xl text-indigo-400 transition-all font-black uppercase tracking-widest active:scale-95 shadow-[0_0_20px_rgba(99,102,241,0.1)]">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 animate-spin-slow">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                    </svg>
+                    Force Refresh All Screens
+                </button>
+            </form>
+        </div>
+
         <!-- LIVE STATS CONTROL LINK -->
         <a href="{{ route('screens.statscontrol', ['user_id' => $user->id]) }}" 
            class="w-full mt-6 py-5 flex items-center justify-center gap-3 bg-amber-900/20 hover:bg-amber-900/40 border-2 border-amber-500/30 hover:border-amber-500 rounded-2xl text-amber-400 transition-all font-black uppercase tracking-widest active:scale-95 text-lg shadow-[0_0_30px_rgba(245,158,11,0.1)] hover:shadow-[0_0_40px_rgba(245,158,11,0.2)]">

@@ -204,6 +204,13 @@ class ScreenController extends Controller
         return back()->with('status', 'Active Match visibility toggled to ' . ($isVisible ? 'Visible' : 'Hidden'));
     }
 
+    public function refreshScreens()
+    {
+        $userId = request()->route('user_id');
+        broadcast(new \App\Events\RefreshScreensEvent($userId));
+        return back()->with('status', 'Refresh signal sent to all screens.');
+    }
+
     public function slotList()
     {
         $user = User::findOrFail(request()->route('user_id'));

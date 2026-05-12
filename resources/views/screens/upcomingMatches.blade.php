@@ -179,6 +179,10 @@
                         window.location.reload();
                     }
                 })
+                .listen('.RefreshScreens', (e) => {
+                    console.log('Force refresh received...');
+                    window.location.reload();
+                })
                 .listen('.MatchStatsUpdated', (e) => {
                     console.log('MatchStatsUpdated received (User Channel):', e);
                     window.location.reload();

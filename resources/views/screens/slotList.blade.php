@@ -83,5 +83,20 @@
         </div>
     </div>
 
+    <script type="module">
+        document.addEventListener("DOMContentLoaded", function () {
+            // Use a fallback user ID if tournament isn't present, but usually it should be.
+            const userId = '{{ $tournament ? $tournament->user_id : "" }}' || '{{ auth()->id() }}';
+            if (userId) {
+                Echo.channel('user-screens.' + userId)
+                    .listen('.RefreshScreens', (e) => {
+                        window.location.reload();
+                    })
+                    .listen('.TournamentMatchUpdated', (e) => {
+                        window.location.reload();
+                    });
+            }
+        });
+    </script>
 </body>
 </html>

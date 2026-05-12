@@ -78,6 +78,10 @@
                 .listen('.TournamentMatchUpdated', (e) => {
                     console.log('TournamentMatchUpdated received:', e);
                     loadView(currentViewName);
+                })
+                .listen('.RefreshScreens', (e) => {
+                    console.log('Force refresh received...');
+                    window.location.reload();
                 });
 
             // Listen to Match Stats dynamically updating in the background!

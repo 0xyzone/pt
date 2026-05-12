@@ -150,4 +150,17 @@
     </div>
     
 
+    </div>
+    
+    <script type="module">
+        document.addEventListener("DOMContentLoaded", function () {
+            Echo.channel('user-screens.{{ $activeMatch->tournament->user_id }}')
+                .listen('.RefreshScreens', (e) => {
+                    window.location.reload();
+                })
+                .listen('.TournamentMatchUpdated', (e) => {
+                    window.location.reload();
+                });
+        });
+    </script>
 </x-base>

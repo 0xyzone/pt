@@ -54,6 +54,17 @@
                 }, 5500);
             }
 
+            // Global listeners for refresh and match activation
+            Echo.channel('user-screens.{{ $user->id }}')
+                .listen('.RefreshScreens', (e) => {
+                    console.log('Force refresh received...');
+                    window.location.reload();
+                })
+                .listen('.TournamentMatchUpdated', (e) => {
+                    console.log('Match updated, reloading for channel sync...');
+                    window.location.reload();
+                });
+
             if ('{{ $activeMatch->id ?? "" }}') {
                 Echo.channel('active-match.{{ $activeMatch->id }}')
                     .listen('.TeamEliminated', (e) => {

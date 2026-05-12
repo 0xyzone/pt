@@ -363,6 +363,14 @@
                             hudRoot.style.visibility = e.isVisible ? 'visible' : 'hidden';
                         }, e.isVisible ? 0 : 500);
                     }
+                })
+                .listen('.RefreshScreens', (e) => {
+                    console.log('Force refresh received...');
+                    window.location.reload();
+                })
+                .listen('.TournamentMatchUpdated', (e) => {
+                    console.log('Match updated/activated, reloading...');
+                    window.location.reload();
                 });
             // Sponsor Logo Carousel — fade cycle every 4 seconds
             const sponsorLogos = document.querySelectorAll('.sponsor-logo');

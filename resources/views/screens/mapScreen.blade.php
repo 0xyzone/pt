@@ -107,6 +107,17 @@
     {{-- Live updates listener --}}
     <script type="module">
         document.addEventListener("DOMContentLoaded", function () {
+            // Listen to match updates and global refresh commands
+            Echo.channel('user-screens.{{ $user->id }}')
+                .listen('.TournamentMatchUpdated', (e) => {
+                    console.log('Match activated/updated, reloading map screen...');
+                    window.location.reload();
+                })
+                .listen('.RefreshScreens', (e) => {
+                    console.log('Force refresh received...');
+                    window.location.reload();
+                });
+
             Echo.channel('active-match.{{ $activeMatch->id }}')
                 .listen('.MatchStatsUpdated', (e) => {
                     // Usually map teams don't change, but if they do, we can reload
