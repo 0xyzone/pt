@@ -23,6 +23,10 @@
         /* Alive pip styling */
         .pip-alive { background: #facc15; box-shadow: 0 0 8px rgba(250,204,21,0.5); }
         .pip-dead { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.25); }
+
+        /* Lower Third */
+        .lower-third-slide { animation: slideFromLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes slideFromLeft { from { transform: translateX(-110%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     </style>
     
     @php
@@ -181,6 +185,24 @@
             </div>
         @endif
 
+    </div>
+
+    <!-- LOWER THIRD: Tournament Branding (Outside hud-root so it persists through data updates) -->
+    <div id="lower-third" class="lower-third-slide" style="position:fixed; bottom:0; left:0; z-index:60; display:flex; align-items:stretch; gap:0;">
+        {{-- Sponsor Box --}}
+        <div style="width:100px; height:100px; background:rgba(0, 0, 0, 0.5); border:1px solid rgba(255,255,255,0.1); border-right:none; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <span style="color:rgba(255,255,255,0.15); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em;"></span>
+        </div>
+        {{-- Tournament Info --}}
+        <div class="glass-panel" style="display:flex; align-items:center; gap:16px; padding:14px 28px 14px 16px; border-left:5px solid #facc15; min-height:100px;">
+            <div style="width:64px; height:64px; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+                <img src="{{ $activeMatch->tournament->logo_image ? asset('storage/' . $activeMatch->tournament->logo_image) : asset('img/defult_team_logo.png') }}" style="width:100%; height:100%; object-fit:contain;">
+            </div>
+            <div style="display:flex; flex-direction:column; gap:4px;">
+                <span style="font-size:24px; font-weight:900; font-style:italic; text-transform:uppercase; color:#fff; letter-spacing:0.05em; line-height:1;">{{ $activeMatch->tournament->name }}</span>
+                <span style="font-size:24px; font-weight:700; text-transform:uppercase; color:#facc15; letter-spacing:0.15em; line-height:1;">{{ $activeMatch->name }}</span>
+            </div>
+        </div>
     </div>
 
     <script type="module">
