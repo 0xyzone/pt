@@ -34,10 +34,15 @@
         .team-card {
             transition: all 0.3s ease;
             position: relative;
+            background: #0f172a; /* slate-900 */
         }
-        .team-card.eliminated {
+        .team-card.eliminated .card-header {
             opacity: 0.4;
             filter: grayscale(100%);
+        }
+        .team-card.eliminated {
+            border-color: rgba(239, 68, 68, 0.2) !important;
+            background: rgba(15, 23, 42, 0.6);
         }
         .team-card.flash {
             box-shadow: 0 0 15px rgba(250, 204, 21, 0.5);
@@ -123,10 +128,14 @@
         {{-- Stats Grid --}}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="stats-grid">
             @php
+                // Map team IDs to their slot number
                 // Sort matchStats by the slot number mapped for each team
                 $sortedStats = $activeMatch->matchStats->sortBy(function($stat) use ($teamSlots) {
                     return $teamSlots[$stat->tournament_team_id] ?? 999;
                 });
+                
+                // Get all placements that are already assigned (excluding 0)
+                $takenPlacements = $activeMatch->matchStats->where('placement', '>', 0)->pluck('placement')->toArray();
             @endphp
             @foreach($sortedStats as $stat)
             <div class="team-card bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col gap-5 {{ $stat->alive == 0 ? 'eliminated' : '' }}"
@@ -134,7 +143,7 @@
                  data-team-id="{{ $stat->tournament_team_id }}">
 
                 {{-- Header: Logo, Name, Points --}}
-                <div class="flex items-center justify-between border-b border-slate-800/80 pb-4">
+                <div class="card-header flex items-center justify-between border-b border-slate-800/80 pb-4 transition-all duration-300">
                     <div class="flex items-center gap-3 w-3/4">
                         <div class="flex-shrink-0">
                             <img src="{{ $stat->tournamentTeam->logo_image ? asset('storage/' . $stat->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}"
@@ -204,7 +213,9 @@
                                 <div class="custom-select-options">
                                     <div class="custom-select-option {{ $stat->placement == 0 ? 'selected' : '' }}" onclick="selectPlacement({{ $stat->id }}, 0)">#0 (Unranked)</div>
                                     @foreach($placementOptions as $p)
-                                        <div class="custom-select-option {{ $stat->placement == $p ? 'selected' : '' }}" onclick="selectPlacement({{ $stat->id }}, {{ $p }})">#{{ $p }}</div>
+                                        @if(!in_array($p, $takenPlacements) || $p == $stat->placement)
+                                            <div class="custom-select-option {{ $stat->placement == $p ? 'selected' : '' }}" onclick="selectPlacement({{ $stat->id }}, {{ $p }})">#{{ $p }}</div>
+                                        @endif
                                     @endforeach
                                 </div>
                             </div>
@@ -347,13 +358,11 @@
                                 const oldPlacement = oldCard.querySelector('[data-field="placement"]');
                                 if (newPlacement && oldPlacement) oldPlacement.textContent = newPlacement.textContent;
 
-                                // Update placement select options (selected state)
-                                const newOptions = newCard.querySelectorAll('.custom-select-option');
-                                const oldOptions = oldCard.querySelectorAll('.custom-select-option');
-                                if(newOptions.length === oldOptions.length) {
-                                    for(let i=0; i<newOptions.length; i++) {
-                                        oldOptions[i].className = newOptions[i].className;
-                                    }
+                                // Update placement select options container (completely replace to handle changing counts)
+                                const newOptionsList = newCard.querySelector('.custom-select-options');
+                                const oldOptionsList = oldCard.querySelector('.custom-select-options');
+                                if (newOptionsList && oldOptionsList) {
+                                    oldOptionsList.innerHTML = newOptionsList.innerHTML;
                                 }
 
                                 // Update winner toggle

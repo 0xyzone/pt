@@ -49,6 +49,30 @@ class EditTournamentSetting extends Page
                         ->label('Kill Points')
                         ->required()
                         ->default(0),
+                    Actions::make([
+                        Action::make('populatePositions')
+                            ->label('Auto-Populate Positions')
+                            ->color('info')
+                            ->icon('heroicon-o-sparkles')
+                            ->form([
+                                TextInput::make('count')
+                                    ->label('Number of Positions')
+                                    ->numeric()
+                                    ->default(16)
+                                    ->required(),
+                            ])
+                            ->action(function (array $data, $set) {
+                                $count = (int) $data['count'];
+                                $items = [];
+                                for ($i = 1; $i <= $count; $i++) {
+                                    $items[] = [
+                                        'placement' => $i,
+                                        'points' => 0,
+                                    ];
+                                }
+                                $set('tournamentSettingPlacementPoints', $items);
+                            }),
+                    ]),
                     Repeater::make('tournamentSettingPlacementPoints')
                         ->relationship()
                         ->columns(2)
