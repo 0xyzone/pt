@@ -92,6 +92,15 @@
             </form>
         </div>
 
+        <!-- LIVE STATS CONTROL LINK -->
+        <a href="{{ route('screens.statscontrol', ['user_id' => $user->id]) }}" 
+           class="w-full mt-6 py-5 flex items-center justify-center gap-3 bg-amber-900/20 hover:bg-amber-900/40 border-2 border-amber-500/30 hover:border-amber-500 rounded-2xl text-amber-400 transition-all font-black uppercase tracking-widest active:scale-95 text-lg shadow-[0_0_30px_rgba(245,158,11,0.1)] hover:shadow-[0_0_40px_rgba(245,158,11,0.2)]">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"/>
+            </svg>
+            Open Live Stats Control
+        </a>
+
         <div class="mt-12 bg-slate-900/60 p-6 rounded-2xl border border-slate-800/50 w-full shadow-lg">
             <h3 class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2 border-b border-slate-800 pb-2">Director Instructions</h3>
             <ul class="text-slate-500 text-sm list-disc pl-4 space-y-2">

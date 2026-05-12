@@ -114,6 +114,76 @@ class ScreenController extends Controller
         return view('screens.controlPanel', compact('user'));
     }
 
+    public function statsControl()
+    {
+        $user = User::findOrFail(request()->route('user_id'));
+        $activeMatch = $user->getActiveMatch();
+        
+        if (!$activeMatch) {
+            return redirect()->route('screens.controlpanel', ['user_id' => $user->id])
+                ->with('status', 'No active match found. Please activate a match first.');
+        }
+
+        $activeMatch->load(['matchStats.tournamentTeam', 'tournament.tournamentSettings.tournamentSettingPlacementPoints']);
+        $tournamentSetting = $activeMatch->tournament->tournamentSettings->first();
+        $placementOptions = $tournamentSetting
+            ? $tournamentSetting->tournamentSettingPlacementPoints->pluck('placement')->toArray()
+            : [];
+
+        return view('screens.statsControl', compact('user', 'activeMatch', 'placementOptions'));
+    }
+
+    public function updateMatchStat()
+    {
+        $statId = request()->input('stat_id');
+        $field = request()->input('field');
+        $value = request()->input('value');
+
+        $stat = \App\Models\MatchStat::findOrFail($statId);
+        $stat->load(['tournamentMatch.tournament.tournamentSettings.tournamentSettingPlacementPoints', 'tournamentTeam']);
+
+        $allowed = ['alive', 'kills', 'placement', 'is_winner'];
+        if (!in_array($field, $allowed)) {
+            return response()->json(['error' => 'Invalid field'], 422);
+        }
+
+        // Handle winner toggle: clear other winners first
+        if ($field === 'is_winner' && $value) {
+            \App\Models\MatchStat::where('tournament_match_id', $stat->tournament_match_id)
+                ->where('id', '!=', $stat->id)
+                ->update(['is_winner' => false]);
+        }
+
+        $stat->update([$field => $value]);
+
+        // Recalculate points if kills or placement changed
+        if (in_array($field, ['kills', 'placement'])) {
+            $stat->refresh();
+            $tournamentSetting = $stat->tournamentMatch?->tournament?->tournamentSettings->first();
+            $points = 0;
+            if ($tournamentSetting) {
+                $killPoints = ($tournamentSetting->kill_points ?? 0) * $stat->kills;
+                $placementPoints = $tournamentSetting->tournamentSettingPlacementPoints
+                    ->where('placement', $stat->placement)
+                    ->first()?->points ?? 0;
+                $points = $killPoints + $placementPoints;
+            }
+            $stat->update(['points' => $points]);
+        }
+
+        // Fire elimination event if alive just hit 0
+        if ($field === 'alive' && (int)$value === 0) {
+            event(new \App\Events\TeamEliminated(
+                $stat->tournamentTeam->name,
+                $stat->tournamentTeam->logo_image,
+                $stat->tournament_match_id
+            ));
+        }
+
+        $stat->refresh();
+        return response()->json(['success' => true, 'stat' => $stat->load('tournamentTeam')]);
+    }
+
     public function switchObsView()
     {
         $userId = request()->route('user_id');
@@ -128,5 +198,26 @@ class ScreenController extends Controller
         $isVisible = request()->input('visible') == '1';
         broadcast(new \App\Events\ActiveMatchVisibilityToggled($userId, $isVisible));
         return back()->with('status', 'Active Match visibility toggled to ' . ($isVisible ? 'Visible' : 'Hidden'));
+    }
+
+    public function slotList()
+    {
+        $user = User::findOrFail(request()->route('user_id'));
+        $activeMatch = $user->getActiveMatch();
+        
+        $tournament = null;
+        if ($activeMatch) {
+            $tournament = $activeMatch->tournament;
+        } else {
+            // Fallback to latest tournament if no active match
+            $tournament = \App\Models\Tournament::where('user_id', $user->id)->latest()->first();
+        }
+
+        $teams = collect();
+        if ($tournament) {
+            $teams = $tournament->tournamentTeams()->get();
+        }
+
+        return view('screens.slotList', compact('tournament', 'teams'));
     }
 }

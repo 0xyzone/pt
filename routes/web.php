@@ -19,5 +19,8 @@ Route::prefix('{user_id}/screens')->group( function () {
     Route::get('/control-panel', [ScreenController::class, 'controlPanel'])->name('screens.controlpanel');
     Route::post('/switch-view', [ScreenController::class, 'switchObsView'])->name('screens.switchview');
     Route::post('/toggle-visibility', [ScreenController::class, 'toggleActiveMatchVisibility'])->name('screens.togglevisibility');
+    Route::get('/stats-control', [ScreenController::class, 'statsControl'])->name('screens.statscontrol');
+    Route::post('/update-stat', [ScreenController::class, 'updateMatchStat'])->name('screens.updatestat');
+    Route::get('/slot-list', [ScreenController::class, 'slotList'])->name('screens.slotlist');
 });
 Route::passkeys();

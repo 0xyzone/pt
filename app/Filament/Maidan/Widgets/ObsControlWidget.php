@@ -27,6 +27,14 @@ class ObsControlWidget extends Widget
                 'is_main' => true,
             ],
             [
+                'name' => 'Live Stats Control',
+                'url' => route('screens.statscontrol', ['user_id' => $userId]),
+                'icon' => 'heroicon-o-table-cells',
+                'description' => 'Real-time match stats editor with live sync across all clients.',
+                'color' => 'warning',
+                'is_main' => true,
+            ],
+            [
                 'name' => 'OBS Master Overlay',
                 'url' => route('screens.obsmaster', ['user_id' => $userId]),
                 'icon' => 'heroicon-o-tv',
@@ -74,6 +82,13 @@ class ObsControlWidget extends Widget
                 'icon' => 'heroicon-o-calendar',
                 'description' => 'Schedule and lineup for the next tournament matches.',
                 'color' => 'gray',
+            ],
+            [
+                'name' => 'Slot List',
+                'url' => route('screens.slotlist', ['user_id' => $userId]),
+                'icon' => 'heroicon-o-numbered-list',
+                'description' => 'Public facing slot list view starting from 2.',
+                'color' => 'indigo',
             ],
         ];
     }
