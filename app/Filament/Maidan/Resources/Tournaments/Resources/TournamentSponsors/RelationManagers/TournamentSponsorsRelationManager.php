@@ -8,12 +8,12 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\TextInputColumn;
 use Filament\Tables\Table;
 
 class TournamentSponsorsRelationManager extends RelationManager
@@ -27,8 +27,7 @@ class TournamentSponsorsRelationManager extends RelationManager
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                TextInput::make('sort_order')
-                    ->numeric()
+                Hidden::make('sort_order')
                     ->default(0),
                 FileUpload::make('logo_image')
                     ->label('Sponsor Logo')
