@@ -53,23 +53,23 @@
             
             {{-- Left Side (1-8) --}}
             <div class="overflow-hidden rounded-sm border border-orange-900/60 bg-slate-900/80 backdrop-blur-2xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] flex flex-col shadow-orange-900/20">
-                <table class="w-full text-left border-collapse relative z-10">
+                <table class="w-full text-left border-collapse relative z-10 table-fixed">
                     <thead>
                         <tr class="bg-gradient-to-r from-slate-900/90 to-orange-950/60 text-slate-400 border-b border-orange-900/50 shadow-md">
-                            <th class="w-16 px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Rank</th>
+                            <th class="w-20 px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Rank</th>
                             <th class="px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest">Team</th>
-                            <th class="w-16 px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center" title="Matches Played">Played</th>
-                            <th class="w-16 px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center text-yellow-500" title="Winner Winner Chicken Dinners">WWCD</th>
-                            <th class="w-16 px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Elims</th>
-                            <th class="w-16 px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Place Pts</th>
-                            <th class="w-24 px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center text-orange-400 drop-shadow-[0_0_5px_rgba(249,115,22,0.5)] whitespace-nowrap">Total pts</th>
+                            <th class="w-20 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center" title="Matches Played">Played</th>
+                            <th class="w-20 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center text-yellow-500" title="Winner Winner Chicken Dinners">WWCD</th>
+                            <th class="w-20 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Elims</th>
+                            <th class="w-20 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Place Pts</th>
+                            <th class="w-28 px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center text-orange-400 drop-shadow-[0_0_5px_rgba(249,115,22,0.5)] whitespace-nowrap">Total pts</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-orange-900/30">
                         @foreach ($leftColumn as $item)
                             @php $rank = $loop->iteration; @endphp
                             <tr class="animate-row group transition-all duration-300 hover:bg-orange-900/30 {{ $rank === 1 ? 'bg-gradient-to-r from-yellow-500/15 to-transparent border-l-4 border-l-yellow-400' : 'border-l-4 border-l-transparent' }}" style="animation-delay: {{ $loop->index * 0.1 }}s;">
-                                <td class="px-4 py-3 font-black italic text-center w-16">
+                                <td class="px-4 py-3 font-black italic text-center w-20">
                                     @if($rank === 1)
                                         <span class="text-4xl lg:text-5xl drop-shadow-[0_0_10px_rgba(251,191,36,0.6)] text-transparent bg-clip-text bg-gradient-to-b from-yellow-200 to-yellow-500">1</span>
                                     @elseif($rank === 2)
@@ -80,21 +80,21 @@
                                         <span class="text-xl lg:text-2xl text-slate-200">{{ $rank }}</span>
                                     @endif
                                 </td>
-                                <td class="px-4 py-3 w-full">
-                                    <div class="flex items-center gap-3 lg:gap-4 whitespace-nowrap">
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center gap-3 lg:gap-4 overflow-hidden">
                                         <div class="relative w-10 h-10 lg:w-12 lg:h-12 flex-shrink-0 {{ $rank === 1 ? 'glow-active-gold rounded-sm' : 'rounded-sm' }}">
                                              <img src="{{ $item['team']->logo_image ? asset('storage/' . $item['team']->logo_image) : asset('img/defult_team_logo.png') }}" class="w-full h-full object-contain filter drop-shadow-md">
                                         </div>
-                                        <div class="flex flex-col">
-                                            <span class="font-black uppercase tracking-tight text-lg lg:text-xl {{ $rank === 1 ? 'text-yellow-400' : 'text-slate-100' }} leading-tight">{{ $item['team']->name }}</span>
-                                            <span class="text-[10px] lg:text-xs text-slate-400 font-semibold tracking-wider font-mono">{{ $item['team']->short_name }}</span>
+                                        <div class="flex flex-col min-w-0">
+                                            <span class="font-black uppercase tracking-tight text-lg lg:text-xl {{ $rank === 1 ? 'text-yellow-400' : 'text-slate-100' }} leading-tight truncate">{{ $item['team']->name }}</span>
+                                            <span class="text-[10px] lg:text-xs text-slate-400 font-semibold tracking-wider font-mono truncate">{{ $item['team']->short_name }}</span>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-4 py-3 text-center font-bold text-base lg:text-lg text-slate-300 bg-black/20">{{ $item['matches_played'] }}</td>
-                                <td class="px-4 py-3 text-center font-black text-lg lg:text-xl text-yellow-500 bg-black/10">{{ $item['total_wins'] }}</td>
-                                <td class="px-4 py-3 text-center font-bold text-lg lg:text-xl text-slate-100">{{ $item['total_kills'] }}</td>
-                                <td class="px-4 py-3 text-center font-bold text-lg lg:text-xl text-slate-300 bg-black/10">{{ $item['total_placement_points'] }}</td>
+                                <td class="px-2 py-3 text-center font-bold text-base lg:text-lg text-slate-300 bg-black/20">{{ $item['matches_played'] }}</td>
+                                <td class="px-2 py-3 text-center font-black text-lg lg:text-xl text-yellow-500 bg-black/10">{{ $item['total_wins'] }}</td>
+                                <td class="px-2 py-3 text-center font-bold text-lg lg:text-xl text-slate-100">{{ $item['total_kills'] }}</td>
+                                <td class="px-2 py-3 text-center font-bold text-lg lg:text-xl text-slate-300 bg-black/10">{{ $item['total_placement_points'] }}</td>
                                 <td class="px-4 py-3 text-center font-black text-2xl lg:text-3xl {{ $rank === 1 ? 'text-yellow-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.6)]' : 'text-orange-400 drop-shadow-[0_0_10px_rgba(249,115,22,0.5)]' }}">{{ $item['total_points'] }}</td>
                             </tr>
                         @endforeach
@@ -104,29 +104,29 @@
 
             {{-- Right Side (9+) --}}
             <div class="overflow-hidden rounded-sm border border-orange-900/60 bg-slate-900/80 backdrop-blur-2xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] flex flex-col shadow-orange-900/10">
-                <table class="w-full text-left border-collapse relative z-10">
+                <table class="w-full text-left border-collapse relative z-10 table-fixed">
                     <thead>
                         <tr class="bg-gradient-to-r from-slate-900/90 to-orange-950/60 text-slate-400 border-b border-orange-900/50 shadow-md">
-                            <th class="w-14 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Rank</th>
+                            <th class="w-16 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Rank</th>
                             <th class="px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest">Team</th>
-                            <th class="w-14 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center" title="Matches Played">Pld</th>
-                            <th class="w-14 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center text-yellow-500" title="WWCD">WWCD</th>
-                            <th class="w-14 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Elims</th>
-                            <th class="w-14 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Place Pts</th>
-                            <th class="w-20 px-2 lg:px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-right text-orange-400 drop-shadow-[0_0_5px_rgba(249,115,22,0.5)] whitespace-nowrap">Total pts</th>
+                            <th class="w-16 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center" title="Matches Played">Pld</th>
+                            <th class="w-16 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center text-yellow-500" title="WWCD">WWCD</th>
+                            <th class="w-16 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Elims</th>
+                            <th class="w-16 px-2 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-center">Place Pts</th>
+                            <th class="w-24 px-2 lg:px-4 py-4 text-[11px] lg:text-xs font-bold uppercase tracking-widest text-right text-orange-400 drop-shadow-[0_0_5px_rgba(249,115,22,0.5)] whitespace-nowrap">Total pts</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-orange-900/30">
                         @foreach ($rightColumn as $item)
                             @php $rank = $loop->iteration + 8; @endphp
                             <tr class="animate-row group transition-all duration-300 hover:bg-orange-900/30 border-l-4 border-l-transparent" style="animation-delay: {{ ($loop->iteration + 8) * 0.1 }}s;">
-                                <td class="px-2 py-2.5 font-black italic text-lg lg:text-xl text-slate-200 text-center w-14">{{ $rank }}</td>
-                                <td class="px-4 py-2.5 w-full">
-                                    <div class="flex items-center gap-3 whitespace-nowrap">
+                                <td class="px-2 py-2.5 font-black italic text-lg lg:text-xl text-slate-200 text-center w-16">{{ $rank }}</td>
+                                <td class="px-4 py-2.5">
+                                    <div class="flex items-center gap-3 overflow-hidden">
                                         <div class="relative w-6 h-6 lg:w-8 lg:h-8 flex-shrink-0">
                                             <img src="{{ $item['team']->logo_image ? asset('storage/' . $item['team']->logo_image) : asset('img/defult_team_logo.png') }}" class="w-full h-full object-contain filter drop-shadow-sm">
                                         </div>
-                                        <span class="font-bold uppercase tracking-tight text-slate-200 text-[13px] lg:text-sm">{{ $item['team']->name }}</span>
+                                        <span class="font-bold uppercase tracking-tight text-slate-200 text-[13px] lg:text-sm truncate">{{ $item['team']->name }}</span>
                                     </div>
                                 </td>
                                 <td class="px-2 py-2.5 text-center font-bold text-xs lg:text-sm text-slate-400 bg-black/20">{{ $item['matches_played'] }}</td>

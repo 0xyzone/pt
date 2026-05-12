@@ -122,7 +122,13 @@
 
         {{-- Stats Grid --}}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="stats-grid">
-            @foreach($activeMatch->matchStats->sortByDesc('points') as $stat)
+            @php
+                // Sort matchStats by the slot number mapped for each team
+                $sortedStats = $activeMatch->matchStats->sortBy(function($stat) use ($teamSlots) {
+                    return $teamSlots[$stat->tournament_team_id] ?? 999;
+                });
+            @endphp
+            @foreach($sortedStats as $stat)
             <div class="team-card bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col gap-5 {{ $stat->alive == 0 ? 'eliminated' : '' }}"
                  data-stat-id="{{ $stat->id }}"
                  data-team-id="{{ $stat->tournament_team_id }}">
@@ -130,11 +136,16 @@
                 {{-- Header: Logo, Name, Points --}}
                 <div class="flex items-center justify-between border-b border-slate-800/80 pb-4">
                     <div class="flex items-center gap-3 w-3/4">
-                        <img src="{{ $stat->tournamentTeam->logo_image ? asset('storage/' . $stat->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}"
-                             class="w-10 h-10 object-contain flex-shrink-0 drop-shadow-md bg-slate-800/50 rounded-lg p-1 border border-slate-700/50">
+                        <div class="flex-shrink-0">
+                            <img src="{{ $stat->tournamentTeam->logo_image ? asset('storage/' . $stat->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}"
+                                 class="w-12 h-12 object-contain drop-shadow-md bg-slate-800/50 rounded-lg p-1 border border-slate-700/50">
+                        </div>
                         <div class="flex flex-col min-w-0">
-                            <span class="font-black text-base uppercase tracking-wide leading-tight truncate text-white" title="{{ $stat->tournamentTeam->name }}">{{ $stat->tournamentTeam->name }}</span>
-                            <span class="text-[11px] text-yellow-500 font-bold uppercase tracking-widest">{{ $stat->tournamentTeam->short_name }}</span>
+                            <div class="flex items-center gap-2">
+                                <span class="bg-yellow-500 text-black text-[10px] font-black px-1.5 py-0.5 rounded leading-none uppercase">Slot {{ $teamSlots[$stat->tournament_team_id] ?? '?' }}</span>
+                                <span class="text-[11px] text-yellow-500 font-bold uppercase tracking-widest">{{ $stat->tournamentTeam->short_name }}</span>
+                            </div>
+                            <span class="font-black text-lg uppercase tracking-wide leading-tight truncate text-white" title="{{ $stat->tournamentTeam->name }}">{{ $stat->tournamentTeam->name }}</span>
                         </div>
                     </div>
                     <div class="flex flex-col items-end">

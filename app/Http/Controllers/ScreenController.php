@@ -129,8 +129,12 @@ class ScreenController extends Controller
         $placementOptions = $tournamentSetting
             ? $tournamentSetting->tournamentSettingPlacementPoints->pluck('placement')->toArray()
             : [];
+            
+        // Map team IDs to their slot numbers (index + 2) based on ID order
+        $orderedTeams = $activeMatch->tournament->tournamentTeams()->orderBy('id')->get();
+        $teamSlots = $orderedTeams->pluck('id')->flip()->map(fn($i) => $i + 2);
 
-        return view('screens.statsControl', compact('user', 'activeMatch', 'placementOptions'));
+        return view('screens.statsControl', compact('user', 'activeMatch', 'placementOptions', 'teamSlots'));
     }
 
     public function updateMatchStat()
@@ -215,7 +219,7 @@ class ScreenController extends Controller
 
         $teams = collect();
         if ($tournament) {
-            $teams = $tournament->tournamentTeams()->get();
+            $teams = $tournament->tournamentTeams()->orderBy('id')->get();
         }
 
         return view('screens.slotList', compact('tournament', 'teams'));
