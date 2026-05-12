@@ -148,22 +148,5 @@
         </div>
     </div>
     
-    <script type="module">
-        document.addEventListener("DOMContentLoaded", function () {
-            Echo.channel('active-match.{{ $activeMatch->id }}')
-                .listen('.MatchStatsUpdated', (e) => {
-                    fetch(window.location.href, { cache: 'no-store', headers: {'Cache-Control': 'no-cache'} })
-                        .then(response => response.text())
-                        .then(html => {
-                            const parser = new DOMParser();
-                            const doc = parser.parseFromString(html, 'text/html');
-                            const newBody = doc.querySelector('body');
-                            
-                            if (newBody) {
-                                document.querySelector('body').innerHTML = newBody.innerHTML;
-                            }
-                        });
-                });
-        });
-    </script>
+
 </x-base>

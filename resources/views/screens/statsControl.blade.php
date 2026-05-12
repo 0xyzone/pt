@@ -225,7 +225,8 @@
                             <button class="stat-btn warning !w-[38px] !h-[38px] !rounded-lg flex items-center justify-center border border-amber-500/30" title="Eliminate Team"
                                     onclick="triggerElimination({{ $stat->id }})">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9V4m0 5h5m-5 0H7m5 0v5m0-5a9 9 0 110 18 9 9 0 010-18z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 14l6-6m0 6l-6-6" />
                                 </svg>
                             </button>
                         </div>
