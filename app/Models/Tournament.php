@@ -50,4 +50,14 @@ class Tournament extends Model
     {
         return $this->hasMany(TournamentSetting::class);
     }
+
+    /**
+     * Get all of the tournamentSponsors for the Tournament
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function tournamentSponsors(): HasMany
+    {
+        return $this->hasMany(TournamentSponsor::class)->orderBy('sort_order');
+    }
 }

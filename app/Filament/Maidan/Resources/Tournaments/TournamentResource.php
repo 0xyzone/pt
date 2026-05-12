@@ -13,6 +13,7 @@ use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches\Relati
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches\TournamentMatchResource;
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentTeams\Pages\CreateTournamentTeam;
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentTeams\RelationManagers\TournamentTeamsRelationManager;
+use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentSponsors\RelationManagers\TournamentSponsorsRelationManager;
 use App\Filament\Maidan\Resources\Tournaments\Schemas\TournamentForm;
 use App\Filament\Maidan\Resources\Tournaments\Tables\TournamentsTable;
 use App\Models\Tournament;
@@ -48,6 +49,7 @@ class TournamentResource extends Resource
         return [
             'tournament_teams' => TournamentTeamsRelationManager::class,
             'tournament_matches' => TournamentMatchesRelationManager::class,
+            'tournament_sponsors' => TournamentSponsorsRelationManager::class,
         ];
     }
 

@@ -188,10 +188,24 @@
     </div>
 
     <!-- LOWER THIRD: Tournament Branding (Outside hud-root so it persists through data updates) -->
+    @php
+        $sponsors = $activeMatch->tournament->tournamentSponsors;
+    @endphp
     <div id="lower-third" class="lower-third-slide" style="position:fixed; bottom:0; left:0; z-index:60; display:flex; align-items:stretch; gap:0;">
-        {{-- Sponsor Box --}}
-        <div style="width:100px; height:100px; background:rgba(0, 0, 0, 0.5); border:1px solid rgba(255,255,255,0.1); border-right:none; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-            <span style="color:rgba(255,255,255,0.15); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em;"></span>
+        {{-- Sponsor Logo Carousel --}}
+        <div id="sponsor-carousel" style="width:100px; height:100px; background:rgba(0, 0, 0, 0.5); border:1px solid rgba(255,255,255,0.1); border-right:none; position:relative; flex-shrink:0; overflow:hidden;">
+            @if($sponsors->count() > 0)
+                @foreach($sponsors as $index => $sponsor)
+                    <img 
+                        class="sponsor-logo" 
+                        src="{{ asset('storage/' . $sponsor->logo_image) }}" 
+                        alt="{{ $sponsor->name }}"
+                        style="position:absolute; inset:0; width:100%; height:100%; object-fit:contain; padding:10px; transition:opacity 0.8s ease-in-out; opacity:{{ $index === 0 ? '1' : '0' }};"
+                    >
+                @endforeach
+            @else
+                <span style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.15); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em;">Sponsor</span>
+            @endif
         </div>
         {{-- Tournament Info --}}
         <div class="glass-panel" style="display:flex; align-items:center; gap:16px; padding:14px 28px 14px 16px; border-left:5px solid #facc15; min-height:100px;">
@@ -350,6 +364,16 @@
                         }, e.isVisible ? 0 : 500);
                     }
                 });
+            // Sponsor Logo Carousel — fade cycle every 4 seconds
+            const sponsorLogos = document.querySelectorAll('.sponsor-logo');
+            if (sponsorLogos.length > 1) {
+                let currentSponsor = 0;
+                setInterval(() => {
+                    sponsorLogos[currentSponsor].style.opacity = '0';
+                    currentSponsor = (currentSponsor + 1) % sponsorLogos.length;
+                    sponsorLogos[currentSponsor].style.opacity = '1';
+                }, 4000);
+            }
         });
     </script>
 </x-base>
