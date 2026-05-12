@@ -33,10 +33,7 @@ class TournamentMatchForm
                         'erangle' => 'Erangle',
                         'miramar' => 'Miramar',
                         'sanhok' => 'Sanhok',
-                        'vikendi' => 'Vikendi',
-                        'karakin' => 'Karakin',
-                        'paramo' => 'Paramo',
-                        'haven' => 'Haven',
+                        'rondo' => 'Rondo'
                     ])
                     ->default('erangle')
                     ->required(),

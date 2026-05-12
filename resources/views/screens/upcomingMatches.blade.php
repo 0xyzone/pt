@@ -96,6 +96,7 @@
                                 'erangle' => asset('/img/erangel_thumb.jpg'),
                                 'miramar' => asset('/img/miramar_thumb.jpg'),
                                 'sanhok' => asset('/img/sanhok_thumb.jpg'),
+                                'rondo' => asset('/img/rondo_thumb.jpg'),
                                 default => null
                             };
 
