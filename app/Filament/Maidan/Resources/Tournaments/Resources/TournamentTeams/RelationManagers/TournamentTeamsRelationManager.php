@@ -10,7 +10,9 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DissociateAction;
 use Filament\Actions\DissociateBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
@@ -91,9 +93,43 @@ class TournamentTeamsRelationManager extends RelationManager
             ])
             ->headerActions([
                 CreateAction::make()
-                ->keyBindings(['ctrl+n'])
-                ->label('Add Team (Ctrl + N)'),
-                // AssociateAction::make(),
+                    ->keyBindings(['ctrl+n'])
+                    ->label('Add Team (Ctrl + N)'),
+                Action::make('associateExistingTeam')
+                    ->label('Associate Existing')
+                    ->icon('heroicon-o-link')
+                    ->color('info')
+                    ->form([
+                        Select::make('team_ids')
+                            ->label('Select Teams')
+                            ->options(function () {
+                                return \App\Models\TournamentTeam::query()
+                                    ->whereHas('tournament', fn($q) => $q->where('user_id', auth()->id()))
+                                    ->where('tournament_id', '!=', $this->getOwnerRecord()->id)
+                                    ->pluck('name', 'id');
+                            })
+                            ->multiple()
+                            ->searchable()
+                            ->required(),
+                    ])
+                    ->action(function (array $data) {
+                        $teamIds = $data['team_ids'] ?? [];
+                        
+                        foreach ($teamIds as $teamId) {
+                            $team = \App\Models\TournamentTeam::find($teamId);
+                            if ($team) {
+                                $team->tournament_id = $this->getOwnerRecord()->id;
+                                $team->save();
+                            }
+                        }
+                        
+                        if (count($teamIds) > 0) {
+                            \Filament\Notifications\Notification::make()
+                                ->title(count($teamIds) . ' teams associated successfully')
+                                ->success()
+                                ->send();
+                        }
+                    }),
             ])
             ->recordActions([
                 EditAction::make(),

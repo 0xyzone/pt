@@ -5,6 +5,7 @@ namespace App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches\
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches\Resources\MatchStats\MatchStatResource;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
+use Filament\Forms\Components\Select;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Components\Actions;
 use Filament\Tables\Table;
@@ -21,17 +22,45 @@ class MatchStatsRelationManager extends RelationManager
             ->headerActions([
                 // CreateAction::make(),
                 Action::make('populate')
-                    ->action(function () {
-                        $teams = $this->ownerRecord->tournament->tournamentTeams;
-                        foreach ($teams as $team) {
-                            $this->ownerRecord->matchStats()->create([
-                                'tournament_team_id' => $team->id,
-                                'kills' => 0,
-                                'alive' => 4,
-                            ]);
+                    ->label('Populate Teams')
+                    ->icon('heroicon-o-users')
+                    ->color('info')
+                    ->form([
+                        Select::make('team_ids')
+                            ->label('Select Teams')
+                            ->options(function () {
+                                $match = $this->getOwnerRecord();
+                                return $match->tournament->tournamentTeams()
+                                    ->whereNotIn('id', $match->matchStats()->pluck('tournament_team_id'))
+                                    ->pluck('name', 'id');
+                            })
+                            ->multiple()
+                            ->searchable()
+                            ->required()
+                            ->hint('Only teams not already in the match are shown.'),
+                    ])
+                    ->action(function (array $data) {
+                        $match = $this->getOwnerRecord();
+                        $teamIds = $data['team_ids'] ?? [];
+                        
+                        foreach ($teamIds as $teamId) {
+                            $match->matchStats()->firstOrCreate(
+                                ['tournament_team_id' => $teamId],
+                                [
+                                    'kills' => 0,
+                                    'alive' => 4,
+                                    'points' => 0,
+                                    'placement' => 0,
+                                ]
+                            );
                         }
+
+                        \Filament\Notifications\Notification::make()
+                            ->title(count($teamIds) . ' teams populated successfully')
+                            ->success()
+                            ->send();
                     })
-                    ->visible(fn() => $this->ownerRecord->matchStats()->count() === 0),
+                    ->visible(fn() => $this->getOwnerRecord()->matchStats()->count() < $this->getOwnerRecord()->tournament->tournamentTeams()->count()),
                     Action::make('live_score_update')
                         ->url(fn() => route('screens.activematch', ['user_id' => auth()->id()]))
                         ->openUrlInNewTab()
