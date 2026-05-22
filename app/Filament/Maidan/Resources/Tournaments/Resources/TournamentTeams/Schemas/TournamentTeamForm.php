@@ -14,7 +14,7 @@ class TournamentTeamForm
 {
     public static function configure(Schema $schema): Schema
     {
-        $tournamentId = request()->route('tournament');
+        $tournamentId = \Illuminate\Support\Facades\Request::route('tournament');
         return $schema
             ->components([
                 Hidden::make('tournament_id')

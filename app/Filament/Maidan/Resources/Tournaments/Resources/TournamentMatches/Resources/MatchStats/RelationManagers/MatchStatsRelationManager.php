@@ -39,6 +39,19 @@ class MatchStatsRelationManager extends RelationManager
                                             ->whereNotIn('id', $match->matchStats()->pluck('tournament_team_id'))
                                             ->pluck('name', 'id');
                                     })
+                                    ->disableOptionWhen(function (string|int $value, Get $get) {
+                                        // Collect all team IDs selected across ALL sibling repeater rows
+                                        $allSelected = collect($get('../../teams'))
+                                            ->pluck('tournament_team_id')
+                                            ->filter()
+                                            ->values();
+
+                                        // The current field's own value (so we don't disable the item's own selection)
+                                        $currentValue = $get('tournament_team_id');
+
+                                        // Disable if selected elsewhere (i.e. in any sibling that isn't "this" row)
+                                        return $allSelected->contains($value) && $value !== $currentValue;
+                                    })
                                     ->searchable()
                                     ->required()
                                     ->live(),

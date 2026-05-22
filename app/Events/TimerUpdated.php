@@ -8,22 +8,28 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class BackgroundChanged implements ShouldBroadcastNow
+class TimerUpdated implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $userId;
-    public $bgType;
-    public $customVideoUrl;
+    public $status;
+    public $duration;
+    public $remainingSeconds;
+    public $endsAt;
+    public $visible;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($userId, $bgType, $customVideoUrl = null)
+    public function __construct($userId, $status, $duration, $remainingSeconds, $endsAt, $visible)
     {
         $this->userId = $userId;
-        $this->bgType = $bgType;
-        $this->customVideoUrl = $customVideoUrl;
+        $this->status = $status;
+        $this->duration = $duration;
+        $this->remainingSeconds = $remainingSeconds;
+        $this->endsAt = $endsAt;
+        $this->visible = (bool)$visible;
     }
 
     /**
@@ -40,6 +46,6 @@ class BackgroundChanged implements ShouldBroadcastNow
 
     public function broadcastAs(): string
     {
-        return 'BackgroundChanged';
+        return 'TimerUpdated';
     }
 }

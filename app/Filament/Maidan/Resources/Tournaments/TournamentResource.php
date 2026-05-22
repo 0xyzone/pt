@@ -8,6 +8,7 @@ use App\Filament\Maidan\Resources\Tournaments\Pages\EditTournamentSetting;
 use App\Filament\Maidan\Resources\Tournaments\Pages\ListTournamentMatches;
 use App\Filament\Maidan\Resources\Tournaments\Pages\ListTournaments;
 use App\Filament\Maidan\Resources\Tournaments\Pages\ListTournamentTeams;
+use App\Filament\Maidan\Resources\Tournaments\Pages\ListTournamentRounds;
 use App\Filament\Maidan\Resources\Tournaments\Pages\ViewTournament;
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches\RelationManagers\TournamentMatchesRelationManager;
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches\TournamentMatchResource;
@@ -60,6 +61,7 @@ class TournamentResource extends Resource
             'create' => CreateTournament::route('/create'),
             'view' => ViewTournament::route('/{record}'),
             'edit' => EditTournament::route('/{record}/edit'),
+            'rounds' => ListTournamentRounds::route('/{record}/rounds'),
             'settings' => EditTournamentSetting::route('/{record}/settings'),
         ];
     }
@@ -70,6 +72,7 @@ class TournamentResource extends Resource
             EditTournament::class,
             ListTournamentTeams::class,
             ListTournamentMatches::class,
+            ListTournamentRounds::class,
             EditTournamentSetting::class,
         ]);
     }

@@ -7,7 +7,7 @@
     <title>{{ $title ?? 'Screen' }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-transparent w-480 h-270 overflow-hidden font-main">
+<body class="bg-transparent overflow-hidden font-main select-none" style="width: 1920px; height: 1080px; position: relative;">
     {{ $slot }}
 </body>
 </html>

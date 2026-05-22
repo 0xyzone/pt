@@ -15,7 +15,7 @@ class MatchStatsUpdated implements ShouldBroadcastNow
 
     public bool $afterCommit = true;
 
-    public $matchStat;
+    public MatchStat $matchStat;
 
     /**
      * Create a new event instance.

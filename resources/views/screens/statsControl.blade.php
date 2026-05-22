@@ -111,7 +111,7 @@
         {{-- Header --}}
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
             <div>
-                <h1 class="text-3xl md:text-4xl font-black italic tracking-tighter uppercase text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-500 drop-shadow-sm">
+                <h1 class="text-3xl md:text-4xl font-black italic tracking-tighter uppercase text-transparent bg-clip-text bg-linear-to-r from-yellow-400 to-amber-500 drop-shadow-sm">
                     Live Stats Control
                 </h1>
                 <div class="flex items-center gap-3 mt-2">
@@ -145,7 +145,7 @@
                 {{-- Header: Logo, Name, Points --}}
                 <div class="card-header flex items-center justify-between border-b border-slate-800/80 pb-4 transition-all duration-300">
                     <div class="flex items-center gap-3 w-3/4">
-                        <div class="flex-shrink-0">
+                        <div class="shrink-0">
                             <img src="{{ $stat->tournamentTeam->logo_image ? asset('storage/' . $stat->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}"
                                  class="w-12 h-12 object-contain drop-shadow-md bg-slate-800/50 rounded-lg p-1 border border-slate-700/50">
                         </div>
@@ -164,7 +164,7 @@
                 </div>
 
                 {{-- Controls Area --}}
-                <div class="flex flex-col gap-4 flex-grow">
+                <div class="flex flex-col gap-4 grow">
                     
                     {{-- Overall Squad Status Summary --}}
                     <div class="flex justify-between items-center bg-slate-950/40 rounded-xl px-4 py-2 border border-slate-800/40 text-xs font-bold uppercase tracking-wider">
@@ -184,7 +184,7 @@
                         @forelse($stat->players as $player)
                             <div class="flex items-center justify-between gap-3 p-2 rounded-lg hover:bg-slate-800/30 transition-all duration-200" data-player-id="{{ $player->id }}">
                                 {{-- Left: Player Name & Role --}}
-                                <div class="flex flex-col min-w-0 flex-grow pl-1">
+                                <div class="flex flex-col min-w-0 grow pl-1">
                                     <span class="font-extrabold text-sm text-slate-200 truncate tracking-wide uppercase leading-tight" title="{{ $player->name }}">{{ $player->ign }}</span>
                                     @if($player->role && $player->role !== 'player')
                                         <span class="text-[8px] text-yellow-500 font-extrabold uppercase tracking-widest mt-0.5 leading-none">{{ $player->role }}</span>
@@ -192,7 +192,7 @@
                                 </div>
 
                                 {{-- Right: Status Toggle & Kills side by side --}}
-                                <div class="flex items-center gap-3 flex-shrink-0">
+                                <div class="flex items-center gap-3 shrink-0">
                                     {{-- Status Dot / Toggle --}}
                                     <button class="flex items-center justify-center w-6 h-6 rounded-full transition-all duration-150 border {{ $player->pivot->is_alive ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20' : 'bg-red-500/10 text-red-500 border-red-500/20 hover:bg-red-500/20' }}"
                                             onclick="togglePlayerAlive({{ $stat->id }}, {{ $player->id }}, {{ $player->pivot->is_alive ? 0 : 1 }})"
@@ -203,12 +203,12 @@
 
                                     {{-- Kills Controller --}}
                                     <div class="flex items-center bg-slate-950/40 rounded-lg p-0.5 border border-slate-800/60">
-                                        <button class="stat-btn danger !w-6 !h-6 !rounded-md" 
+                                        <button class="stat-btn danger w-6! h-6! rounded-md!" 
                                                 onclick="updatePlayerKills({{ $stat->id }}, {{ $player->id }}, Math.max(0, parseInt(this.nextElementSibling.textContent) - 1))">
                                             <span class="font-extrabold text-xs">-</span>
                                         </button>
                                         <span class="text-xs font-black text-red-400 w-5 text-center font-mono" data-player-kills-id="{{ $player->id }}">{{ $player->pivot->kills }}</span>
-                                        <button class="stat-btn success !w-6 !h-6 !rounded-md" 
+                                        <button class="stat-btn success w-6! h-6! rounded-md!" 
                                                 onclick="updatePlayerKills({{ $stat->id }}, {{ $player->id }}, parseInt(this.previousElementSibling.textContent) + 1)">
                                             <span class="font-extrabold text-xs">+</span>
                                         </button>
@@ -258,7 +258,7 @@
 
                         {{-- Eliminate Button --}}
                         <div class="flex flex-col justify-end h-full">
-                            <button class="stat-btn warning !w-[38px] !h-[38px] !rounded-lg flex items-center justify-center border border-amber-500/30" title="Eliminate Team"
+                            <button class="stat-btn warning w-9.5! h-9.5! rounded-lg! flex items-center justify-center border border-amber-500/30" title="Eliminate Team"
                                     onclick="triggerElimination({{ $stat->id }})">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9V4m0 5h5m-5 0H7m5 0v5m0-5a9 9 0 110 18 9 9 0 010-18z" />

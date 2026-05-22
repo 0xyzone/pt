@@ -8,9 +8,11 @@
             flex-direction: column;
             width: 100%;
             height: 100%;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.6);
             background: white;
-            border-radius: 2px;
+            border-radius: 4px;
+            border: 2px solid rgba(250, 204, 21, 0.25);
+            transition: all 0.3s ease;
         }
         
         .team-card-top {
@@ -24,11 +26,12 @@
         }
         
         .team-card-bottom {
-            height: 32px;
+            height: 60px;
             background: white;
             display: flex;
             align-items: center;
             justify-content: center;
+            border-top: 2px solid #0f172a;
         }
 
         .map-bg {
@@ -47,13 +50,13 @@
     <div class="w-full h-full flex font-sans map-bg overflow-hidden relative">
 
         {{-- LEFT COLUMN (420px) --}}
-        <div class="w-[420px] h-full flex flex-col pt-8 px-6 pb-6 z-10 relative bg-black/40 border-r border-slate-700/50">
+        <div class="w-105 h-full flex flex-col pt-8 px-6 pb-6 z-10 relative bg-black/40 border-r border-slate-700/50">
             {{-- Tournament Branding --}}
-            <div class="flex items-center gap-4 mb-10 pl-2">
-                <img src="{{ $tournament->logo_image ? asset('storage/' . $tournament->logo_image) : asset('img/defult_team_logo.png') }}" class="w-20 aspect-square object-contain drop-shadow-xl">
+            <div class="flex items-center gap-6 mb-10 pl-2">
+                <img src="{{ $tournament->logo_image ? asset('storage/' . $tournament->logo_image) : asset('img/defult_team_logo.png') }}" class="w-24 aspect-square object-contain drop-shadow-2xl">
                 <div class="flex flex-col">
-                    <span class="text-3xl font-black uppercase text-white tracking-widest leading-none drop-shadow-md">PUBG MOBILE</span>
-                    <span class="text-lg font-bold uppercase text-white bg-white/20 px-2 py-0.5 inline-block mt-1 tracking-widest">{{ $tournament->name }}</span>
+                    <span class="text-5xl font-black uppercase text-white tracking-widest leading-none drop-shadow-md">PUBG MOBILE</span>
+                    <span class="text-2xl font-black uppercase text-yellow-400 bg-black/60 border border-yellow-400/40 px-3 py-1 inline-block mt-2 tracking-widest rounded">{{ $tournament->name }}</span>
                 </div>
             </div>
 
@@ -64,8 +67,8 @@
                         <div class="team-card-top">
                             <img src="{{ $team->logo_image ? asset('storage/' . $team->logo_image) : asset('img/defult_team_logo.png') }}" class="max-w-full max-h-full object-contain filter drop-shadow-md">
                         </div>
-                        <div class="team-card-bottom">
-                            <span class="font-black text-[15px] uppercase tracking-widest">{{ $team->short_name }}</span>
+                        <div class="team-card-bottom bg-slate-100">
+                            <span class="font-black text-3xl lg:text-4xl uppercase tracking-wider text-slate-950">{{ $team->short_name }}</span>
                         </div>
                     </div>
                 @endforeach
@@ -74,17 +77,17 @@
 
         {{-- MIDDLE COLUMN (1080x1080) --}}
         {{-- This area is kept completely transparent for OBS map source --}}
-        <div class="w-[1080px] h-[1080px] shrink-0 relative bg-transparent">
+        <div class="w-270 h-270 shrink-0 relative bg-transparent">
             {{-- Optional: We can add an inner glow or border to frame the map --}}
             <div class="absolute inset-0 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)] pointer-events-none border-x border-slate-800/50"></div>
         </div>
 
         {{-- RIGHT COLUMN (420px) --}}
-        <div class="w-[420px] h-full flex flex-col pt-8 px-6 pb-6 z-10 relative bg-black/40 border-l border-slate-700/50">
+        <div class="w-105 h-full flex flex-col pt-8 px-6 pb-6 z-10 relative bg-black/40 border-l border-slate-700/50 font-sans shadow-lg">
             {{-- Match Details --}}
             <div class="flex flex-col items-end mb-10 pr-2">
-                <span class="text-3xl font-black uppercase text-orange-500 tracking-widest drop-shadow-md leading-tight">{{ $activeMatch->name }}</span>
-                <span class="text-2xl font-black uppercase text-slate-200 tracking-widest drop-shadow-md mt-1">{{ $activeMatch->map }}</span>
+                <span class="text-6xl font-black uppercase text-orange-500 tracking-widest leading-none font-display" style="text-shadow: 0 3px 6px rgba(0,0,0,0.5);">{{ $activeMatch->name }}</span>
+                <span class="text-4xl font-black uppercase text-slate-100 tracking-widest mt-4 font-sans bg-orange-600 border-2 border-orange-400 px-5 py-2 inline-block rounded shadow-lg" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">{{ $activeMatch->map }}</span>
             </div>
 
             {{-- Right Teams Grid (Next 8 teams) --}}
@@ -94,8 +97,8 @@
                         <div class="team-card-top">
                             <img src="{{ $team->logo_image ? asset('storage/' . $team->logo_image) : asset('img/defult_team_logo.png') }}" class="max-w-full max-h-full object-contain filter drop-shadow-md">
                         </div>
-                        <div class="team-card-bottom">
-                            <span class="font-black text-[15px] uppercase tracking-widest">{{ $team->short_name }}</span>
+                        <div class="team-card-bottom bg-slate-100">
+                            <span class="font-black text-3xl lg:text-4xl uppercase tracking-wider text-slate-950">{{ $team->short_name }}</span>
                         </div>
                     </div>
                 @endforeach

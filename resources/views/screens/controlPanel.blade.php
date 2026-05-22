@@ -1,24 +1,41 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Screen</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>OBS Director Console</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        .neon-border-yellow {
+            box-shadow: 0 0 15px rgba(250, 204, 21, 0.15);
+            border-color: rgba(250, 204, 21, 0.2);
+        }
+        .neon-border-yellow:hover {
+            box-shadow: 0 0 25px rgba(250, 204, 21, 0.35);
+            border-color: rgba(250, 204, 21, 0.6);
+        }
+        @keyframes pulse-timer {
+            0%, 100% { opacity: 1; text-shadow: 0 0 10px rgba(250, 204, 21, 0.4); }
+            50% { opacity: 0.8; text-shadow: 0 0 20px rgba(250, 204, 21, 0.7); }
+        }
+        .pulse-timer {
+            animation: pulse-timer 2s infinite ease-in-out;
+        }
+    </style>
 </head>
-<body class="bg-transparent">
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-yellow-500 selection:text-black">
 
-    <!-- Background styling for control panel specifically, distinct from OBS overlay -->
-    <div class="min-h-screen bg-slate-950 p-6 md:p-12 font-sans text-slate-100 flex flex-col items-center w-full">
+    <div class="min-h-screen p-6 md:p-12 flex flex-col items-center w-full max-w-6xl mx-auto">
         
-        <div class="text-center w-full mb-10">
-            <h1 class="text-4xl md:text-5xl font-black italic tracking-tighter uppercase drop-shadow-md pb-2 text-transparent bg-clip-text bg-linear-to-r from-red-500 to-rose-600">
+        {{-- Header Section --}}
+        <div class="text-center w-full mb-8">
+            <h1 class="text-4xl md:text-5xl font-black italic tracking-tighter uppercase drop-shadow-md pb-2 text-transparent bg-clip-text bg-linear-to-r from-yellow-400 to-amber-500">
                 OBS Director Console
             </h1>
-            <p class="text-slate-400 font-bold uppercase tracking-[0.2em] text-sm mt-3 border border-slate-800 bg-slate-900 rounded-lg py-2 inline-block px-4">
-                Active User Environment: <span class="text-slate-100">{{ $user->name }}</span>
+            <p class="text-slate-400 font-bold uppercase tracking-[0.2em] text-xs mt-3 border border-slate-800 bg-slate-900/60 rounded-xl py-2 inline-block px-5">
+                Active User Environment: <span class="text-yellow-400 font-extrabold">{{ $user->name }}</span>
             </p>
         </div>
         
@@ -28,16 +45,17 @@
             </div>
         @endif
 
-        <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
+        {{-- 3-Grid Quick Overlays Actions --}}
+        <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <!-- POST MATCH BTN -->
             <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
                 @csrf
                 <input type="hidden" name="view" value="postmatch">
-                <button type="submit" class="w-full h-40 flex flex-col items-center justify-center gap-3 bg-slate-900/80 hover:bg-yellow-900/40 hover:border-yellow-500 border border-slate-800 rounded-2xl text-yellow-500 transition-all shadow-[0_4px_20px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(234,179,8,0.2)] active:scale-95 group">
+                <button type="submit" class="w-full h-36 flex flex-col items-center justify-center gap-3 bg-slate-900/60 hover:bg-yellow-950/20 hover:border-yellow-500 border border-slate-850 rounded-2xl text-yellow-500 transition-all shadow-lg active:scale-[0.98] group">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10 group-hover:scale-110 transition-transform">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
                     </svg>
-                    <span class="text-xl font-black uppercase tracking-widest text-center">Post Match</span>
+                    <span class="text-lg font-black uppercase tracking-widest text-center">Post Match</span>
                 </button>
             </form>
             
@@ -45,11 +63,11 @@
             <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
                 @csrf
                 <input type="hidden" name="view" value="overallranking">
-                <button type="submit" class="w-full h-40 flex flex-col items-center justify-center gap-3 bg-slate-900/80 hover:bg-orange-900/40 hover:border-orange-500 border border-slate-800 rounded-2xl text-orange-400 transition-all shadow-[0_4px_20px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(249,115,22,0.2)] active:scale-95 group">
+                <button type="submit" class="w-full h-36 flex flex-col items-center justify-center gap-3 bg-slate-900/60 hover:bg-orange-950/20 hover:border-orange-500 border border-slate-850 rounded-2xl text-orange-400 transition-all shadow-lg active:scale-[0.98] group">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10 group-hover:scale-110 transition-transform">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
                     </svg>
-                    <span class="text-xl font-black uppercase tracking-widest text-center">Overall Rank</span>
+                    <span class="text-lg font-black uppercase tracking-widest text-center">Overall Rank</span>
                 </button>
             </form>
 
@@ -57,47 +75,236 @@
             <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
                 @csrf
                 <input type="hidden" name="view" value="empty">
-                <button type="submit" class="w-full h-40 flex flex-col items-center justify-center gap-3 bg-slate-900/80 hover:bg-rose-900/40 hover:border-rose-500 border border-slate-800 rounded-2xl text-slate-300 hover:text-rose-400 transition-all shadow-[0_4px_20px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(244,63,94,0.2)] active:scale-95 group">
+                <button type="submit" class="w-full h-36 flex flex-col items-center justify-center gap-3 bg-slate-900/60 hover:bg-rose-950/20 hover:border-rose-500 border border-slate-850 rounded-2xl text-slate-300 hover:text-rose-400 transition-all shadow-lg active:scale-[0.98] group">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10 group-hover:scale-110 transition-transform">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                     </svg>
-                    <span class="text-xl font-black uppercase tracking-widest text-center">Empty Screen</span>
+                    <span class="text-lg font-black uppercase tracking-widest text-center">Empty Screen</span>
                 </button>
             </form>
         </div>
 
-        <!-- VISIBILITY TOGGLES -->
-        <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        {{-- VISIBILITY TOGGLES --}}
+        <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <form action="{{ route('screens.togglevisibility', ['user_id' => $user->id]) }}" method="POST">
                 @csrf
                 <input type="hidden" name="visible" value="1">
-                <button type="submit" class="w-full py-6 flex items-center justify-center gap-3 bg-emerald-900/20 hover:bg-emerald-900/40 border border-emerald-500/30 hover:border-emerald-500 rounded-2xl text-emerald-400 transition-all font-black uppercase tracking-widest active:scale-95">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                <button type="submit" class="w-full py-5 flex items-center justify-center gap-3 bg-emerald-950/30 hover:bg-emerald-950/50 border border-emerald-500/30 hover:border-emerald-500 rounded-2xl text-emerald-400 transition-all font-black uppercase tracking-widest active:scale-95 text-sm shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
-                    Show Active Match
+                    Show Active Match Leaderboard
                 </button>
             </form>
 
             <form action="{{ route('screens.togglevisibility', ['user_id' => $user->id]) }}" method="POST">
                 @csrf
                 <input type="hidden" name="visible" value="0">
-                <button type="submit" class="w-full py-6 flex items-center justify-center gap-3 bg-rose-900/20 hover:bg-rose-900/40 border border-rose-500/30 hover:border-rose-500 rounded-2xl text-rose-400 transition-all font-black uppercase tracking-widest active:scale-95">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                <button type="submit" class="w-full py-5 flex items-center justify-center gap-3 bg-rose-950/30 hover:bg-rose-950/50 border border-rose-500/30 hover:border-rose-500 rounded-2xl text-rose-400 transition-all font-black uppercase tracking-widest active:scale-95 text-sm shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
                     </svg>
-                    Hide Active Match
+                    Hide Active Match Leaderboard
                 </button>
             </form>
         </div>
 
-        <!-- REFRESH ALL SCREENS -->
-        <div class="w-full mt-6">
+        {{-- REAL-TIME COUNTDOWN TIMER & CONTROLS HUD --}}
+        <div class="w-full bg-slate-900/50 border border-slate-800 rounded-2xl p-6 mb-8 shadow-xl">
+            <h2 class="text-yellow-400 text-lg font-black uppercase tracking-wider mb-6 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Countdown Timer & HUD Controls
+            </h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+                
+                {{-- Left: Live Timer Display & Visibility State --}}
+                <div class="flex flex-col items-center justify-center bg-slate-950 rounded-2xl border border-slate-850 p-6 shadow-inner relative overflow-hidden group">
+                    <div class="absolute top-2 right-3 text-[9px] uppercase tracking-widest font-black" id="visibility-status-badge">
+                        @if($timerState['visible'])
+                            <span class="text-emerald-400">VISIBLE ON OVERLAYS</span>
+                        @else
+                            <span class="text-rose-500">HIDDEN ON OVERLAYS</span>
+                        @endif
+                    </div>
+                    <span class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-1">Director View Clock</span>
+                    <div class="font-mono text-5xl font-black text-yellow-400 tracking-wider pulse-timer" id="console-timer-display">
+                        00:00
+                    </div>
+                    <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400 mt-2" id="timer-status-badge">
+                        Status: <span class="uppercase font-black text-yellow-400">{{ $timerState['status'] }}</span>
+                    </span>
+                </div>
+
+                {{-- Middle: Configure Timer duration --}}
+                <div class="flex flex-col gap-4">
+                    <div class="flex flex-col">
+                        <label class="text-xs font-black uppercase tracking-wider text-slate-400 mb-1.5">Timer Duration (Minutes)</label>
+                        <div class="flex gap-2">
+                            <input type="number" id="timer-duration-input" min="1" max="120" value="{{ $timerState['duration'] }}" 
+                                class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white font-mono font-black text-lg focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 w-full">
+                            <button onclick="setTimerDuration()" class="bg-yellow-400 hover:bg-yellow-500 text-black font-black uppercase tracking-wider px-5 py-3 rounded-xl transition-all hover:scale-[1.02] text-sm shrink-0 active:scale-95 shadow-md">
+                                Apply
+                            </button>
+                        </div>
+                    </div>
+                    
+                    {{-- Toggle timer visibility --}}
+                    <div class="grid grid-cols-2 gap-3 mt-1">
+                        <button onclick="toggleTimerVisibility(1)" id="btn-show-timer" class="py-2.5 bg-emerald-950/20 border border-emerald-500/30 hover:border-emerald-500 text-emerald-400 font-bold uppercase text-xs tracking-wider rounded-xl transition-all hover:scale-[1.01] active:scale-95">
+                            Show Timer
+                        </button>
+                        <button onclick="toggleTimerVisibility(0)" id="btn-hide-timer" class="py-2.5 bg-rose-950/20 border border-rose-500/30 hover:border-rose-500 text-rose-400 font-bold uppercase text-xs tracking-wider rounded-xl transition-all hover:scale-[1.01] active:scale-95">
+                            Hide Timer
+                        </button>
+                    </div>
+                </div>
+
+                {{-- Right: Direct Countdown Controls --}}
+                <div class="flex flex-col gap-3.5">
+                    <button onclick="triggerTimerAction('start')" class="w-full py-4.5 bg-yellow-400 hover:bg-yellow-500 text-black font-black uppercase tracking-widest text-sm rounded-xl transition-all hover:scale-[1.01] active:scale-95 shadow-md flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                            <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd" />
+                        </svg>
+                        Start Countdown
+                    </button>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="triggerTimerAction('pause')" class="py-3 bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/30 hover:border-orange-500 text-orange-400 font-black uppercase text-xs tracking-widest rounded-xl transition-all hover:scale-[1.01] active:scale-95 flex items-center justify-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5">
+                                <path fill-rule="evenodd" d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7.5 0A.75.75 0 0115 4.5h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H15a.75.75 0 01-.75-.75V5.25z" clip-rule="evenodd" />
+                            </svg>
+                            Pause
+                        </button>
+                        <button onclick="triggerTimerAction('reset')" class="py-3 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 hover:border-rose-500 text-rose-400 font-black uppercase text-xs tracking-widest rounded-xl transition-all hover:scale-[1.01] active:scale-95 flex items-center justify-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5">
+                                <path fill-rule="evenodd" d="M4.5 7.5a3 3 0 013-3h9a3 3 0 013 3v9a3 3 0 01-3 3h-9a3 3 0 01-3-3v-9z" clip-rule="evenodd" />
+                            </svg>
+                            Reset Timer
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        {{-- INTERMISSION BACKGROUND CONTROLLER --}}
+        <div class="w-full bg-slate-900/50 border border-slate-800 rounded-2xl p-6 mb-8 shadow-xl">
+            <h2 class="text-yellow-400 text-lg font-black uppercase tracking-wider mb-6 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-1.242 2.25 2.25 0 012.25-2.25 2.25 2.25 0 002.25-2.25 4.5 4.5 0 00-1.242-3.12 2.25 2.25 0 010-3.18 4.5 4.5 0 00-6.364 0 2.25 2.25 0 01-3.182 0 4.5 4.5 0 00-6.364 0 2.25 2.25 0 01-3.181 0 4.5 4.5 0 00-6.364 6.364 2.25 2.25 0 010 3.181z" />
+                </svg>
+                Intermission Background Type (Starting & Ending Screens)
+            </h2>
+            
+            <div class="flex flex-col gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <div class="text-slate-400 text-sm">
+                        Configure whether the Starting Soon and Ending intermission screens should have a fully transparent background (for OBS overlays), the built-in cyber animated theme, or your custom uploaded animated video.
+                        <div class="mt-2 text-xs uppercase font-black text-slate-500">
+                            Current Status: <span class="text-yellow-400 font-extrabold" id="bg-type-status-badge">{{ strtoupper($bgType) }}</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-3">
+                        <button onclick="updateBackgroundType('transparent')" id="btn-bg-transparent" 
+                            class="py-3 px-2 rounded-xl font-black uppercase text-[10px] tracking-wider transition-all active:scale-95 shadow-md flex flex-col items-center justify-center gap-1.5 border {{ $bgType === 'transparent' ? 'bg-yellow-400 border-yellow-500 text-black font-black' : 'bg-slate-950/60 border-slate-850 hover:border-yellow-500 text-yellow-500' }}">
+                            <span>Transparent</span>
+                            <span class="text-[8px] opacity-75 font-semibold">(OBS Layers)</span>
+                        </button>
+                        <button onclick="updateBackgroundType('animated')" id="btn-bg-animated" 
+                            class="py-3 px-2 rounded-xl font-black uppercase text-[10px] tracking-wider transition-all active:scale-95 shadow-md flex flex-col items-center justify-center gap-1.5 border {{ $bgType === 'animated' ? 'bg-yellow-400 border-yellow-500 text-black font-black' : 'bg-slate-950/60 border-slate-850 hover:border-yellow-500 text-yellow-500' }}">
+                            <span>Cyber Theme</span>
+                            <span class="text-[8px] opacity-75 font-semibold">(Built-in)</span>
+                        </button>
+                        <button onclick="updateBackgroundType('custom')" id="btn-bg-custom" 
+                            @if(!$customVideo) disabled title="Please upload a custom video first" @endif
+                            class="py-3 px-2 rounded-xl font-black uppercase text-[10px] tracking-wider transition-all active:scale-95 shadow-md flex flex-col items-center justify-center gap-1.5 border {{ $bgType === 'custom' ? 'bg-yellow-400 border-yellow-500 text-black font-black' : ($customVideo ? 'bg-slate-950/60 border-slate-850 hover:border-yellow-500 text-yellow-500' : 'bg-slate-950/20 border-slate-900 text-slate-600 cursor-not-allowed') }}">
+                            <span>Custom Video</span>
+                            <span class="text-[8px] opacity-75 font-semibold">(Uploaded)</span>
+                        </button>
+                    </div>
+                </div>
+
+                {{-- Upload & Custom Video Management Zone --}}
+                <div class="border-t border-slate-800/80 pt-6">
+                    <h3 class="text-xs uppercase font-black tracking-widest text-slate-400 mb-4 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 text-yellow-400">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                        </svg>
+                        Custom Animated Video Settings
+                    </h3>
+
+                    @if($customVideo)
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center bg-slate-950/40 p-4 rounded-xl border border-slate-800">
+                            <div class="flex items-center gap-4">
+                                <div class="w-32 h-20 bg-slate-900 rounded-lg overflow-hidden border border-slate-800 relative flex items-center justify-center shrink-0">
+                                    <video autoplay loop muted playsinline class="w-full h-full object-cover">
+                                        <source src="{{ asset('storage/' . $customVideo) }}" type="video/mp4">
+                                    </video>
+                                </div>
+                                <div class="flex flex-col overflow-hidden">
+                                    <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">Active Background Video</span>
+                                    <span class="text-sm font-semibold text-slate-200 truncate mt-1">{{ basename($customVideo) }}</span>
+                                    <span class="text-[10px] text-emerald-400 font-black uppercase mt-1 tracking-wider">Ready for Broadcast</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-col sm:flex-row justify-end gap-3">
+                                {{-- Replace video triggers standard file upload --}}
+                                <form action="{{ route('screens.uploadvideo', ['user_id' => $user->id]) }}" method="POST" enctype="multipart/form-data" class="flex items-center gap-2">
+                                    @csrf
+                                    <label class="px-4 py-2.5 bg-slate-900 hover:bg-slate-850 text-slate-300 border border-slate-800 hover:border-slate-700 rounded-lg text-xs uppercase font-bold tracking-wider cursor-pointer transition-all active:scale-95 flex items-center gap-1.5 w-full sm:w-auto justify-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                        </svg>
+                                        Replace Video
+                                        <input type="file" name="video" accept="video/mp4,video/webm,video/quicktime" class="hidden" onchange="this.form.submit()">
+                                    </label>
+                                </form>
+
+                                <form action="{{ route('screens.deletevideo', ['user_id' => $user->id]) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="w-full sm:w-auto px-4 py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 hover:border-rose-400 rounded-lg text-xs uppercase font-bold tracking-wider transition-all active:scale-95 flex items-center justify-center gap-1.5">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                        </svg>
+                                        Delete Video
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    @else
+                        <form action="{{ route('screens.uploadvideo', ['user_id' => $user->id]) }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="flex flex-col items-center justify-center border-2 border-dashed border-slate-800 hover:border-slate-700 bg-slate-950/20 rounded-xl p-8 transition-colors text-center relative group">
+                                <input type="file" name="video" accept="video/mp4,video/webm,video/quicktime" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="this.form.submit()">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-slate-500 group-hover:text-yellow-400 transition-colors mb-3">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+                                </svg>
+                                <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Drag & drop or click to upload video</span>
+                                <span class="text-[10px] text-slate-500 mt-1 uppercase">Supports MP4, WebM, MOV (Max 50MB)</span>
+                            </div>
+                        </form>
+                    @endif
+
+                    @error('video')
+                        <div class="text-rose-500 text-xs font-bold mt-2 uppercase tracking-wide">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+            </div>
+        </div>
+
+        {{-- FORCE REFRESH ALL SCREENS --}}
+        <div class="w-full mb-8">
             <form action="{{ route('screens.refresh', ['user_id' => $user->id]) }}" method="POST">
                 @csrf
-                <button type="submit" class="w-full py-6 flex items-center justify-center gap-3 bg-indigo-900/20 hover:bg-indigo-900/40 border border-indigo-500/30 hover:border-indigo-500 rounded-2xl text-indigo-400 transition-all font-black uppercase tracking-widest active:scale-95 shadow-[0_0_20px_rgba(99,102,241,0.1)]">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 animate-spin-slow">
+                <button type="submit" class="w-full py-4.5 flex items-center justify-center gap-3 bg-indigo-900/20 hover:bg-indigo-900/40 border border-indigo-500/30 hover:border-indigo-500 rounded-2xl text-indigo-400 transition-all font-black uppercase tracking-wider text-sm active:scale-[0.99] shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 animate-spin-slow">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                     </svg>
                     Force Refresh All Screens
@@ -105,25 +312,252 @@
             </form>
         </div>
 
-        <!-- LIVE STATS CONTROL LINK -->
+        {{-- LIVE STATS CONTROL LINK --}}
         <a href="{{ route('screens.statscontrol', ['user_id' => $user->id]) }}" 
-           class="w-full mt-6 py-5 flex items-center justify-center gap-3 bg-amber-900/20 hover:bg-amber-900/40 border-2 border-amber-500/30 hover:border-amber-500 rounded-2xl text-amber-400 transition-all font-black uppercase tracking-widest active:scale-95 text-lg shadow-[0_0_30px_rgba(245,158,11,0.1)] hover:shadow-[0_0_40px_rgba(245,158,11,0.2)]">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7">
+           class="w-full py-5 flex items-center justify-center gap-3 bg-amber-950/20 hover:bg-amber-950/40 border border-amber-500/30 hover:border-amber-500 rounded-2xl text-amber-400 transition-all font-black uppercase tracking-widest active:scale-[0.99] text-base shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"/>
             </svg>
-            Open Live Stats Control
+            Open Live Stats Control Panel
         </a>
 
-        <div class="mt-12 bg-slate-900/60 p-6 rounded-2xl border border-slate-800/50 w-full shadow-lg">
-            <h3 class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2 border-b border-slate-800 pb-2">Director Instructions</h3>
-            <ul class="text-slate-500 text-sm list-disc pl-4 space-y-2">
-                <li><strong class="text-slate-300 uppercase text-[10px] tracking-wider">Main Master:</strong> Load <code class="text-rose-400 bg-slate-950 px-2 py-0.5 rounded">{{ route('screens.obsmaster', ['user_id' => $user->id]) }}</code> for Post-Match & Standings.</li>
-                <li><strong class="text-slate-300 uppercase text-[10px] tracking-wider">Elimination HUD:</strong> Load <code class="text-red-400 bg-slate-950 px-2 py-0.5 rounded">{{ route('screens.teamelimination', ['user_id' => $user->id]) }}</code> for top-center squad notifications.</li>
-                <li><strong class="text-slate-300 uppercase text-[10px] tracking-wider">Live Ranking HUD:</strong> Load <code class="text-yellow-400 bg-slate-950 px-2 py-0.5 rounded">{{ route('screens.activematch', ['user_id' => $user->id]) }}</code> for the left-side scrolling leaderboard.</li>
-                <li><strong class="text-slate-300 uppercase text-[10px] tracking-wider">Map Screen:</strong> Load <code class="text-blue-400 bg-slate-950 px-2 py-0.5 rounded">{{ route('screens.mapscreen', ['user_id' => $user->id]) }}</code> for the 1080x1080 map view with teams.</li>
-                <li>Set the Browser Source dimensions accurately. All views have transparent layers so your game source will shine through.</li>
+        {{-- Overlays Links and Instructions --}}
+        <div class="mt-12 bg-slate-900/30 p-8 rounded-2xl border border-slate-800 w-full shadow-lg">
+            <h3 class="text-slate-400 text-xs font-black uppercase tracking-widest mb-4 border-b border-slate-800 pb-2">Active OBS Overlay Screens</h3>
+            <ul class="text-slate-400 text-sm space-y-3.5">
+                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-slate-950 p-3 rounded-xl border border-slate-850">
+                    <div>
+                        <strong class="text-yellow-400 uppercase text-xs tracking-wider">1. Upcoming Matches Screen:</strong>
+                        <span class="text-slate-500 block text-xs mt-0.5">L-shaped advertisement frame with empty highlights space. Dimensions: 1920x1080.</span>
+                    </div>
+                    <a href="{{ route('screens.upcomingmatches', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 hover:border-yellow-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-yellow-500/20 text-center transition-all">Open Overlay</a>
+                </li>
+                
+                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-slate-950 p-3 rounded-xl border border-slate-850">
+                    <div>
+                        <strong class="text-yellow-400 uppercase text-xs tracking-wider">2. Starting Soon Screen:</strong>
+                        <span class="text-slate-500 block text-xs mt-0.5">Beautiful landing with large central countdown clock and sponsor slideshow. Dimensions: 1920x1080.</span>
+                    </div>
+                    <a href="{{ route('screens.startingsoon', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 hover:border-yellow-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-yellow-500/20 text-center transition-all">Open Overlay</a>
+                </li>
+
+                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-slate-950 p-3 rounded-xl border border-slate-850">
+                    <div>
+                        <strong class="text-rose-500 uppercase text-xs tracking-wider">3. Ending Screen:</strong>
+                        <span class="text-slate-500 block text-xs mt-0.5">Intermission / Match Ended layout with massive countdown and sponsor scroll. Dimensions: 1920x1080.</span>
+                    </div>
+                    <a href="{{ route('screens.ending', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-rose-500/10 text-rose-400 border border-rose-500/30 hover:border-rose-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-rose-500/20 text-center transition-all">Open Overlay</a>
+                </li>
+
+                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-slate-950 p-3 rounded-xl border border-slate-850">
+                    <div>
+                        <strong class="text-orange-400 uppercase text-xs tracking-wider">4. Main Master:</strong>
+                        <span class="text-slate-500 block text-xs mt-0.5">Dynamic screen switching for Post-Match and Standings dynamically. Dimensions: 1920x1080.</span>
+                    </div>
+                    <a href="{{ route('screens.obsmaster', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-orange-500/10 text-orange-400 border border-orange-500/30 hover:border-orange-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-orange-500/20 text-center transition-all">Open Overlay</a>
+                </li>
+
+                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-slate-950 p-3 rounded-xl border border-slate-850">
+                    <div>
+                        <strong class="text-emerald-400 uppercase text-xs tracking-wider">5. Live Leaderboard HUD:</strong>
+                        <span class="text-slate-500 block text-xs mt-0.5">Left-side leaderboard display HUD for active tournament matches. Dimensions: 1920x1080.</span>
+                    </div>
+                    <a href="{{ route('screens.activematch', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:border-emerald-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-emerald-500/20 text-center transition-all">Open Overlay</a>
+                </li>
+
+                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-slate-950 p-3 rounded-xl border border-slate-850">
+                    <div>
+                        <strong class="text-blue-400 uppercase text-xs tracking-wider">6. Map Screen HUD:</strong>
+                        <span class="text-slate-500 block text-xs mt-0.5">1080x1080 map framing with active rosters for OBS browsers overlays. Dimensions: 1920x1080.</span>
+                    </div>
+                    <a href="{{ route('screens.mapscreen', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-blue-500/10 text-blue-400 border border-blue-500/30 hover:border-blue-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-blue-500/20 text-center transition-all">Open Overlay</a>
+                </li>
             </ul>
         </div>
     </div>
+
+    {{-- Script for AJAX Real-time sync --}}
+    <script type="module">
+        let timerDuration = {{ $timerState['duration'] }};
+        let timerStatus = "{{ $timerState['status'] }}";
+        let timerEndsAt = {{ $timerState['endsAt'] }};
+        let timerRemaining = {{ $timerState['remainingSeconds'] }};
+        let timerVisible = {{ $timerState['visible'] ? 'true' : 'false' }};
+        let timerInterval = null;
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function updateControlPanelUI() {
+            // Update live clock view
+            const display = document.getElementById('console-timer-display');
+            if (display) {
+                if (timerStatus === 'running') {
+                    const now = Math.floor(Date.now() / 1000);
+                    const remaining = Math.max(0, timerEndsAt - now);
+                    display.innerText = formatTime(remaining);
+                    if (remaining <= 0) {
+                        display.innerText = "00:00";
+                        timerStatus = 'stopped';
+                        clearInterval(timerInterval);
+                    }
+                } else if (timerStatus === 'paused') {
+                    display.innerText = formatTime(timerRemaining);
+                } else {
+                    display.innerText = formatTime(timerDuration * 60);
+                }
+            }
+
+            // Update status text
+            const statusBadge = document.getElementById('timer-status-badge');
+            if (statusBadge) {
+                statusBadge.innerHTML = `Status: <span class="uppercase font-black text-yellow-400">${timerStatus}</span>`;
+            }
+
+            // Update visibility badge
+            const visBadge = document.getElementById('visibility-status-badge');
+            if (visBadge) {
+                if (timerVisible) {
+                    visBadge.innerHTML = `<span class="text-emerald-400">VISIBLE ON OVERLAYS</span>`;
+                } else {
+                    visBadge.innerHTML = `<span class="text-rose-500">HIDDEN ON OVERLAYS</span>`;
+                }
+            }
+        }
+
+        window.triggerTimerAction = async function(action, payload = {}) {
+            try {
+                const response = await fetch('{{ route("screens.updatetimer", ["user_id" => $user->id]) }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({ action, ...payload })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    timerStatus = data.status;
+                    timerDuration = data.duration;
+                    timerRemaining = data.remainingSeconds;
+                    timerEndsAt = data.endsAt;
+                    timerVisible = data.visible;
+                    
+                    updateControlPanelUI();
+                    if (timerStatus === 'running') {
+                        startTimerLoop();
+                    } else if (timerStatus === 'stopped' || timerStatus === 'paused') {
+                        clearInterval(timerInterval);
+                    }
+                } else {
+                    console.error('Action failed:', response.statusText);
+                }
+            } catch (err) {
+                console.error('Network error during action:', err);
+            }
+        }
+
+        window.updateBackgroundType = async function(bgType) {
+            try {
+                const response = await fetch('{{ route("screens.updatebg", ["user_id" => $user->id]) }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({ bg_type: bgType })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Update state badge
+                    const statusBadge = document.getElementById('bg-type-status-badge');
+                    if (statusBadge) {
+                        statusBadge.innerText = data.bg_type.toUpperCase();
+                    }
+
+                    // Toggle button styling
+                    const btnTransparent = document.getElementById('btn-bg-transparent');
+                    const btnAnimated = document.getElementById('btn-bg-animated');
+                    const btnCustom = document.getElementById('btn-bg-custom');
+                    
+                    const activeClass = "py-3 px-2 rounded-xl font-black uppercase text-[10px] tracking-wider transition-all active:scale-95 shadow-md flex flex-col items-center justify-center gap-1.5 border bg-yellow-400 border-yellow-500 text-black font-black";
+                    const inactiveClass = "py-3 px-2 rounded-xl font-black uppercase text-[10px] tracking-wider transition-all active:scale-95 shadow-md flex flex-col items-center justify-center gap-1.5 border bg-slate-950/60 border-slate-850 hover:border-yellow-500 text-yellow-500";
+                    const disabledClass = "py-3 px-2 rounded-xl font-black uppercase text-[10px] tracking-wider transition-all active:scale-95 shadow-md flex flex-col items-center justify-center gap-1.5 border bg-slate-950/20 border-slate-900 text-slate-600 cursor-not-allowed";
+
+                    if (btnTransparent) btnTransparent.className = data.bg_type === 'transparent' ? activeClass : inactiveClass;
+                    if (btnAnimated) btnAnimated.className = data.bg_type === 'animated' ? activeClass : inactiveClass;
+                    if (btnCustom) {
+                        if (btnCustom.hasAttribute('disabled')) {
+                            btnCustom.className = disabledClass;
+                        } else {
+                            btnCustom.className = data.bg_type === 'custom' ? activeClass : inactiveClass;
+                        }
+                    }
+                } else {
+                    console.error('Failed to update background type');
+                }
+            } catch (err) {
+                console.error('Error during background update:', err);
+            }
+        }
+
+        window.setTimerDuration = function() {
+            const input = document.getElementById('timer-duration-input');
+            if (!input) return;
+            const minutes = parseInt(input.value);
+            if (isNaN(minutes) || minutes < 1) return;
+            triggerTimerAction('set-duration', { duration: minutes });
+        }
+
+        window.toggleTimerVisibility = function(visible) {
+            triggerTimerAction('toggle-visibility', { visible: visible });
+        }
+
+        function startTimerLoop() {
+            clearInterval(timerInterval);
+            updateControlPanelUI();
+            timerInterval = setInterval(() => {
+                updateControlPanelUI();
+            }, 1000);
+        }
+
+        // Init loops
+        if (timerStatus === 'running') {
+            startTimerLoop();
+        } else {
+            updateControlPanelUI();
+        }
+
+        // Connect Laravel Echo channels for real-time synchronization if another director modifies state
+        document.addEventListener("DOMContentLoaded", function () {
+            Echo.channel('user-screens.{{ $user->id }}')
+                .listen('.TimerUpdated', (e) => {
+                    console.log('TimerUpdated received in control panel:', e);
+                    timerStatus = e.status;
+                    timerDuration = e.duration;
+                    timerRemaining = e.remainingSeconds;
+                    timerEndsAt = e.endsAt;
+                    timerVisible = e.visible;
+                    
+                    const input = document.getElementById('timer-duration-input');
+                    if (input) {
+                        input.value = timerDuration;
+                    }
+
+                    updateControlPanelUI();
+                    if (timerStatus === 'running') {
+                        startTimerLoop();
+                    } else {
+                        clearInterval(timerInterval);
+                    }
+                });
+        });
+    </script>
 </body>
 </html>

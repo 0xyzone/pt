@@ -18,22 +18,44 @@ class TournamentMatchForm
         return $schema
             ->components([
                 Hidden::make('tournament_id')
-                    ->default(fn() => request()->route('tournament'))
+                    ->default(fn() => \Illuminate\Support\Facades\Request::route('tournament'))
                     ->required(),
+                Select::make('tournament_round_id')
+                    ->label('Round')
+                    ->options(function ($record) {
+                        $tournamentId = \Illuminate\Support\Facades\Request::route('tournament');
+                        if (!$tournamentId && $record) {
+                            $tournamentId = $record->tournament_id;
+                        }
+                        if (!$tournamentId) {
+                            return [];
+                        }
+                        return \App\Models\TournamentRound::where('tournament_id', $tournamentId)->pluck('name', 'id');
+                    })
+                    ->nullable()
+                    ->searchable(),
                 TextInput::make('name')
                     ->required(),
                 DatePicker::make('match_date')
-                ->native(false),
+                    ->native(false)
+                    ->default(now()),
                 TimePicker::make('match_time')
-                // ->native(false)
-                ->seconds(false)
-                ->displayFormat('h:i A'),
+                    // ->native(false)
+                    ->seconds(false)
+                    ->displayFormat('h:i A')
+                    ->default(now()),
                 Select::make('map')
                     ->options([
                         'erangle' => 'Erangle',
                         'miramar' => 'Miramar',
                         'sanhok' => 'Sanhok',
-                        'rondo' => 'Rondo'
+                        'rondo' => 'Rondo',
+                        'vikendi' => 'Vikendi',
+                        'taego' => 'Taego',
+                        'deston' => 'Deston',
+                        'karakin' => 'Karakin',
+                        'paramo' => 'Paramo',
+                        'haven' => 'Haven',
                     ])
                     ->default('erangle')
                     ->required(),

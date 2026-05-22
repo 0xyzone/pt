@@ -34,6 +34,11 @@ class ManageTournamentMatches extends ManageRelatedRecords
             ->components([
                 TextInput::make('name')
                     ->required(),
+                Select::make('tournament_round_id')
+                    ->label('Round')
+                    ->options(fn () => $this->getOwnerRecord()->tournamentRounds->pluck('name', 'id'))
+                    ->nullable()
+                    ->searchable(),
                 // DatePicker::make('match_date'),
                 // TimePicker::make('match_time'),
                 Select::make('map')
@@ -41,7 +46,10 @@ class ManageTournamentMatches extends ManageRelatedRecords
                         'erangle' => 'Erangle',
                         'miramar' => 'Miramar',
                         'sanhok' => 'Sanhok',
+                        'rondo' => 'Rondo',
                         'vikendi' => 'Vikendi',
+                        'taego' => 'Taego',
+                        'deston' => 'Deston',
                         'karakin' => 'Karakin',
                         'paramo' => 'Paramo',
                         'haven' => 'Haven',
@@ -61,6 +69,11 @@ class ManageTournamentMatches extends ManageRelatedRecords
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),
+                TextColumn::make('tournamentRound.name')
+                    ->label('Round')
+                    ->searchable()
+                    ->badge()
+                    ->color('info'),
                 // TextColumn::make('match_date')
                 //     ->date()
                 //     ->sortable(),
@@ -83,7 +96,87 @@ class ManageTournamentMatches extends ManageRelatedRecords
             ])
             ->headerActions([
                 CreateAction::make(),
-                // AssociateAction::make(),
+                \Filament\Tables\Actions\Action::make('generate_matches')
+                    ->label('Generate Round Matches')
+                    ->icon('heroicon-o-sparkles')
+                    ->color('success')
+                    ->form([
+                        Select::make('tournament_round_id')
+                            ->label('Select Round')
+                            ->options(fn () => $this->getOwnerRecord()->tournamentRounds->pluck('name', 'id'))
+                            ->required(),
+                    ])
+                    ->action(function (array $data) {
+                        $tournament = $this->getOwnerRecord();
+                        $round = \App\Models\TournamentRound::find($data['tournament_round_id']);
+                        if (!$round) {
+                            return;
+                        }
+
+                        $maps = $round->maps ?? [];
+                        if (empty($maps)) {
+                            \Filament\Notifications\Notification::make()
+                                ->title('No maps configured')
+                                ->body('Please configure maps for this round in the tournament edit form first.')
+                                ->warning()
+                                ->send();
+                            return;
+                        }
+
+                        $teams = $tournament->tournamentTeams;
+                        if ($teams->isEmpty()) {
+                            \Filament\Notifications\Notification::make()
+                                ->title('No teams registered')
+                                ->body('Please add teams to this tournament first so they can be populated to matches.')
+                                ->warning()
+                                ->send();
+                            return;
+                        }
+
+                        $matchCount = 0;
+                        foreach ($maps as $index => $mapItem) {
+                            $mapName = $mapItem['map'] ?? 'erangle';
+                            $matchIndex = $index + 1;
+                            
+                            // Create the match
+                            $match = $tournament->tournamentMatches()->create([
+                                'tournament_round_id' => $round->id,
+                                'name' => "{$round->name} - Match {$matchIndex}",
+                                'map' => $mapName,
+                                'is_active' => false,
+                                'is_completed' => false,
+                                'match_date' => now()->toDateString(),
+                                'match_time' => now()->toTimeString(),
+                            ]);
+
+                            // Populate teams and players
+                            foreach ($teams as $team) {
+                                $playerIds = \App\Models\Player::where('tournament_team_id', $team->id)->pluck('id')->toArray();
+                                
+                                $matchStat = $match->matchStats()->create([
+                                    'tournament_team_id' => $team->id,
+                                    'alive' => count($playerIds) > 0 ? count($playerIds) : 4,
+                                    'kills' => 0,
+                                    'placement' => 0,
+                                    'is_winner' => false,
+                                    'points' => 0,
+                                ]);
+
+                                if (!empty($playerIds)) {
+                                    $matchStat->players()->sync($playerIds);
+                                }
+                                $matchStat->recalculateTotals();
+                            }
+                            
+                            $matchCount++;
+                        }
+
+                        \Filament\Notifications\Notification::make()
+                            ->title("Generated {$matchCount} matches")
+                            ->body("Successfully generated matches for {$round->name} and populated teams and players.")
+                            ->success()
+                            ->send();
+                    })
             ])
             ->recordActions([
                 EditAction::make(),

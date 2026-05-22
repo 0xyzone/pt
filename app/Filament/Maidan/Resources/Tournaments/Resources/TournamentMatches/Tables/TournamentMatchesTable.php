@@ -20,6 +20,11 @@ class TournamentMatchesTable
                     ->searchable(),
                 TextColumn::make('name')
                     ->searchable(),
+                TextColumn::make('tournamentRound.name')
+                    ->label('Round')
+                    ->searchable()
+                    ->badge()
+                    ->color('info'),
                 // TextColumn::make('match_date')
                 //     ->date()
                 //     ->sortable(),

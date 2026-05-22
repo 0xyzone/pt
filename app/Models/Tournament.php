@@ -42,6 +42,15 @@ class Tournament extends Model
         return $this->hasMany(TournamentMatch::class);
     }
     /**
+     * Get all of the tournamentRounds for the Tournament
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function tournamentRounds(): HasMany
+    {
+        return $this->hasMany(TournamentRound::class)->orderBy('id');
+    }
+    /**
      * Get all of the tournamentSettings for the Tournament
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
