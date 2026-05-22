@@ -126,7 +126,7 @@
         </div>
 
         {{-- Stats Grid --}}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="stats-grid">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="stats-grid">
             @php
                 // Map team IDs to their slot number
                 // Sort matchStats by the slot number mapped for each team
@@ -166,35 +166,60 @@
                 {{-- Controls Area --}}
                 <div class="flex flex-col gap-4 flex-grow">
                     
-                    {{-- Row 1: Alive & Kills --}}
-                    <div class="flex justify-between items-center bg-slate-950/50 rounded-xl p-3 border border-slate-800/50">
-                        {{-- Alive --}}
-                        <div class="flex flex-col items-center w-1/2 border-r border-slate-800/80 pr-2">
-                            <span class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-2">Alive</span>
-                            <div class="flex items-center justify-center gap-2 w-full">
-                                <button class="stat-btn danger" onclick="updateStat({{ $stat->id }}, 'alive', Math.max(0, {{ $stat->alive }} - 1))" {{ $stat->alive <= 0 ? 'disabled' : '' }}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" /></svg>
-                                </button>
-                                <span class="stat-value text-emerald-400" data-field="alive">{{ $stat->alive }}</span>
-                                <button class="stat-btn success" onclick="updateStat({{ $stat->id }}, 'alive', Math.min(4, {{ $stat->alive }} + 1))" {{ $stat->alive >= 4 ? 'disabled' : '' }}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                                </button>
-                            </div>
+                    {{-- Overall Squad Status Summary --}}
+                    <div class="flex justify-between items-center bg-slate-950/40 rounded-xl px-4 py-2 border border-slate-800/40 text-xs font-bold uppercase tracking-wider">
+                        <div class="flex items-center gap-1.5 text-emerald-400">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>Alive: <span class="font-black text-sm" data-field="alive">{{ $stat->alive }}</span></span>
                         </div>
+                        <div class="flex items-center gap-1.5 text-red-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" /></svg>
+                            <span>Kills: <span class="font-black text-sm" data-field="kills">{{ $stat->kills }}</span></span>
+                        </div>
+                    </div>
 
-                        {{-- Kills --}}
-                        <div class="flex flex-col items-center w-1/2 pl-2">
-                            <span class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-2">Kills</span>
-                            <div class="flex items-center justify-center gap-2 w-full">
-                                <button class="stat-btn danger" onclick="updateStat({{ $stat->id }}, 'kills', Math.max(0, parseInt(this.parentElement.querySelector('[data-field=kills]').textContent) - 1))">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" /></svg>
-                                </button>
-                                <span class="stat-value text-red-400" data-field="kills">{{ $stat->kills }}</span>
-                                <button class="stat-btn success" onclick="updateStat({{ $stat->id }}, 'kills', parseInt(this.parentElement.querySelector('[data-field=kills]').textContent) + 1)">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                                </button>
+                    {{-- Squad Roster Section --}}
+                    <div class="squad-roster-container flex flex-col gap-2 bg-slate-950/20 rounded-xl p-3 border border-slate-800/30">
+                        <span class="text-[9px] text-slate-500 font-extrabold uppercase tracking-widest border-b border-slate-800/50 pb-1.5 mb-1">Squad Roster</span>
+                        @forelse($stat->players as $player)
+                            <div class="flex items-center justify-between gap-3 p-2 rounded-lg hover:bg-slate-800/30 transition-all duration-200" data-player-id="{{ $player->id }}">
+                                {{-- Left: Player Name & Role --}}
+                                <div class="flex flex-col min-w-0 flex-grow pl-1">
+                                    <span class="font-extrabold text-sm text-slate-200 truncate tracking-wide uppercase leading-tight" title="{{ $player->name }}">{{ $player->ign }}</span>
+                                    @if($player->role && $player->role !== 'player')
+                                        <span class="text-[8px] text-yellow-500 font-extrabold uppercase tracking-widest mt-0.5 leading-none">{{ $player->role }}</span>
+                                    @endif
+                                </div>
+
+                                {{-- Right: Status Toggle & Kills side by side --}}
+                                <div class="flex items-center gap-3 flex-shrink-0">
+                                    {{-- Status Dot / Toggle --}}
+                                    <button class="flex items-center justify-center w-6 h-6 rounded-full transition-all duration-150 border {{ $player->pivot->is_alive ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20' : 'bg-red-500/10 text-red-500 border-red-500/20 hover:bg-red-500/20' }}"
+                                            onclick="togglePlayerAlive({{ $stat->id }}, {{ $player->id }}, {{ $player->pivot->is_alive ? 0 : 1 }})"
+                                            data-player-status-id="{{ $player->id }}"
+                                            title="{{ $player->pivot->is_alive ? 'Mark as Dead' : 'Revive Player' }}">
+                                        <span class="w-1.5 h-1.5 rounded-full {{ $player->pivot->is_alive ? 'bg-emerald-400' : 'bg-red-500' }}"></span>
+                                    </button>
+
+                                    {{-- Kills Controller --}}
+                                    <div class="flex items-center bg-slate-950/40 rounded-lg p-0.5 border border-slate-800/60">
+                                        <button class="stat-btn danger !w-6 !h-6 !rounded-md" 
+                                                onclick="updatePlayerKills({{ $stat->id }}, {{ $player->id }}, Math.max(0, parseInt(this.nextElementSibling.textContent) - 1))">
+                                            <span class="font-extrabold text-xs">-</span>
+                                        </button>
+                                        <span class="text-xs font-black text-red-400 w-5 text-center font-mono" data-player-kills-id="{{ $player->id }}">{{ $player->pivot->kills }}</span>
+                                        <button class="stat-btn success !w-6 !h-6 !rounded-md" 
+                                                onclick="updatePlayerKills({{ $stat->id }}, {{ $player->id }}, parseInt(this.previousElementSibling.textContent) + 1)">
+                                            <span class="font-extrabold text-xs">+</span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        @empty
+                            <div class="text-center py-4 text-slate-500 text-xs font-semibold uppercase tracking-wider">
+                                No playing players populated
+                            </div>
+                        @endforelse
                     </div>
 
                     {{-- Row 2: Placement & Actions --}}
@@ -287,12 +312,161 @@
             }
         });
 
+        // Local DOM Sync Engine for real-time instantaneous visual updates (React-like)
+        window.updateCardDOM = function(statId, stat) {
+            const card = document.querySelector(`[data-stat-id="${statId}"]`);
+            if (!card) return;
+
+            // 1. Update Team-level Stats
+            const pointsEl = card.querySelector('[data-field="points"]');
+            if (pointsEl) pointsEl.textContent = stat.points;
+
+            const aliveEl = card.querySelector('[data-field="alive"]');
+            if (aliveEl) aliveEl.textContent = stat.alive;
+
+            const killsEl = card.querySelector('[data-field="kills"]');
+            if (killsEl) killsEl.textContent = stat.kills;
+
+            // Eliminated Status class
+            if (parseInt(stat.alive) === 0) {
+                card.classList.add('eliminated');
+            } else {
+                card.classList.remove('eliminated');
+            }
+
+            // Winner Toggle Badge
+            const winnerToggle = card.querySelector('[data-field="is_winner"]');
+            if (winnerToggle) {
+                if (stat.is_winner) {
+                    winnerToggle.classList.add('active');
+                    // Ensure other winner toggles are deactivated in the DOM for consistency
+                    document.querySelectorAll('.winner-toggle.active').forEach(toggle => {
+                        const otherCard = toggle.closest('.team-card');
+                        if (otherCard && otherCard.getAttribute('data-stat-id') != statId) {
+                            toggle.classList.remove('active');
+                        }
+                    });
+                } else {
+                    winnerToggle.classList.remove('active');
+                }
+            }
+
+            // Placement Select Dropdown Text
+            const placementEl = card.querySelector('[data-field="placement"]');
+            if (placementEl) placementEl.textContent = '#' + stat.placement;
+
+            // Placement Select Dropdown Options selected state
+            const options = card.querySelectorAll('.custom-select-option');
+            options.forEach(opt => {
+                const match = opt.getAttribute('onclick').match(/selectPlacement\(\s*\d+\s*,\s*(\d+)\s*\)/);
+                if (match) {
+                    const optVal = parseInt(match[1]);
+                    if (optVal === stat.placement) {
+                        opt.classList.add('selected');
+                    } else {
+                        opt.classList.remove('selected');
+                    }
+                }
+            });
+
+            // 2. Update Squad Roster Players
+            if (stat.players && Array.isArray(stat.players)) {
+                stat.players.forEach(player => {
+                    const playerRow = card.querySelector(`[data-player-id="${player.id}"]`);
+                    if (playerRow) {
+                        // Kills Counter
+                        const playerKillsEl = playerRow.querySelector('[data-player-kills-id]');
+                        if (playerKillsEl) playerKillsEl.textContent = player.pivot.kills;
+
+                        // Survival Status Dot Badge & Button Class
+                        const statusBtn = playerRow.querySelector('[data-player-status-id]');
+                        if (statusBtn) {
+                            const isAlive = !!player.pivot.is_alive;
+                            if (isAlive) {
+                                statusBtn.className = "flex items-center justify-center w-6 h-6 rounded-full transition-all duration-150 border bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20";
+                                statusBtn.title = "Mark as Dead";
+                            } else {
+                                statusBtn.className = "flex items-center justify-center w-6 h-6 rounded-full transition-all duration-150 border bg-red-500/10 text-red-500 border-red-500/20 hover:bg-red-500/20";
+                                statusBtn.title = "Revive Player";
+                            }
+                            statusBtn.setAttribute('onclick', `togglePlayerAlive(${statId}, ${player.id}, ${isAlive ? 0 : 1})`);
+
+                            const dot = statusBtn.querySelector('span');
+                            if (dot) {
+                                dot.className = isAlive ? "w-1.5 h-1.5 rounded-full bg-emerald-400" : "w-1.5 h-1.5 rounded-full bg-red-500";
+                            }
+                        }
+                    }
+                });
+            }
+        };
+
         // Global Update Function
         window.updateStat = async function(statId, field, value) {
             const card = document.querySelector(`[data-stat-id="${statId}"]`);
             if (card) {
                 card.classList.add('flash');
                 setTimeout(() => card.classList.remove('flash'), 600);
+
+                // Optimistic UI updates for ultra-snappy responsiveness
+                if (field === 'placement') {
+                    const placementEl = card.querySelector('[data-field="placement"]');
+                    if (placementEl) placementEl.textContent = '#' + value;
+                    
+                    const options = card.querySelectorAll('.custom-select-option');
+                    options.forEach(opt => {
+                        const match = opt.getAttribute('onclick').match(/selectPlacement\(\s*\d+\s*,\s*(\d+)\s*\)/);
+                        if (match) {
+                            const optVal = parseInt(match[1]);
+                            if (optVal === parseInt(value)) {
+                                opt.classList.add('selected');
+                            } else {
+                                opt.classList.remove('selected');
+                            }
+                        }
+                    });
+                } else if (field === 'is_winner') {
+                    const winnerToggle = card.querySelector('[data-field="is_winner"]');
+                    if (winnerToggle) {
+                        if (value) {
+                            winnerToggle.classList.add('active');
+                            
+                            // Optimistically set placement to 1 as well!
+                            const placementEl = card.querySelector('[data-field="placement"]');
+                            if (placementEl) placementEl.textContent = '#1';
+                            
+                            const options = card.querySelectorAll('.custom-select-option');
+                            options.forEach(opt => {
+                                const match = opt.getAttribute('onclick').match(/selectPlacement\(\s*\d+\s*,\s*(\d+)\s*\)/);
+                                if (match) {
+                                    const optVal = parseInt(match[1]);
+                                    if (optVal === 1) {
+                                        opt.classList.add('selected');
+                                    } else {
+                                        opt.classList.remove('selected');
+                                    }
+                                }
+                            });
+
+                            document.querySelectorAll('.winner-toggle.active').forEach(toggle => {
+                                const otherCard = toggle.closest('.team-card');
+                                if (otherCard && otherCard.getAttribute('data-stat-id') != statId) {
+                                    toggle.classList.remove('active');
+                                }
+                            });
+                        } else {
+                            winnerToggle.classList.remove('active');
+                        }
+                    }
+                } else if (field === 'alive') {
+                    const aliveEl = card.querySelector('[data-field="alive"]');
+                    if (aliveEl) aliveEl.textContent = value;
+                    if (parseInt(value) === 0) {
+                        card.classList.add('eliminated');
+                    } else {
+                        card.classList.remove('eliminated');
+                    }
+                }
             }
 
             pendingRequests++;
@@ -307,7 +481,104 @@
                     body: JSON.stringify({ stat_id: statId, field, value }),
                 });
                 const data = await resp.json();
-                if (!data.success) console.error('Update failed:', data);
+                if (data.success && data.stat) {
+                    window.updateCardDOM(statId, data.stat);
+                } else {
+                    console.error('Update failed:', data);
+                }
+            } catch (err) {
+                console.error('Network error:', err);
+            } finally {
+                pendingRequests--;
+            }
+        };
+
+        window.togglePlayerAlive = async function(statId, playerId, isAlive) {
+            const card = document.querySelector(`[data-stat-id="${statId}"]`);
+            if (card) {
+                card.classList.add('flash');
+                setTimeout(() => card.classList.remove('flash'), 600);
+
+                // Optimistic UI updates for ultra-snappy responsiveness
+                const playerRow = card.querySelector(`[data-player-id="${playerId}"]`);
+                if (playerRow) {
+                    const statusBtn = playerRow.querySelector('[data-player-status-id]');
+                    if (statusBtn) {
+                        const isAliveBool = !!isAlive;
+                        if (isAliveBool) {
+                            statusBtn.className = "flex items-center justify-center w-6 h-6 rounded-full transition-all duration-150 border bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20";
+                            statusBtn.title = "Mark as Dead";
+                        } else {
+                            statusBtn.className = "flex items-center justify-center w-6 h-6 rounded-full transition-all duration-150 border bg-red-500/10 text-red-500 border-red-500/20 hover:bg-red-500/20";
+                            statusBtn.title = "Revive Player";
+                        }
+                        statusBtn.setAttribute('onclick', `togglePlayerAlive(${statId}, ${playerId}, ${isAliveBool ? 0 : 1})`);
+                        
+                        const dot = statusBtn.querySelector('span');
+                        if (dot) {
+                            dot.className = isAliveBool ? "w-1.5 h-1.5 rounded-full bg-emerald-400" : "w-1.5 h-1.5 rounded-full bg-red-500";
+                        }
+                    }
+                }
+            }
+
+            pendingRequests++;
+            try {
+                const resp = await fetch(updateUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({ stat_id: statId, player_id: playerId, field: 'is_alive', value: isAlive }),
+                });
+                const data = await resp.json();
+                if (data.success && data.stat) {
+                    window.updateCardDOM(statId, data.stat);
+                } else {
+                    console.error('Update failed:', data);
+                }
+            } catch (err) {
+                console.error('Network error:', err);
+            } finally {
+                pendingRequests--;
+            }
+        };
+
+        window.updatePlayerKills = async function(statId, playerId, kills) {
+            const card = document.querySelector(`[data-stat-id="${statId}"]`);
+            if (card) {
+                card.classList.add('flash');
+                setTimeout(() => card.classList.remove('flash'), 600);
+
+                // Optimistic UI updates for ultra-snappy responsiveness
+                const playerRow = card.querySelector(`[data-player-id="${playerId}"]`);
+                if (playerRow) {
+                    const killsSpan = playerRow.querySelector('[data-player-kills-id]');
+                    if (killsSpan) {
+                        killsSpan.textContent = kills;
+                    }
+                }
+            }
+
+            pendingRequests++;
+            try {
+                const resp = await fetch(updateUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({ stat_id: statId, player_id: playerId, field: 'kills', value: kills }),
+                });
+                const data = await resp.json();
+                if (data.success && data.stat) {
+                    window.updateCardDOM(statId, data.stat);
+                } else {
+                    console.error('Update failed:', data);
+                }
             } catch (err) {
                 console.error('Network error:', err);
             } finally {
@@ -316,122 +587,43 @@
         };
 
         window.triggerElimination = async function(statId) {
-            // Instantly update the UI to zero alive
+            // Instantly update the UI to zero alive (optimistic)
             const card = document.querySelector(`[data-stat-id="${statId}"]`);
             if(card) {
                 const aliveSpan = card.querySelector('[data-field="alive"]');
                 if(aliveSpan) aliveSpan.textContent = '0';
                 card.classList.add('eliminated');
-                const aliveBtns = card.querySelectorAll('.stat-btn.danger, .stat-btn.success');
-                if(aliveBtns[0]) aliveBtns[0].disabled = true; // minus button
-                if(aliveBtns[1]) aliveBtns[1].disabled = false; // plus button (can still revive if mistake)
+
+                // Mark all players of this team dead in the UI optimistically
+                card.querySelectorAll('[data-player-status-id]').forEach(btn => {
+                    btn.className = "flex items-center justify-center w-6 h-6 rounded-full transition-all duration-150 border bg-red-500/10 text-red-500 border-red-500/20 hover:bg-red-500/20";
+                    btn.title = "Revive Player";
+                    const playerId = btn.getAttribute('data-player-status-id');
+                    btn.setAttribute('onclick', `togglePlayerAlive(${statId}, ${playerId}, 1)`);
+                    const dot = btn.querySelector('span');
+                    if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-red-500";
+                });
             }
             // Proceed to update the backend
             updateStat(statId, 'alive', 0);
         };
 
-        // Live updates via Echo
+        // Live updates via Echo - Instantly sync other clients' updates via JSON DOM Sync
         document.addEventListener("DOMContentLoaded", function () {
             const statusEl = document.getElementById('connection-status');
 
-            function refreshPage() {
-                fetch(window.location.href, { cache: 'no-store' })
-                    .then(r => r.text())
-                    .then(html => {
-                        const parser = new DOMParser();
-                        const doc = parser.parseFromString(html, 'text/html');
-
-                        // Update all team cards
-                        doc.querySelectorAll('.team-card').forEach(newCard => {
-                            const statId = newCard.getAttribute('data-stat-id');
-                            const oldCard = document.querySelector(`[data-stat-id="${statId}"]`);
-                            if (oldCard) {
-                                // Update scalar values
-                                ['alive', 'kills', 'points'].forEach(field => {
-                                    const newVal = newCard.querySelector(`[data-field="${field}"]`);
-                                    const oldVal = oldCard.querySelector(`[data-field="${field}"]`);
-                                    if (newVal && oldVal) oldVal.textContent = newVal.textContent;
-                                });
-
-                                // Update placement select text
-                                const newPlacement = newCard.querySelector('[data-field="placement"]');
-                                const oldPlacement = oldCard.querySelector('[data-field="placement"]');
-                                if (newPlacement && oldPlacement) oldPlacement.textContent = newPlacement.textContent;
-
-                                // Update placement select options container (completely replace to handle changing counts)
-                                const newOptionsList = newCard.querySelector('.custom-select-options');
-                                const oldOptionsList = oldCard.querySelector('.custom-select-options');
-                                if (newOptionsList && oldOptionsList) {
-                                    oldOptionsList.innerHTML = newOptionsList.innerHTML;
-                                }
-
-                                // Update winner toggle
-                                const newWinner = newCard.querySelector('[data-field="is_winner"]');
-                                const oldWinner = oldCard.querySelector('[data-field="is_winner"]');
-                                if (newWinner && oldWinner) {
-                                    oldWinner.className = newWinner.className;
-                                }
-
-                                // Update eliminated state
-                                if (newCard.classList.contains('eliminated')) {
-                                    oldCard.classList.add('eliminated');
-                                } else {
-                                    oldCard.classList.remove('eliminated');
-                                }
-
-                                // Update alive buttons disabled state & onclick
-                                const aliveVal = parseInt(oldCard.querySelector('[data-field="alive"]').textContent);
-                                const aliveBtns = oldCard.querySelectorAll('.stat-btn.danger:not(.warning), .stat-btn.success:not(.warning)');
-                                // Assuming first is minus alive, second is plus alive, third is minus kills, fourth is plus kills
-                                // We can target them directly using their parent container
-                                const aliveContainer = oldCard.querySelector('[data-field="alive"]').parentElement;
-                                const currentAliveBtns = aliveContainer.querySelectorAll('.stat-btn');
-                                if (currentAliveBtns[0]) {
-                                    currentAliveBtns[0].disabled = aliveVal <= 0;
-                                    currentAliveBtns[0].setAttribute('onclick', `updateStat(${statId}, 'alive', Math.max(0, ${aliveVal} - 1))`);
-                                }
-                                if (currentAliveBtns[1]) {
-                                    currentAliveBtns[1].disabled = aliveVal >= 4;
-                                    currentAliveBtns[1].setAttribute('onclick', `updateStat(${statId}, 'alive', Math.min(4, ${aliveVal} + 1))`);
-                                }
-
-                                // Flash updated card
-                                oldCard.classList.add('flash');
-                                setTimeout(() => oldCard.classList.remove('flash'), 600);
-                            }
-                        });
-                        
-                        // Handle sorting order updates if points changed (optional: currently maintaining position for stability, but we can reorder DOM)
-                        const newGrid = doc.getElementById('stats-grid');
-                        const oldGrid = document.getElementById('stats-grid');
-                        if (newGrid && oldGrid) {
-                            const newOrderIds = Array.from(newGrid.children).map(c => c.getAttribute('data-stat-id'));
-                            const oldOrderIds = Array.from(oldGrid.children).map(c => c.getAttribute('data-stat-id'));
-                            
-                            // Check if order changed
-                            let orderChanged = false;
-                            for(let i=0; i<newOrderIds.length; i++) {
-                                if(newOrderIds[i] !== oldOrderIds[i]) {
-                                    orderChanged = true; break;
-                                }
-                            }
-                            
-                            if(orderChanged) {
-                                newOrderIds.forEach(id => {
-                                    const card = document.querySelector(`[data-stat-id="${id}"]`);
-                                    if(card) oldGrid.appendChild(card); // Moves it to the end in the new order
-                                });
-                            }
-                        }
-                    });
-            }
-
             Echo.channel('active-match.{{ $activeMatch->id }}')
                 .listen('.MatchStatsUpdated', (e) => {
-                    if (pendingRequests === 0) {
-                        refreshPage();
-                    } else {
-                        setTimeout(() => refreshPage(), 500);
+                    // Instantly sync the updated card in real-time using the event payload
+                    if (e && e.matchStat) {
+                        window.updateCardDOM(e.matchStat.id, e.matchStat);
+                        
+                        // Flash the card to signal real-time external update
+                        const card = document.querySelector(`[data-stat-id="${e.matchStat.id}"]`);
+                        if (card) {
+                            card.classList.add('flash');
+                            setTimeout(() => card.classList.remove('flash'), 600);
+                        }
                     }
                 });
         });

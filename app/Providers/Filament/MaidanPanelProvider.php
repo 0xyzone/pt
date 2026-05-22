@@ -28,6 +28,8 @@ class MaidanPanelProvider extends PanelProvider
         return $panel
             ->id('maidan')
             ->path('maidan')
+            ->databaseNotifications()
+            ->databaseNotificationsPolling('30s')
             ->viteTheme('resources/css/filament/maidan/theme.css')
             ->colors([
                 'primary' => Color::Amber,

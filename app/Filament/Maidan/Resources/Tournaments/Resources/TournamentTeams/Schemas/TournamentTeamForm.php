@@ -4,8 +4,10 @@ namespace App\Filament\Maidan\Resources\Tournaments\Resources\TournamentTeams\Sc
 
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class TournamentTeamForm
@@ -36,6 +38,47 @@ class TournamentTeamForm
                         ->automaticallyResizeImagesToWidth(500)
                         ->automaticallyResizeImagesToHeight(500)
                         ->automaticallyOpenImageEditorForAspectRatio(),
+
+                    Section::make('Team Players')
+                        ->description('Manage players on this team and their in-game details.')
+                        ->icon('heroicon-o-users')
+                        ->collapsible()
+                        ->columnSpanFull()
+                        ->schema([
+                            Repeater::make('players')
+                                ->relationship('players')
+                                ->label(false) // Hide label of repeater as the section header serves as the label
+                                ->schema([
+                                    TextInput::make('name')
+                                        ->label('Real Name')
+                                        ->maxLength(255)
+                                        ->placeholder('e.g., John Doe'),
+                                    TextInput::make('ign')
+                                        ->label('In-Game Name (IGN)')
+                                        ->required()
+                                        ->maxLength(255)
+                                        ->placeholder('e.g., Shroud'),
+                                    TextInput::make('in_game_id')
+                                        ->label('In-Game ID (UID)')
+                                        ->maxLength(255)
+                                        ->placeholder('e.g., 5123456789'),
+                                    Select::make('role')
+                                        ->label('Role')
+                                        ->options([
+                                            'player' => 'Regular Player',
+                                            'igl' => 'IGL (In-Game Leader)',
+                                            'substitute' => 'Substitute',
+                                            'manager' => 'Manager',
+                                        ])
+                                        ->default('player')
+                                        ->required()
+                                        ->native(false),
+                                ])
+                                ->columns(2)
+                                ->grid(2)
+                                ->defaultItems(0)
+                                ->addActionLabel('Add Player')
+                        ]),
             ]);
     }
 }

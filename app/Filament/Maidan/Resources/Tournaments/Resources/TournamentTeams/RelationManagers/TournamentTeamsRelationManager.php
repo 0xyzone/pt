@@ -2,7 +2,7 @@
 
 namespace App\Filament\Maidan\Resources\Tournaments\Resources\TournamentTeams\RelationManagers;
 
-use Filament\Actions\AssociateAction;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
@@ -10,15 +10,17 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DissociateAction;
 use Filament\Actions\DissociateBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class TournamentTeamsRelationManager extends RelationManager
 {
@@ -29,6 +31,7 @@ class TournamentTeamsRelationManager extends RelationManager
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->columnSpanFull()
                     ->required()
                     ->maxLength(255),
                 TextInput::make('short_name')
@@ -40,7 +43,7 @@ class TournamentTeamsRelationManager extends RelationManager
                     ->maxLength(255),
                 TextInput::make('whatsapp_number')
                     ->maxLength(255),
-                    FileUpload::make('logo_image')
+                FileUpload::make('logo_image')
                     ->image()
                     ->directory('tournament-team-logos')
                     ->visibility('public')
@@ -51,6 +54,47 @@ class TournamentTeamsRelationManager extends RelationManager
                     ->automaticallyResizeImagesToWidth(500)
                     ->automaticallyResizeImagesToHeight(500)
                     ->automaticallyOpenImageEditorForAspectRatio(),
+
+                Section::make('Team Players')
+                    ->description('Manage players on this team and their in-game details.')
+                    ->icon('heroicon-o-users')
+                    ->columnSpanFull()
+                    ->collapsible()
+                    ->schema([
+                        Repeater::make('players')
+                            ->relationship('players')
+                            ->label(false) // Hide label of repeater as the section header serves as the label
+                            ->schema([
+                                TextInput::make('name')
+                                    ->label('Real Name')
+                                    ->maxLength(255)
+                                    ->placeholder('e.g., John Doe'),
+                                TextInput::make('ign')
+                                    ->label('In-Game Name (IGN)')
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->placeholder('e.g., Shroud'),
+                                TextInput::make('in_game_id')
+                                    ->label('In-Game ID (UID)')
+                                    ->maxLength(255)
+                                    ->placeholder('e.g., 5123456789'),
+                                Select::make('role')
+                                    ->label('Role')
+                                    ->options([
+                                        'player' => 'Regular Player',
+                                        'igl' => 'IGL (In-Game Leader)',
+                                        'substitute' => 'Substitute',
+                                        'manager' => 'Manager',
+                                    ])
+                                    ->default('player')
+                                    ->required()
+                                    ->native(false),
+                            ])
+                            ->columns(2)
+                            ->grid(2)
+                            ->defaultItems(0)
+                            ->addActionLabel('Add Player')
+                    ]),
             ]);
     }
 
@@ -60,11 +104,11 @@ class TournamentTeamsRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 ImageColumn::make('logo_image')
-                ->label('Logo')
-                ->circular()
-                ->imageSize(50)
-                ->disk('public')
-                ->visibility('public'),
+                    ->label('Logo')
+                    ->circular()
+                    ->imageSize(50)
+                    ->disk('public')
+                    ->visibility('public'),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('short_name')
@@ -75,7 +119,7 @@ class TournamentTeamsRelationManager extends RelationManager
                     ->searchable(),
                 TextColumn::make('whatsapp_number')
                     ->searchable()
-                    ->url(fn ($record) => 'https://wa.me/' . preg_replace('/\D/', '', $record->whatsapp_number))
+                    ->url(fn($record) => 'https://wa.me/' . preg_replace('/\D/', '', $record->whatsapp_number))
                     ->openUrlInNewTab()
                     ->label('WhatsApp')
                     ->icon('heroicon-o-chat-bubble-oval-left'),
@@ -104,7 +148,7 @@ class TournamentTeamsRelationManager extends RelationManager
                             ->label('Select Teams')
                             ->options(function () {
                                 return \App\Models\TournamentTeam::query()
-                                    ->whereHas('tournament', fn($q) => $q->where('user_id', auth()->id()))
+                                    ->whereHas('tournament', fn($q) => $q->where('user_id', Auth::id()))
                                     ->where('tournament_id', '!=', $this->getOwnerRecord()->id)
                                     ->pluck('name', 'id');
                             })
@@ -114,7 +158,7 @@ class TournamentTeamsRelationManager extends RelationManager
                     ])
                     ->action(function (array $data) {
                         $teamIds = $data['team_ids'] ?? [];
-                        
+
                         foreach ($teamIds as $teamId) {
                             $team = \App\Models\TournamentTeam::find($teamId);
                             if ($team) {
@@ -122,7 +166,7 @@ class TournamentTeamsRelationManager extends RelationManager
                                 $team->save();
                             }
                         }
-                        
+
                         if (count($teamIds) > 0) {
                             \Filament\Notifications\Notification::make()
                                 ->title(count($teamIds) . ' teams associated successfully')

@@ -28,79 +28,14 @@ class MatchStatsTable
                 TextColumn::make('tournamentTeam.short_name')
                     ->label('Short Name')
                     ->alignCenter(),
-                TextColumn::make('decrease_alive')
-                    ->label('')
-                    ->getStateUsing(fn() => '-')
-                    ->disabled(fn(MatchStat $record) => $record->alive <= 0)
-                    ->action(function (MatchStat $record) {
-                        if ($record->alive > 0) {
-                            $newAlive = $record->alive - 1;
-                            $record->update(['alive' => $newAlive]);
-
-                            if ($newAlive === 0) {
-                                $record->load('tournamentTeam');
-                                \Illuminate\Support\Facades\Log::info("Auto-triggering elimination for Team: " . $record->tournamentTeam->name);
-                                event(new \App\Events\TeamEliminated(
-                                    $record->tournamentTeam->name,
-                                    $record->tournamentTeam->logo_image,
-                                    $record->tournament_match_id
-                                ));
-                            }
-                        }
-                    })
-                    ->alignCenter()
-                    ->badge()
-                    ->color('danger'),
                 TextColumn::make('alive')
+                    ->label('Alive')
                     ->alignCenter()
                     ->color('success'),
-                TextColumn::make('increase_alive')
-                    ->label('')
-                    ->getStateUsing(fn() => '+')
-                    ->action(function (MatchStat $record) {
-                        if ($record->alive < 4) {
-                            $record->update(['alive' => $record->alive + 1]);
-                        } else {
-                            $record->update(['alive' => 4]);
-                        };
-                    })
-                    ->alignCenter()
-                    ->badge()
-                    ->color('success'),
-                TextColumn::make('decrease_kills')
-                    ->label('')
-                    ->getStateUsing(fn() => '-')
-                    ->disabled(fn(MatchStat $record) => $record->kills <= 0)
-                    ->action(function (MatchStat $record) {
-                        if ($record->kills > 0) {
-                            $record->update(['kills' => $record->kills - 1]);
-                        }
-
-                        $record->update([
-                            'points' => static::calculatePoints($record)
-                        ]);
-                    })
-                    ->alignCenter()
-                    ->badge()
-                    ->color('danger'),
                 TextColumn::make('kills')
+                    ->label('Kills')
                     ->alignCenter()
                     ->color('danger'),
-                TextColumn::make('increase_kills')
-                    ->label('')
-                    ->badge()
-                    ->color('success')
-                    ->getStateUsing(fn() => '+')
-                    ->action(function (MatchStat $record) {
-                        if ($record->kills < 100) { // Assuming a maximum of 100 kills
-                            $record->update(['kills' => $record->kills + 1]);
-                        }
-
-                        $record->update([
-                            'points' => static::calculatePoints($record)
-                        ]);
-                    })
-                    ->alignCenter(),
                 SelectColumn::make('placement')
                     ->sortable()
                     ->disablePlaceholderSelection()
@@ -157,12 +92,73 @@ class MatchStatsTable
             ->filters([
                 //
             ])
-            ->recordActions([
+            ->actions([
+                Action::make('manage_roster')
+                    ->label('Manage Roster')
+                    ->icon('heroicon-o-users')
+                    ->color('warning')
+                    ->form(function (MatchStat $record) {
+                        return [
+                            \Filament\Forms\Components\Repeater::make('players_stats')
+                                ->label('Squad Players')
+                                ->schema([
+                                    \Filament\Forms\Components\Hidden::make('id'),
+                                    \Filament\Forms\Components\TextInput::make('ign')
+                                        ->label('Player IGN')
+                                        ->disabled(),
+                                    \Filament\Forms\Components\Toggle::make('is_alive')
+                                        ->label('Alive')
+                                        ->default(true),
+                                    \Filament\Forms\Components\TextInput::make('kills')
+                                        ->label('Kills')
+                                        ->numeric()
+                                        ->default(0)
+                                        ->minValue(0),
+                                ])
+                                ->addable(false)
+                                ->deletable(false)
+                                ->reorderable(false)
+                        ];
+                    })
+                    ->fillForm(function (MatchStat $record): array {
+                        $record->load('players');
+                        $playersData = [];
+                        foreach ($record->players as $player) {
+                            $playersData[] = [
+                                'id' => $player->id,
+                                'ign' => $player->ign,
+                                'is_alive' => (bool) $player->pivot->is_alive,
+                                'kills' => (int) $player->pivot->kills,
+                            ];
+                        }
+                        return [
+                            'players_stats' => $playersData,
+                        ];
+                    })
+                    ->action(function (MatchStat $record, array $data): void {
+                        $playersStats = $data['players_stats'] ?? [];
+                        foreach ($playersStats as $item) {
+                            $playerId = $item['id'] ?? null;
+                            if ($playerId) {
+                                $record->players()->updateExistingPivot($playerId, [
+                                    'is_alive' => (bool)($item['is_alive'] ?? false),
+                                    'kills' => (int)($item['kills'] ?? 0),
+                                ]);
+                            }
+                        }
+                        $record->recalculateTotals();
+                    }),
                 Action::make('trigger_elimination')
                     ->label('Elim')
                     ->icon('heroicon-o-bell-alert')
                     ->color('danger')
+                    ->requiresConfirmation()
                     ->action(function (MatchStat $record) {
+                        foreach ($record->players as $player) {
+                            $record->players()->updateExistingPivot($player->id, ['is_alive' => false]);
+                        }
+                        $record->recalculateTotals();
+
                         $record->load('tournamentTeam');
                         \Illuminate\Support\Facades\Log::info("Manual-triggering elimination for Team: " . $record->tournamentTeam->name);
                         event(new \App\Events\TeamEliminated(
@@ -172,6 +168,9 @@ class MatchStatsTable
                         ));
                     }),
                 DeleteAction::make(),
+            ])
+            ->recordActions([
+                Action::make('manage_roster'),
             ])
             ->toolbarActions([
                 // BulkActionGroup::make([

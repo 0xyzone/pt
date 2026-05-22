@@ -44,4 +44,17 @@ class MatchStatsUpdated implements ShouldBroadcastNow
     {
         return 'MatchStatsUpdated';
     }
+
+    /**
+     * Get the data to broadcast.
+     *
+     * @return array<string, mixed>
+     */
+    public function broadcastWith(): array
+    {
+        $this->matchStat->load(['tournamentTeam', 'players']);
+        return [
+            'matchStat' => $this->matchStat->toArray(),
+        ];
+    }
 }

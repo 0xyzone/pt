@@ -37,4 +37,34 @@ class MatchStat extends Model
     {
         return $this->belongsTo(TournamentTeam::class);
     }
+
+    public function players(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Player::class, 'match_stat_player')
+            ->withPivot(['kills', 'is_alive']);
+    }
+
+    public function recalculateTotals(): void
+    {
+        $this->load('players');
+        
+        $totalKills = $this->players->sum('pivot.kills');
+        $aliveCount = $this->players->filter(fn($player) => $player->pivot->is_alive)->count();
+        
+        $this->kills = $totalKills;
+        $this->alive = $aliveCount;
+        
+        // Recalculate points
+        $tournamentSetting = $this->tournamentMatch?->tournament?->tournamentSettings->first();
+        $points = 0;
+        if ($tournamentSetting) {
+            $killPoints = ($tournamentSetting->kill_points ?? 0) * $this->kills;
+            $placementPoints = $tournamentSetting->tournamentSettingPlacementPoints
+                ->where('placement', $this->placement)
+                ->first()?->points ?? 0;
+            $points = $killPoints + $placementPoints;
+        }
+        $this->points = $points;
+        $this->save();
+    }
 }

@@ -124,7 +124,7 @@ class ScreenController extends Controller
                 ->with('status', 'No active match found. Please activate a match first.');
         }
 
-        $activeMatch->load(['matchStats.tournamentTeam', 'tournament.tournamentSettings.tournamentSettingPlacementPoints']);
+        $activeMatch->load(['matchStats.tournamentTeam', 'matchStats.players', 'tournament.tournamentSettings.tournamentSettingPlacementPoints']);
         $tournamentSetting = $activeMatch->tournament->tournamentSettings->first();
         $placementOptions = $tournamentSetting
             ? $tournamentSetting->tournamentSettingPlacementPoints->pluck('placement')->toArray()
@@ -140,52 +140,94 @@ class ScreenController extends Controller
     public function updateMatchStat()
     {
         $statId = request()->input('stat_id');
+        $playerId = request()->input('player_id');
         $field = request()->input('field');
         $value = request()->input('value');
 
         $stat = \App\Models\MatchStat::findOrFail($statId);
-        $stat->load(['tournamentMatch.tournament.tournamentSettings.tournamentSettingPlacementPoints', 'tournamentTeam']);
+        $stat->load(['tournamentMatch.tournament.tournamentSettings.tournamentSettingPlacementPoints', 'tournamentTeam', 'players']);
 
-        $allowed = ['alive', 'kills', 'placement', 'is_winner'];
-        if (!in_array($field, $allowed)) {
-            return response()->json(['error' => 'Invalid field'], 422);
-        }
-
-        // Handle winner toggle: clear other winners first
-        if ($field === 'is_winner' && $value) {
-            \App\Models\MatchStat::where('tournament_match_id', $stat->tournament_match_id)
-                ->where('id', '!=', $stat->id)
-                ->update(['is_winner' => false]);
-        }
-
-        $stat->update([$field => $value]);
-
-        // Recalculate points if kills or placement changed
-        if (in_array($field, ['kills', 'placement'])) {
-            $stat->refresh();
-            $tournamentSetting = $stat->tournamentMatch?->tournament?->tournamentSettings->first();
-            $points = 0;
-            if ($tournamentSetting) {
-                $killPoints = ($tournamentSetting->kill_points ?? 0) * $stat->kills;
-                $placementPoints = $tournamentSetting->tournamentSettingPlacementPoints
-                    ->where('placement', $stat->placement)
-                    ->first()?->points ?? 0;
-                $points = $killPoints + $placementPoints;
+        if ($playerId) {
+            // Player-level update
+            $allowed = ['is_alive', 'kills'];
+            if (!in_array($field, $allowed)) {
+                return response()->json(['error' => 'Invalid player field'], 422);
             }
-            $stat->update(['points' => $points]);
-        }
 
-        // Fire elimination event if alive just hit 0
-        if ($field === 'alive' && (int)$value === 0) {
-            event(new \App\Events\TeamEliminated(
-                $stat->tournamentTeam->name,
-                $stat->tournamentTeam->logo_image,
-                $stat->tournament_match_id
-            ));
-        }
+            $wasAlive = $stat->alive > 0;
 
-        $stat->refresh();
-        return response()->json(['success' => true, 'stat' => $stat->load('tournamentTeam')]);
+            $stat->players()->updateExistingPivot($playerId, [$field => $value]);
+            $stat->recalculateTotals();
+
+            // Fire elimination event if team alive count just transitioned from >0 to 0
+            if ($wasAlive && $stat->alive === 0) {
+                event(new \App\Events\TeamEliminated(
+                    $stat->tournamentTeam->name,
+                    $stat->tournamentTeam->logo_image,
+                    $stat->tournament_match_id
+                ));
+            }
+
+            $stat->refresh();
+            return response()->json(['success' => true, 'stat' => $stat->load(['tournamentTeam', 'players'])]);
+        } else {
+            // Team-level update
+            $allowed = ['placement', 'is_winner', 'alive'];
+            if (!in_array($field, $allowed)) {
+                return response()->json(['error' => 'Invalid team field'], 422);
+            }
+
+            if ($field === 'alive') {
+                $wasAlive = $stat->alive > 0;
+                foreach ($stat->players as $player) {
+                    $stat->players()->updateExistingPivot($player->id, ['is_alive' => ((int)$value > 0)]);
+                }
+                $stat->recalculateTotals();
+
+                if ($wasAlive && $stat->alive === 0) {
+                    event(new \App\Events\TeamEliminated(
+                        $stat->tournamentTeam->name,
+                        $stat->tournamentTeam->logo_image,
+                        $stat->tournament_match_id
+                    ));
+                }
+
+                $stat->refresh();
+                return response()->json(['success' => true, 'stat' => $stat->load(['tournamentTeam', 'players'])]);
+            }
+
+            // Handle winner toggle: clear other winners first
+            if ($field === 'is_winner' && $value) {
+                \App\Models\MatchStat::where('tournament_match_id', $stat->tournament_match_id)
+                    ->where('id', '!=', $stat->id)
+                    ->update(['is_winner' => false]);
+                
+                $stat->update([
+                    'is_winner' => true,
+                    'placement' => 1
+                ]);
+            } else {
+                $stat->update([$field => $value]);
+            }
+
+            // Recalculate points if placement changed or if the team was marked as match winner (which sets placement to 1)
+            if ($field === 'placement' || ($field === 'is_winner' && $value)) {
+                $stat->refresh();
+                $tournamentSetting = $stat->tournamentMatch?->tournament?->tournamentSettings->first();
+                $points = 0;
+                if ($tournamentSetting) {
+                    $killPoints = ($tournamentSetting->kill_points ?? 0) * $stat->kills;
+                    $placementPoints = $tournamentSetting->tournamentSettingPlacementPoints
+                        ->where('placement', $stat->placement)
+                        ->first()?->points ?? 0;
+                    $points = $killPoints + $placementPoints;
+                }
+                $stat->update(['points' => $points]);
+            }
+
+            $stat->refresh();
+            return response()->json(['success' => true, 'stat' => $stat->load(['tournamentTeam', 'players'])]);
+        }
     }
 
     public function switchObsView()

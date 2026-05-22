@@ -29,4 +29,14 @@ class TournamentTeam extends Model
     {
         return $this->hasMany(MatchStat::class);
     }
+
+    /**
+     * Get the players for the TournamentTeam.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function players(): HasMany
+    {
+        return $this->hasMany(Player::class);
+    }
 }
