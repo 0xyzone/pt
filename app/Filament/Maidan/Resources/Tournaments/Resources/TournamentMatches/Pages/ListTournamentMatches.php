@@ -3,6 +3,7 @@
 namespace App\Filament\Maidan\Resources\Tournaments\Pages;
 
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches\TournamentMatchResource;
+use App\Filament\Maidan\Resources\Tournaments\TournamentResource;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
@@ -14,6 +15,18 @@ class ListTournamentMatches extends ListRecords
     protected static string $resource = TournamentMatchResource::class;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPuzzlePiece;
     protected static ?string $navigationLabel = 'Manage Games';
+
+    public function getSubNavigation(): array
+    {
+        return TournamentResource::getRecordSubNavigation($this);
+    }
+
+    public function getSubNavigationParameters(): array
+    {
+        return [
+            'record' => $this->getParentRecord(),
+        ];
+    }
 
     protected function getHeaderActions(): array
     {

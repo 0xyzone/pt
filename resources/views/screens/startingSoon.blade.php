@@ -85,11 +85,11 @@
         }
 
         .pubg-skew {
-            transform: skewX(-12deg);
+            transform: none;
         }
 
         .pubg-unskew {
-            transform: skewX(12deg);
+            transform: none;
         }
 
         /* Animated radial lighting */
@@ -213,12 +213,12 @@
                     <span class="text-slate-600 uppercase font-black text-sm tracking-[0.25em] opacity-40">COMMERCIAL PARTNERSHIP AD SLOT</span>
                 @else
                     @foreach($sponsors as $idx => $sponsor)
-                        <div class="sponsor-slide absolute inset-0 flex items-center justify-center p-4 transition-all duration-1000 opacity-0 transform translate-y-4 {{ $idx === 0 ? 'active opacity-100 translate-y-0' : '' }}" data-index="{{ $idx }}">
+                        <div class="sponsor-slide absolute inset-0 flex items-center justify-center p-4 transition-all duration-1000 opacity-0 transform translate-y-0 {{ $idx === 0 ? 'active opacity-100 translate-y-0' : '' }}" data-index="{{ $idx }}">
                             <div class="flex items-center gap-6">
-                                <div class="bg-slate-950/60 p-2 rounded-xl border border-slate-800">
+                                <div class="">
                                     <img src="{{ $sponsor->logo_image ? asset('storage/' . $sponsor->logo_image) : asset('img/defult_team_logo.png') }}" class="h-10 object-contain drop-shadow-md">
                                 </div>
-                                <span class="text-white font-black tracking-widest uppercase text-xl border-l-2 border-yellow-400 pl-5 leading-none">{{ $sponsor->name }}</span>
+                                {{-- <span class="text-white font-black tracking-widest uppercase text-xl border-l-2 border-yellow-400 pl-5 leading-none">{{ $sponsor->name }}</span> --}}
                             </div>
                         </div>
                     @endforeach

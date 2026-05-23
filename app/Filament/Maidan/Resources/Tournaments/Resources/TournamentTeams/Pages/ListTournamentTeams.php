@@ -3,6 +3,7 @@
 namespace App\Filament\Maidan\Resources\Tournaments\Pages;
 
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentTeams\TournamentTeamResource;
+use App\Filament\Maidan\Resources\Tournaments\TournamentResource;
 use App\Models\Player;
 use App\Models\TournamentTeam;
 use BackedEnum;
@@ -20,6 +21,18 @@ class ListTournamentTeams extends ListRecords
     protected static string $resource = TournamentTeamResource::class;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
     protected static ?string $navigationLabel = 'Manage Teams';
+
+    public function getSubNavigation(): array
+    {
+        return TournamentResource::getRecordSubNavigation($this);
+    }
+
+    public function getSubNavigationParameters(): array
+    {
+        return [
+            'record' => $this->getParentRecord(),
+        ];
+    }
     protected function getHeaderActions(): array
     {
         return [

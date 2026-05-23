@@ -10,8 +10,8 @@
             font-family: 'Inter', sans-serif;
         }
 
-        .pubg-skew { transform: skewX(-12deg); }
-        .pubg-unskew { transform: skewX(12deg); }
+        .pubg-skew { transform: none; }
+        .pubg-unskew { transform: none; }
         
         .team-card {
             display: flex;
@@ -65,7 +65,7 @@
     <div class="w-full h-full flex font-esports bg-transparent overflow-hidden relative select-none">
 
         {{-- LEFT COLUMN (420px) --}}
-        <div class="w-[420px] h-full flex flex-col pt-8 px-6 pb-6 z-10 relative bg-slate-950/80 backdrop-blur-md border-r border-yellow-400/20 shadow-2xl">
+        <div class="w-105 h-full flex flex-col pt-8 px-6 pb-6 z-10 relative bg-slate-950/80 backdrop-blur-md border-r border-yellow-400/20 shadow-2xl">
             <div class="absolute inset-0 decor-grid z-0 opacity-40 pointer-events-none"></div>
 
             {{-- Tournament Branding --}}
@@ -80,7 +80,7 @@
                 </div>
             </div>
 
-            <div class="w-full h-[1px] bg-gradient-to-r from-yellow-400/30 to-transparent mb-6 relative z-10"></div>
+            <div class="w-full h-px bg-linear-to-r from-yellow-400/30 to-transparent mb-6 relative z-10"></div>
 
             {{-- Left Teams Grid (First 8 teams) --}}
             <div class="grid grid-cols-2 grid-rows-4 gap-x-4 gap-y-5 w-full flex-1 mb-2 relative z-10">
@@ -99,27 +99,27 @@
 
         {{-- MIDDLE COLUMN (1080px wide) --}}
         {{-- Totally transparent container to capture clean OBS game maps --}}
-        <div class="w-[1080px] h-full shrink-0 relative bg-transparent pointer-events-none">
+        <div class="w-270 h-full shrink-0 relative bg-transparent pointer-events-none">
             {{-- Sleek glowing framing border for the OBS map capture --}}
-            <div class="absolute inset-y-0 left-0 w-[1px] bg-gradient-to-b from-transparent via-yellow-400/25 to-transparent"></div>
-            <div class="absolute inset-y-0 right-0 w-[1px] bg-gradient-to-b from-transparent via-yellow-400/25 to-transparent"></div>
+            <div class="absolute inset-y-0 left-0 w-px bg-linear-to-b from-transparent via-yellow-400/25 to-transparent"></div>
+            <div class="absolute inset-y-0 right-0 w-px bg-linear-to-b from-transparent via-yellow-400/25 to-transparent"></div>
             <div class="absolute inset-0 shadow-[inset_0_0_60px_rgba(0,0,0,0.85)]"></div>
         </div>
 
         {{-- RIGHT COLUMN (420px) --}}
-        <div class="w-[420px] h-full flex flex-col pt-8 px-6 pb-6 z-10 relative bg-slate-950/80 backdrop-blur-md border-l border-yellow-400/20 shadow-2xl">
+        <div class="w-105 h-full flex flex-col pt-8 px-6 pb-6 z-10 relative bg-slate-950/80 backdrop-blur-md border-l border-yellow-400/20 shadow-2xl">
             <div class="absolute inset-0 decor-grid z-0 opacity-40 pointer-events-none"></div>
 
             {{-- Match Details --}}
             <div class="flex flex-col items-end mb-8 pr-1 relative z-10">
                 <span class="text-xs font-bold text-slate-500 tracking-[0.3em] uppercase leading-none">SYS // ACTIVE_PHASE</span>
                 <span class="text-3xl font-black uppercase text-slate-200 tracking-widest mt-2 leading-none font-esports">{{ $activeMatch->name }}</span>
-                <div class="pubg-skew bg-gradient-to-r from-yellow-500 to-amber-500 border border-white/20 px-5 py-1.5 inline-block mt-3 shadow-md">
+                <div class="pubg-skew bg-linear-to-r from-yellow-500 to-amber-500 border border-white/20 px-5 py-1.5 inline-block mt-3 shadow-md">
                     <span class="pubg-unskew block text-black font-black uppercase text-xl tracking-wider font-esports leading-none italic">{{ $activeMatch->map }}</span>
                 </div>
             </div>
 
-            <div class="w-full h-[1px] bg-gradient-to-l from-yellow-400/30 to-transparent mb-6 relative z-10"></div>
+            <div class="w-full h-px bg-linear-to-l from-yellow-400/30 to-transparent mb-6 relative z-10"></div>
 
             {{-- Right Teams Grid (Next 8 teams) --}}
             <div class="grid grid-cols-2 grid-rows-4 gap-x-4 gap-y-5 w-full flex-1 mb-2 relative z-10">

@@ -14,10 +14,10 @@
         }
 
         .pubg-skew {
-            transform: skewX(-12deg);
+            transform: none;
         }
         .pubg-unskew {
-            transform: skewX(12deg);
+            transform: none;
         }
 
         .glass-panel {
@@ -108,7 +108,7 @@
     <div id="hud-root" class="w-full h-full relative font-esports text-white overflow-hidden bg-transparent select-none">
 
         {{-- L-SHAPE LEFT SIDEBAR --}}
-        <div class="fixed left-0 top-0 w-[480px] h-full z-30 flex flex-col bg-slate-950/95 backdrop-blur-xl border-r-3 border-yellow-400 p-8 shadow-[15px_0_40px_rgba(0,0,0,0.85)]">
+        <div class="fixed left-0 top-0 w-120 h-full z-30 flex flex-col bg-slate-950/95 backdrop-blur-xl border-r-3 border-yellow-400 p-8 shadow-[15px_0_40px_rgba(0,0,0,0.85)]">
             
             {{-- Tournament Header --}}
             <div class="flex items-center gap-5 mb-6 mt-4">
@@ -122,7 +122,7 @@
                 </div>
             </div>
 
-            <div class="w-full h-[1px] bg-gradient-to-r from-yellow-400/40 to-transparent mb-8"></div>
+            <div class="w-full h-px bg-linear-to-r from-yellow-400/40 to-transparent mb-8"></div>
 
             {{-- SPONSORS & PARTNERS AD SLOT --}}
             <div class="flex-1 flex flex-col justify-center items-center my-6">
@@ -156,24 +156,24 @@
         </div>
 
         {{-- L-SHAPE BOTTOM BAR --}}
-        <div class="fixed bottom-0 left-0 w-full h-[260px] z-20 flex">
+        <div class="fixed bottom-0 left-0 w-full h-65 z-20 flex">
             {{-- Offset to dodge the Left Sidebar --}}
-            <div class="w-[480px] h-full shrink-0 bg-transparent border-none pointer-events-none"></div>
+            <div class="w-120 h-full shrink-0 bg-transparent border-none pointer-events-none"></div>
 
             {{-- Match Cards Container --}}
             <div class="flex-1 glass-panel flex items-center px-12 relative overflow-visible shadow-[0_-15px_40px_rgba(0,0,0,0.8)] border-r-none border-b-none border-l-none">
 
                 {{-- Mascot --}}
                 <img src="{{ asset('img/pubg_mascot.png') }}"
-                    class="absolute z-10 -left-24 -top-36 h-[340px] object-contain drop-shadow-[0_15px_30px_rgba(0,0,0,0.9)] pointer-events-none">
+                    class="absolute z-10 -left-24 -top-36 h-85 object-contain drop-shadow-[0_15px_30px_rgba(0,0,0,0.9)] pointer-events-none">
 
                 {{-- Schedule Badge --}}
-                <div class="bg-gradient-to-r from-yellow-500 to-amber-500 py-2.5 px-12 pubg-skew inline-block ml-36 shadow-2xl absolute -top-6 z-10 border border-white/20">
+                <div class="bg-linear-to-r from-yellow-500 to-amber-500 py-2.5 px-12 pubg-skew inline-block ml-36 shadow-2xl absolute -top-6 z-10 border border-white/20">
                     <span class="pubg-unskew block text-black font-black uppercase text-2xl tracking-widest italic leading-none">Upcoming Matches</span>
                 </div>
 
                 {{-- VIEWPORT CONTAINER --}}
-                <div class="carousel-viewport w-full overflow-hidden h-[240px] flex items-center pl-36 relative">
+                <div class="carousel-viewport w-full overflow-hidden h-60 flex items-center pl-36 relative">
                     {{-- Left-edge frosted blur fade overlay --}}
                     <div class="carousel-left-blur absolute left-0 top-0 h-full w-36 z-20 pointer-events-none"></div>
                     {{-- CAROUSEL TRACK --}}
@@ -188,9 +188,9 @@
                         @endphp
 
                         @foreach($displayMatches as $index => $match)
-                            <div class="match-card h-[210px] w-[340px] shrink-0 relative overflow-hidden group rounded-xl border border-yellow-400/20 hover:border-yellow-400 shadow-2xl">
+                            <div class="match-card h-52.5 w-85 shrink-0 relative overflow-hidden group rounded-xl border border-yellow-400/20 hover:border-yellow-400 shadow-2xl">
                                 {{-- Map Background Gradient Overlay --}}
-                                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-slate-950/20 z-10 group-hover:from-slate-950 group-hover:via-slate-950/50 transition-all duration-300"></div>
+                                <div class="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/70 to-slate-950/20 z-10 group-hover:from-slate-950 group-hover:via-slate-950/50 transition-all duration-300"></div>
                                 @php
                                     $mapImage = match (strtolower($match->map)) {
                                         'erangle', 'erangel' => asset('/img/erangel_thumb.jpg'),
@@ -245,7 +245,7 @@
 
                                     <div class="flex flex-col text-left">
                                         <span class="text-4xl font-black uppercase italic tracking-wider text-yellow-400 leading-none drop-shadow-lg">{{ $match->map }}</span>
-                                        <div class="w-16 h-[2px] bg-yellow-400 mt-2 shadow-[0_0_10px_#facc15]"></div>
+                                        <div class="w-16 h-0.5 bg-yellow-400 mt-2 shadow-[0_0_10px_#facc15]"></div>
                                     </div>
                                 </div>
                             </div>
@@ -364,6 +364,10 @@
                     console.log('Force refresh received...');
                     window.location.reload();
                 })
+                .listen('.TournamentMatchUpdated', (e) => {
+                    // Reload when a match is marked active/completed so winner overlay and status update
+                    window.location.reload();
+                })
                 .listen('.TimerUpdated', (e) => {
                     console.log('TimerUpdated event received:', e);
                     timerStatus = e.status;
@@ -381,6 +385,14 @@
                     }
                     updateDisplay();
                 });
+
+            // Also listen on the active match channel for stats updates
+            @if($activeMatch)
+            Echo.channel('active-match.{{ $activeMatch->id }}')
+                .listen('.MatchStatsUpdated', (e) => {
+                    window.location.reload();
+                });
+            @endif
         });
     </script>
 </x-base>

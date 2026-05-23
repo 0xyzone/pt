@@ -23,17 +23,29 @@ use Filament\Support\Icons\Heroicon;
  */
 class EditTournamentSetting extends Page
 {
-    public $tournamentId;
+    public int|string|null $tournamentId;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCog;
     protected static string $resource = TournamentResource::class;
     protected string $view = 'filament.maidan.resources.tournaments.pages.tournament-setting';
+
+    public function getSubNavigation(): array
+    {
+        return TournamentResource::getRecordSubNavigation($this);
+    }
+
+    public function getSubNavigationParameters(): array
+    {
+        return [
+            'record' => Tournament::findOrFail($this->tournamentId),
+        ];
+    }
 
     /**
      * @var array<string, mixed> | null
      */
     public ?array $data = [];
 
-    public function mount($record): void
+    public function mount(int|string|null $record): void
     {
         $this->tournamentId = $record;
         // dd($tournamentId);

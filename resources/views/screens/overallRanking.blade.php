@@ -1,253 +1,300 @@
 <x-base>
-    {{-- High-End Typography & Theme Imports --}}
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Rajdhani:wght@600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Rajdhani:wght@600;700;900&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
 
     <style>
-        .font-esports {
-            font-family: 'Rajdhani', sans-serif;
-        }
-        .font-body-esports {
-            font-family: 'Inter', sans-serif;
-        }
+        * { box-sizing: border-box; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: transparent; }
 
-        @keyframes slideInUp {
-            from { opacity: 0; transform: translateY(30px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        .animate-row {
-            animation: slideInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-        }
-        
-        .pubg-skew {
-            transform: skewX(-12deg);
-        }
-        .pubg-unskew {
-            transform: skewX(12deg);
-        }
+        .font-esports { font-family: 'Rajdhani', sans-serif; }
+        .font-body    { font-family: 'Inter', sans-serif; }
+        .font-hud     { font-family: 'Orbitron', sans-serif; }
 
-        .glass-panel {
-            background: rgba(8, 12, 24, 0.78);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(250, 204, 21, 0.15);
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
-        }
+        /* ══════════════════════════════════════════════════════
+           ENTRANCE ANIMATIONS
+        ══════════════════════════════════════════════════════ */
 
-        /* Tech bracket corner designs */
-        .bracket-corner::before,
-        .bracket-corner::after,
-        .bracket-inner::before,
-        .bracket-inner::after {
-            content: '';
-            position: absolute;
-            width: 14px;
-            height: 14px;
-            border-color: rgba(250, 204, 21, 0.75);
-            border-style: solid;
-            pointer-events: none;
+        /* Header slides down */
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-60px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-        .bracket-corner::before { top: -1px; left: -1px; border-width: 2.5px 0 0 2.5px; }
-        .bracket-corner::after { top: -1px; right: -1px; border-width: 2.5px 2.5px 0 0; }
-        .bracket-inner::before { bottom: -1px; left: -1px; border-width: 0 0 2.5px 2.5px; }
-        .bracket-inner::after { bottom: -1px; right: -1px; border-width: 0 2.5px 2.5px 0; }
+        .slide-down { animation: slideDown 0.7s cubic-bezier(0.16,1,0.3,1) both; }
+
+        /* Left column slides from left */
+        @keyframes slideFromLeft {
+            from { opacity: 0; transform: translateX(-70px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        .slide-from-left { animation: slideFromLeft 0.7s cubic-bezier(0.16,1,0.3,1) both; }
+
+        /* Right column slides from right */
+        @keyframes slideFromRight {
+            from { opacity: 0; transform: translateX(70px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        .slide-from-right { animation: slideFromRight 0.7s cubic-bezier(0.16,1,0.3,1) both; }
+
+        /* Each row slides up with stagger */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .slide-up { animation: slideUp 0.48s cubic-bezier(0.16,1,0.3,1) both; }
+
+        /* Footer slides up */
+        @keyframes slideUpFooter {
+            from { opacity: 0; transform: translateY(40px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .slide-up-footer { animation: slideUpFooter 0.65s cubic-bezier(0.16,1,0.3,1) both; animation-delay:0.9s; }
+
+        /* Rank #1 badge pops */
+        @keyframes badgePop {
+            from { opacity:0; transform: scale(0.6); }
+            60%  { transform: scale(1.15); }
+            to   { opacity:1; transform: scale(1); }
+        }
+        .badge-pop { animation: badgePop 0.7s cubic-bezier(0.34,1.56,0.64,1) both; }
+
+        /* ══════════════════════════════════════════════════════
+           LOOPING ANIMATIONS
+        ══════════════════════════════════════════════════════ */
 
         @keyframes scanline {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100%); }
+            from { transform: translateY(-100%); }
+            to   { transform: translateY(200%); }
         }
         .scan-sweep {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to bottom, transparent 45%, rgba(250, 204, 21, 0.04) 50%, transparent 55%);
-            animation: scanline 10s infinite linear;
+            position: absolute; inset: 0; z-index: 0;
+            background: linear-gradient(to bottom, transparent 48%, rgba(250,204,21,0.05) 50%, transparent 52%);
+            animation: scanline 12s linear infinite;
             pointer-events: none;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50%       { transform: translateY(-18px) scale(1.04); }
+        }
+        .orb { position: absolute; border-radius: 50%; filter: blur(90px); pointer-events: none; animation: orbFloat 9s ease-in-out infinite; }
+
+        @keyframes rank1Pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(250,204,21,0.45), inset 0 0 30px rgba(250,204,21,0.06); }
+            50%       { box-shadow: 0 0 0 8px rgba(250,204,21,0.0), inset 0 0 60px rgba(250,204,21,0.13); }
+        }
+        .rank1-pulse { animation: rank1Pulse 2.6s ease-in-out infinite; }
+
+        @keyframes numGlow {
+            0%, 100% { text-shadow: 0 0 6px currentColor; }
+            50%       { text-shadow: 0 0 22px currentColor, 0 0 44px currentColor; }
+        }
+        .num-glow { animation: numGlow 3s ease-in-out infinite; }
+
+        @keyframes badgeShimmer {
+            from { background-position: -200% center; }
+            to   { background-position: 200% center; }
+        }
+        .badge-shimmer {
+            background: linear-gradient(90deg,#f59e0b 0%,#fde68a 30%,#f59e0b 50%,#fb923c 70%,#f59e0b 100%);
+            background-size: 200% auto;
+            animation: badgeShimmer 3.5s linear infinite;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+
+        /* ══════════════════════════════════════════════════════
+           CARD STYLES
+        ══════════════════════════════════════════════════════ */
+
+        .glass-row {
+            background: rgba(8, 11, 22, 0.88);
+            border: 1px solid rgba(255,255,255,0.07);
+            box-shadow: 0 2px 14px rgba(0,0,0,0.6);
+            backdrop-filter: blur(14px);
+        }
+        .rank1-card {
+            background: linear-gradient(to right, rgba(28,20,4,0.96), rgba(8,11,22,0.96));
+            border: 1px solid rgba(250,204,21,0.35);
+            border-left: 3px solid #facc15;
+            box-shadow: 0 0 35px rgba(250,204,21,0.13), 0 4px 20px rgba(0,0,0,0.7);
+            backdrop-filter: blur(16px);
+        }
+        .rank2-card {
+            background: rgba(8, 11, 22, 0.88);
+            border: 1px solid rgba(148,163,184,0.18);
+            border-left: 3px solid rgba(148,163,184,0.65);
+            backdrop-filter: blur(14px);
+        }
+        .rank3-card {
+            background: rgba(8, 11, 22, 0.88);
+            border: 1px solid rgba(234,88,12,0.18);
+            border-left: 3px solid rgba(234,88,12,0.65);
+            backdrop-filter: blur(14px);
+        }
+
+        .tbl-header {
+            background: rgba(2, 4, 16, 0.92);
+            border-bottom: 2px solid rgba(250,204,21,0.55);
+            backdrop-filter: blur(12px);
+        }
+
+        .header-bar {
+            background: rgba(2, 4, 16, 0.85);
+            border-bottom: 1px solid rgba(250,204,21,0.25);
+            backdrop-filter: blur(16px);
+        }
+
+        .footer-bar {
+            background: rgba(2, 4, 16, 0.82);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            backdrop-filter: blur(16px);
         }
     </style>
 
-    <div class="w-full h-full p-8 font-esports text-slate-100 relative overflow-hidden z-10 flex flex-col justify-between">
-        
-        {{-- High-tech background grid lines --}}
-        <div class="absolute inset-0 z-0 pointer-events-none opacity-20">
-            <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,#020617_90%)]"></div>
-            <div class="absolute top-[10%] left-[20%] w-[500px] h-[500px] bg-amber-500/5 blur-[120px] rounded-full"></div>
-            <div class="absolute bottom-[10%] right-[20%] w-[600px] h-[600px] bg-orange-600/5 blur-[150px] rounded-full"></div>
-        </div>
+    <div class="w-full h-full font-esports text-slate-100 relative overflow-hidden flex flex-col" style="background: transparent;">
 
-        {{-- Dynamic scanning sweep --}}
-        <div class="scan-sweep z-0"></div>
+        {{-- Ambient orbs --}}
+        <div class="orb" style="width:400px;height:400px;background:rgba(245,158,11,0.07);top:4%;left:6%;animation-delay:0s;"></div>
+        <div class="orb" style="width:480px;height:480px;background:rgba(234,88,12,0.05);bottom:4%;right:5%;animation-delay:4s;"></div>
+        <div class="scan-sweep"></div>
 
-        {{-- TOP: Header Branding HUD --}}
-        <div class="relative z-10 w-full max-w-[1800px] mx-auto flex justify-between items-end border-b border-yellow-400/20 pb-4">
-            <div class="flex items-center gap-6">
-                <div class="bg-slate-950/90 border border-yellow-400/40 p-2.5 rounded-lg shadow-lg">
-                    <img src="{{ $tournament->logo_image ? asset('storage/' . $tournament->logo_image) : asset('img/defult_team_logo.png') }}"
-                        class="w-14 h-14 object-contain">
+        {{-- ─── HEADER (slides down) ────────────────────────── --}}
+        <div class="slide-down header-bar relative z-10 flex justify-between items-center px-10 py-4" style="animation-delay:0s;">
+            <div class="flex items-center gap-5">
+                <div class="p-2 rounded-lg" style="background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.4);">
+                    <img src="{{ $tournament->logo_image ? asset('storage/'.$tournament->logo_image) : asset('img/defult_team_logo.png') }}" class="w-12 h-12 object-contain">
                 </div>
-                <div class="flex flex-col text-left">
-                    <span class="text-lg font-bold text-yellow-400 tracking-[0.35em] uppercase leading-none">OFFICIAL LEADERBOARD</span>
-                    <h1 class="text-4xl font-black italic tracking-tight uppercase mt-1 leading-none text-slate-100">
-                        {{ $tournament->name }}
-                    </h1>
+                <div>
+                    <div class="text-yellow-400 text-xs font-black uppercase tracking-[0.4em] font-body">
+                        @if($currentRound) {{ $currentRound->name }} STANDINGS @else OFFICIAL LEADERBOARD @endif
+                    </div>
+                    <h1 class="text-3xl font-black uppercase tracking-tight leading-none text-white mt-0.5">{{ $tournament->name }}</h1>
                 </div>
             </div>
-
-            <div class="flex flex-col items-end text-right">
-                <span class="text-[11px] font-bold text-slate-500 tracking-[0.3em] uppercase leading-none">SYS // STANDINGS_OVERALL</span>
-                <div class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-400 to-amber-500 drop-shadow-[0_0_10px_rgba(245,158,11,0.3)] uppercase tracking-wider mt-1 leading-none italic">
-                    Overall Rankings
+            <div class="text-right">
+                <div class="text-slate-500 text-[10px] font-black uppercase tracking-[0.35em] font-body">SYS // STANDINGS_OVERALL</div>
+                <div class="text-3xl font-black uppercase tracking-wide mt-0.5">
+                    <span class="badge-shimmer">Overall Rankings</span>
                 </div>
             </div>
         </div>
 
         @php
-            $leftColumn = $rankings->take(8);
+            $leftColumn  = $rankings->take(8);
             $rightColumn = $rankings->slice(8)->take(8);
         @endphp
 
-        {{-- MIDDLE: Dynamic Dual Columns Standing Board --}}
-        <div class="relative z-10 w-full max-w-[1800px] mx-auto grid grid-cols-2 gap-8 my-6 flex-1 items-start">
-            
-            {{-- Column Left (1-8) --}}
-            <div class="flex flex-col gap-2.5">
-                {{-- Flex Table Header --}}
-                <div class="pubg-skew bg-slate-950/90 border-b border-yellow-400/40 px-4 py-2.5 flex items-center gap-4 text-xs font-black uppercase tracking-wider text-slate-400 shadow-md">
-                    <div class="pubg-unskew flex items-center w-full gap-4">
-                        <span class="w-12 text-center">Rank</span>
-                        <span class="w-10 shrink-0"></span>
-                        <span class="flex-1 text-left text-slate-200">Team Name</span>
-                        <span class="w-14 text-center">Played</span>
-                        <span class="w-16 text-center text-yellow-400">WWCD</span>
-                        <span class="w-16 text-center">Elims</span>
-                        <span class="w-16 text-center">Place Pts</span>
-                        <span class="w-20 text-right text-orange-400">Total Pts</span>
-                    </div>
+        {{-- ─── CONTENT ────────────────────────────────────── --}}
+        <div class="relative z-10 flex-1 grid grid-cols-2 gap-6 px-8 py-4 min-h-0">
+
+            @php
+                $cols = [
+                    ['data' => $leftColumn,  'startRank' => 1, 'class' => 'slide-from-left',  'delay' => 0.15],
+                    ['data' => $rightColumn, 'startRank' => 9, 'class' => 'slide-from-right', 'delay' => 0.25],
+                ];
+            @endphp
+
+            @foreach($cols as $colIdx => $col)
+            <div class="{{ $col['class'] }} flex flex-col gap-1.5" style="animation-delay:{{ $col['delay'] }}s;">
+
+                {{-- Column header --}}
+                <div class="tbl-header px-3 py-2 flex items-center gap-2 rounded-t-md">
+                    <span class="w-10 text-center text-[9px] font-black uppercase tracking-widest text-slate-500 font-body">#</span>
+                    <span class="w-8 shrink-0"></span>
+                    <span class="flex-1 text-[9px] font-black uppercase tracking-widest text-slate-300 font-body">Team</span>
+                    <span class="w-12 text-center text-[9px] font-black uppercase tracking-widest text-slate-400 font-body">Played</span>
+                    <span class="w-12 text-center text-[9px] font-black uppercase tracking-widest text-yellow-400 font-body">WWCD</span>
+                    <span class="w-12 text-center text-[9px] font-black uppercase tracking-widest text-slate-400 font-body">Elims</span>
+                    <span class="w-14 text-center text-[9px] font-black uppercase tracking-widest text-slate-400 font-body">Pl.Pts</span>
+                    <span class="w-16 text-right text-[9px] font-black uppercase tracking-widest text-orange-400 font-body">Total</span>
                 </div>
 
-                {{-- Rows --}}
-                @foreach ($leftColumn as $item)
-                    @php $rank = $loop->iteration; @endphp
-                    <div class="animate-row glass-panel hover:bg-slate-900/90 border border-slate-800 hover:border-yellow-400/50 px-4 py-3 flex items-center gap-4 transition-all duration-300 hover:scale-[1.01] {{ $rank === 1 ? 'border-l-4 border-l-yellow-400 shadow-[0_0_20px_rgba(251,191,36,0.15)]' : '' }}" 
-                         style="animation-delay: {{ $loop->index * 0.08 }}s;">
-                        <div class="flex items-center w-full gap-4">
-                            
-                            {{-- Rank Badging --}}
-                            <div class="w-12 flex justify-center items-center font-black italic text-2xl">
-                                @if($rank === 1)
-                                    <span class="text-4xl text-transparent bg-clip-text bg-gradient-to-b from-yellow-200 to-yellow-500 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]">01</span>
-                                @elseif($rank === 2)
-                                    <span class="text-3xl text-transparent bg-clip-text bg-gradient-to-b from-slate-200 to-slate-400 drop-shadow-[0_0_8px_rgba(148,163,184,0.6)]">02</span>
-                                @elseif($rank === 3)
-                                    <span class="text-3xl text-transparent bg-clip-text bg-gradient-to-b from-orange-400 to-orange-700 drop-shadow-[0_0_8px_rgba(217,119,6,0.6)]">03</span>
-                                @else
-                                    <span class="text-2xl text-slate-300 font-semibold font-mono">{{ str_pad($rank, 2, '0', STR_PAD_LEFT) }}</span>
-                                @endif
+                {{-- Rows — slide up with stagger --}}
+                @foreach($col['data'] as $item)
+                    @php $rank = $loop->iteration + $col['startRank'] - 1; @endphp
+
+                    <div class="slide-up {{ $rank === 1 ? 'rank1-card rank1-pulse' : ($rank === 2 ? 'rank2-card' : ($rank === 3 ? 'rank3-card' : 'glass-row')) }} px-3 py-2.5 flex items-center gap-2 rounded-md transition-all duration-200 hover:scale-[1.006] hover:brightness-110"
+                         style="animation-delay:{{ $col['delay'] + 0.1 + $loop->index * 0.07 }}s;">
+
+                        {{-- Rank --}}
+                        <div class="w-10 flex justify-center items-center shrink-0">
+                            @if($rank === 1)
+                                <span class="badge-pop num-glow font-hud text-2xl font-black" style="color:#facc15;animation-delay:0.6s;">01</span>
+                            @elseif($rank === 2)
+                                <span class="font-hud text-xl font-black" style="color:#cbd5e1;text-shadow:0 0 8px rgba(148,163,184,0.7);">02</span>
+                            @elseif($rank === 3)
+                                <span class="font-hud text-xl font-black" style="color:#f97316;text-shadow:0 0 8px rgba(249,115,22,0.7);">03</span>
+                            @else
+                                <span class="font-body text-xs font-bold text-slate-500">{{ str_pad($rank, 2, '0', STR_PAD_LEFT) }}</span>
+                            @endif
+                        </div>
+
+                        {{-- Logo --}}
+                        <div class="w-14 h-14 rounded shrink-0 flex items-center justify-center" style="background:rgba(2,6,23,0.88);border:1px solid {{ $rank===1 ? 'rgba(250,204,21,0.5)' : 'rgba(255,255,255,0.12)' }};">
+                            <img src="{{ $item['team']->logo_image ? asset('storage/'.$item['team']->logo_image) : asset('img/defult_team_logo.png') }}" class="w-11 h-11 object-contain">
+                        </div>
+
+                        {{-- Team Name --}}
+                        <div class="flex-1 min-w-0 flex flex-col justify-center">
+                            <div class="font-black uppercase leading-tight text-xl {{ $rank === 1 ? 'text-yellow-300' : 'text-white' }}" style="font-family:'Rajdhani',sans-serif;{{ $rank===1 ? 'text-shadow:0 0 14px rgba(250,204,21,0.35);' : '' }}">
+                                {{ $item['team']->name }}
                             </div>
-
-                            {{-- Logo --}}
-                            <div class="w-10 h-10 bg-slate-950/80 p-1 border border-slate-800 rounded flex-shrink-0 flex items-center justify-center">
-                                <img src="{{ $item['team']->logo_image ? asset('storage/' . $item['team']->logo_image) : asset('img/defult_team_logo.png') }}" class="w-full h-full object-contain filter drop-shadow-md">
+                            <div class="text-sm uppercase tracking-wider font-body leading-none {{ $rank===1 ? 'text-yellow-400/70' : 'text-slate-400' }}">
+                                {{ $item['team']->short_name }}
                             </div>
+                        </div>
 
-                            {{-- Team Full & Short Name (Grows dynamically - NO truncation cutoffs!) --}}
-                            <div class="flex-1 flex flex-col justify-center min-w-0 pr-4">
-                                <span class="font-black uppercase tracking-tight text-xl lg:text-2xl {{ $rank === 1 ? 'text-yellow-400' : 'text-slate-100' }} leading-none whitespace-normal break-words">
-                                    {{ $item['team']->name }}
-                                </span>
-                                <span class="text-xs text-slate-500 font-semibold tracking-wider font-body-esports mt-0.5 uppercase leading-none">
-                                    {{ $item['team']->short_name }}
-                                </span>
-                            </div>
+                        {{-- Played --}}
+                        <div class="w-12 text-center">
+                            <span class="font-body text-sm font-bold text-slate-400">{{ $item['matches_played'] }}</span>
+                        </div>
 
-                            {{-- Stats --}}
-                            <span class="w-14 text-center font-bold text-lg text-slate-400 font-mono">{{ $item['matches_played'] }}</span>
-                            <span class="w-16 text-center font-black text-xl text-yellow-500 font-mono">{{ $item['total_wins'] }}</span>
-                            <span class="w-16 text-center font-bold text-lg text-slate-300 font-mono">{{ $item['total_kills'] }}</span>
-                            <span class="w-16 text-center font-bold text-lg text-slate-400 font-mono">{{ $item['total_placement_points'] }}</span>
-                            <span class="w-20 text-right font-black text-3xl {{ $rank === 1 ? 'text-yellow-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]' : 'text-orange-400 drop-shadow-[0_0_8px_rgba(249,115,22,0.4)]' }} font-mono leading-none">{{ $item['total_points'] }}</span>
+                        {{-- WWCD --}}
+                        <div class="w-12 text-center">
+                            @if($item['total_wins'] > 0)
+                                <span class="num-glow font-hud text-base font-black" style="color:#facc15;">{{ $item['total_wins'] }}</span>
+                            @else
+                                <span class="font-hud text-sm font-bold text-slate-600">0</span>
+                            @endif
+                        </div>
 
+                        {{-- Elims --}}
+                        <div class="w-12 text-center">
+                            <span class="font-hud text-base font-black text-slate-200">{{ $item['total_kills'] }}</span>
+                        </div>
+
+                        {{-- Place Pts --}}
+                        <div class="w-14 text-center">
+                            <span class="font-hud text-sm font-bold text-slate-400">{{ $item['total_placement_points'] }}</span>
+                        </div>
+
+                        {{-- Total Pts --}}
+                        <div class="w-16 text-right">
+                            @if($rank === 1)
+                                <span class="num-glow font-hud text-2xl font-black" style="color:#facc15;">{{ $item['total_points'] }}</span>
+                            @else
+                                <span class="font-hud text-xl font-black" style="color:#fb923c;text-shadow:0 0 8px rgba(251,146,60,0.4);">{{ $item['total_points'] }}</span>
+                            @endif
                         </div>
                     </div>
                 @endforeach
             </div>
-
-            {{-- Column Right (9-16) --}}
-            <div class="flex flex-col gap-2.5">
-                {{-- Flex Table Header --}}
-                <div class="pubg-skew bg-slate-950/90 border-b border-yellow-400/40 px-4 py-2.5 flex items-center gap-4 text-xs font-black uppercase tracking-wider text-slate-400 shadow-md">
-                    <div class="pubg-unskew flex items-center w-full gap-4">
-                        <span class="w-12 text-center">Rank</span>
-                        <span class="w-10 shrink-0"></span>
-                        <span class="flex-1 text-left text-slate-200">Team Name</span>
-                        <span class="w-14 text-center">Played</span>
-                        <span class="w-16 text-center text-yellow-400">WWCD</span>
-                        <span class="w-16 text-center">Elims</span>
-                        <span class="w-16 text-center">Place Pts</span>
-                        <span class="w-20 text-right text-orange-400">Total Pts</span>
-                    </div>
-                </div>
-
-                {{-- Rows --}}
-                @foreach ($rightColumn as $item)
-                    @php $rank = $loop->iteration + 8; @endphp
-                    <div class="animate-row glass-panel hover:bg-slate-900/90 border border-slate-800 hover:border-yellow-400/50 px-4 py-3 flex items-center gap-4 transition-all duration-300 hover:scale-[1.01]" 
-                         style="animation-delay: {{ ($loop->iteration + 8) * 0.08 }}s;">
-                        <div class="flex items-center w-full gap-4">
-                            
-                            {{-- Rank --}}
-                            <div class="w-12 flex justify-center items-center font-black italic text-2xl text-slate-400 font-mono">
-                                {{ str_pad($rank, 2, '0', STR_PAD_LEFT) }}
-                            </div>
-
-                            {{-- Logo --}}
-                            <div class="w-10 h-10 bg-slate-950/80 p-1 border border-slate-800 rounded flex-shrink-0 flex items-center justify-center">
-                                <img src="{{ $item['team']->logo_image ? asset('storage/' . $item['team']->logo_image) : asset('img/defult_team_logo.png') }}" class="w-full h-full object-contain filter drop-shadow-md">
-                            </div>
-
-                            {{-- Team Full & Short Name --}}
-                            <div class="flex-1 flex flex-col justify-center min-w-0 pr-4">
-                                <span class="font-black uppercase tracking-tight text-xl lg:text-2xl text-slate-100 leading-none whitespace-normal break-words">
-                                    {{ $item['team']->name }}
-                                </span>
-                                <span class="text-xs text-slate-500 font-semibold tracking-wider font-body-esports mt-0.5 uppercase leading-none">
-                                    {{ $item['team']->short_name }}
-                                </span>
-                            </div>
-
-                            {{-- Stats --}}
-                            <span class="w-14 text-center font-bold text-lg text-slate-400 font-mono">{{ $item['matches_played'] }}</span>
-                            <span class="w-16 text-center font-black text-xl text-yellow-500 font-mono">{{ $item['total_wins'] }}</span>
-                            <span class="w-16 text-center font-bold text-lg text-slate-300 font-mono">{{ $item['total_kills'] }}</span>
-                            <span class="w-16 text-center font-bold text-lg text-slate-400 font-mono">{{ $item['total_placement_points'] }}</span>
-                            <span class="w-20 text-right font-black text-3xl text-orange-400 drop-shadow-[0_0_8px_rgba(249,115,22,0.3)] font-mono leading-none">{{ $item['total_points'] }}</span>
-
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-
+            @endforeach
         </div>
 
-        {{-- BOTTOM: High-tech footer coordinate bar --}}
-        <div class="relative z-10 w-full max-w-[1800px] mx-auto flex items-center justify-between text-xs font-bold text-slate-500 tracking-[0.4em] uppercase pt-2 border-t border-slate-800/60">
+        {{-- ─── FOOTER (slides up) ─────────────────────────── --}}
+        <div class="slide-up-footer footer-bar relative z-10 flex items-center justify-between px-10 py-2 font-body text-[10px] font-bold text-slate-600 tracking-[0.4em] uppercase">
             <span>SYS_LOC // 0x48FA90</span>
-            <div class="h-[1px] w-40 bg-linear-to-r from-transparent via-yellow-400/30 to-transparent"></div>
-            <span class="text-yellow-400/70 font-black drop-shadow-[0_0_5px_rgba(250,204,21,0.3)]">Official standings stream overlay</span>
-            <div class="h-[1px] w-40 bg-linear-to-r from-transparent via-yellow-400/30 to-transparent"></div>
+            <div class="h-px w-32 flex-shrink-0" style="background:linear-gradient(to right,transparent,rgba(250,204,21,0.3),transparent);"></div>
+            <span class="text-yellow-400/60">Official Standings Stream Overlay</span>
+            <div class="h-px w-32 flex-shrink-0" style="background:linear-gradient(to right,transparent,rgba(250,204,21,0.3),transparent);"></div>
             <span>SYS_VER_3.5.2</span>
         </div>
-
     </div>
 
     <script type="module">
         document.addEventListener("DOMContentLoaded", function () {
             Echo.channel('user-screens.{{ $activeMatch->tournament->user_id }}')
-                .listen('.RefreshScreens', (e) => {
-                    window.location.reload();
-                })
-                .listen('.TournamentMatchUpdated', (e) => {
-                    window.location.reload();
-                });
+                .listen('.RefreshScreens', (e) => { window.location.reload(); })
+                .listen('.TournamentMatchUpdated', (e) => { window.location.reload(); });
         });
     </script>
 </x-base>
-

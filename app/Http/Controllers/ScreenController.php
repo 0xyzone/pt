@@ -30,9 +30,18 @@ class ScreenController extends Controller
         $activeMatch = $user->getActiveMatch();
         $tournament = $activeMatch->tournament;
 
+        // Scope to the current round if the active match belongs to one,
+        // otherwise fall back to all tournament matches.
+        $currentRound = $activeMatch->tournamentRound;
+        if ($currentRound) {
+            $matches = $currentRound->tournamentMatches()->with('matchStats.tournamentTeam')->get();
+        } else {
+            $matches = $tournament->tournamentMatches()->with('matchStats.tournamentTeam')->get();
+        }
+
         $teamsData = collect();
 
-        foreach ($tournament->tournamentMatches as $match) {
+        foreach ($matches as $match) {
             foreach ($match->matchStats as $stat) {
                 if (!$teamsData->has($stat->tournament_team_id)) {
                     $teamsData->put($stat->tournament_team_id, [
@@ -49,11 +58,11 @@ class ScreenController extends Controller
                 $data['total_points'] += $stat->points;
                 $data['total_kills'] += $stat->kills;
                 $data['total_placement_points'] += ($stat->points - $stat->kills);
-                
+
                 if ($match->is_completed) {
                     $data['matches_played'] += 1;
                 }
-                
+
                 if ($stat->placement == 1) {
                     $data['total_wins'] += 1;
                 }
@@ -68,7 +77,7 @@ class ScreenController extends Controller
             ['total_kills', 'desc'],
         ])->values();
 
-        return view('screens.overallRanking', compact('tournament', 'rankings', 'activeMatch'));
+        return view('screens.overallRanking', compact('tournament', 'rankings', 'activeMatch', 'currentRound'));
     }
 
     public function teamElimination(Request $request)
@@ -87,9 +96,9 @@ class ScreenController extends Controller
         
         $currentRound = $activeMatch->tournamentRound;
         if ($currentRound) {
-            $matches = $currentRound->tournamentMatches()->orderBy('id')->get();
+            $matches = $currentRound->tournamentMatches()->with('matchStats.tournamentTeam')->orderBy('id')->get();
         } else {
-            $matches = $tournament->tournamentMatches()->orderBy('match_date')->orderBy('match_time')->get();
+            $matches = $tournament->tournamentMatches()->with('matchStats.tournamentTeam')->orderBy('match_date')->orderBy('match_time')->get();
         }
 
         $durationKey = "timer_duration_{$user->id}";

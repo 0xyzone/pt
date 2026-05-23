@@ -17,10 +17,10 @@
         }
 
         .pubg-skew {
-            transform: skewX(-12deg);
+            transform: none;
         }
         .pubg-unskew {
-            transform: skewX(12deg);
+            transform: none;
         }
 
         .glass-panel {
@@ -59,9 +59,9 @@
 
     {{-- High-tech background grid --}}
     <div class="absolute inset-0 z-0 pointer-events-none opacity-20">
-        <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:45px_45px]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-size-[45px_45px]"></div>
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,#020617_90%)]"></div>
-        <div class="absolute top-[20%] left-[30%] w-[500px] h-[500px] bg-amber-500/5 blur-[120px] rounded-full"></div>
+        <div class="absolute top-[20%] left-[30%] w-125 h-125 bg-amber-500/5 blur-[120px] rounded-full"></div>
     </div>
 
     <div class="max-w-4xl mx-auto relative z-10 flex flex-col h-full justify-between py-12">
@@ -92,7 +92,7 @@
                 </div>
 
                 {{-- Teams List --}}
-                <div class="divide-y divide-slate-800/40 overflow-y-auto flex-1 max-h-[620px] pr-2">
+                <div class="divide-y divide-slate-800/40 overflow-y-auto flex-1 max-h-155 pr-2">
                     @foreach($teams as $index => $team)
                     <div class="slot-row flex items-center gap-6 px-8 py-3">
                         {{-- Slot Number starts from 2 --}}
@@ -102,7 +102,7 @@
                         
                         {{-- Team Info --}}
                         <div class="flex items-center gap-5">
-                            <div class="w-11 h-11 bg-slate-950/80 p-1 border border-slate-800 rounded flex-shrink-0 flex items-center justify-center">
+                            <div class="w-11 h-11 bg-slate-950/80 p-1 border border-slate-800 rounded shrink-0 flex items-center justify-center">
                                 <img src="{{ $team->logo_image ? asset('storage/' . $team->logo_image) : asset('img/defult_team_logo.png') }}"
                                      alt="{{ $team->name }}"
                                      class="w-full h-full object-contain filter drop-shadow-md">

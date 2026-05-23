@@ -10,8 +10,8 @@
             font-family: 'Inter', sans-serif;
         }
         
-        .pubg-skew { transform: skewX(-12deg); }
-        .pubg-unskew { transform: skewX(12deg); }
+        .pubg-skew { transform: none; }
+        .pubg-unskew { transform: none; }
         
         .glass-panel { 
             background: rgba(8, 12, 24, 0.85); 
@@ -92,7 +92,7 @@
 
         @if($isWWCD)
             {{-- ========== WINNER WINNER CHICKEN DINNER ========== --}}
-            <div id="wwcd-view" class="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-slate-950/85 backdrop-blur-md">
+            <div id="wwcd-view" class="fixed inset-0 z-200 flex flex-col items-center justify-center bg-slate-950/85 backdrop-blur-md">
                 
                 {{-- Decorative light rays --}}
                 <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.12)_0px,transparent_60%)] pointer-events-none"></div>
@@ -101,7 +101,7 @@
                 <div class="flex flex-col items-center wwcd-pop relative z-10">
                     
                     {{-- Double-skewed gold bar --}}
-                    <div class="bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500 px-40 py-7 mb-10 pubg-skew shadow-[0_0_80px_rgba(250,204,21,0.5)] border-y-2 border-white/50">
+                    <div class="bg-linear-to-r from-yellow-400 via-amber-500 to-yellow-500 px-40 py-7 mb-10 pubg-skew shadow-[0_0_80px_rgba(250,204,21,0.5)] border-y-2 border-white/50">
                         <div class="pubg-unskew flex flex-col items-center">
                             <span class="text-black text-2xl font-black uppercase tracking-[0.45em] mb-1 font-esports">Winner Winner</span>
                             <span class="text-black text-7xl font-black uppercase tracking-widest font-esports italic">Chicken Dinner</span>
@@ -113,11 +113,11 @@
                         
                         <div class="absolute top-3 left-4 text-[9px] font-bold text-slate-500 tracking-widest uppercase">MATCH_VICTORY_HUD // CH_01</div>
                         
-                        <div class="w-48 h-48 bg-slate-950/80 p-4 border border-yellow-400/40 rounded-full mb-8 flex items-center justify-center shadow-[0_0_40px_rgba(250,204,21,0.2)]">
-                            <img src="{{ $winner->tournamentTeam->logo_image ? asset('storage/' . $winner->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" class="max-w-full max-h-full object-contain">
+                        <div class="w-48 h-48 bg-slate-950/80 border border-yellow-400/40 mb-8 flex items-center justify-center shadow-[0_0_40px_rgba(250,204,21,0.2)] overflow-hidden">
+                            <img src="{{ $winner->tournamentTeam->logo_image ? asset('storage/' . $winner->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" class="w-full aspect-square object-contain">
                         </div>
                         
-                        <h2 class="text-7xl font-black italic uppercase text-slate-100 tracking-widest mb-8 text-glow-gold">{{ $winner->tournamentTeam->name }}</h2>
+                        <h2 class="text-7xl font-black italic uppercase text-slate-100 tracking-widest mb-8 text-glow-gold text-center">{{ $winner->tournamentTeam->name }}</h2>
                         
                         <div class="flex gap-20 mt-2 w-full justify-center">
                             <div class="flex flex-col items-center border-r border-slate-800 pr-12">
@@ -138,7 +138,7 @@
             <div id="final-four-container" style="position:fixed; top:40px; left:0; width:100%; z-index:50; display:flex; flex-direction:column; align-items:center;">
                 
                 {{-- Duel Title Badge --}}
-                <div class="mb-8 bg-gradient-to-r from-red-600 via-orange-500 to-red-600 px-24 py-2.5 pubg-skew border-b-4 border-black/35 shadow-[0_10px_25px_rgba(239,68,68,0.3)]">
+                <div class="mb-8 bg-linear-to-r from-red-600 via-orange-500 to-red-600 px-24 py-2.5 pubg-skew border-b-4 border-black/35 shadow-[0_10px_25px_rgba(239,68,68,0.3)]">
                     <span class="pubg-unskew block text-3xl font-black uppercase tracking-[0.45em] text-white italic text-glow-gold">Final Duel</span>
                 </div>
 
@@ -200,7 +200,7 @@
             <div id="side-list-container" style="position:fixed; bottom:30px; right:30px; width:330px; display:flex; flex-direction:column; gap:4px; z-index:40;">
                 
                 {{-- Title bar --}}
-                <div class="bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 py-1.5 px-5 pubg-skew shadow-xl" style="border-bottom:2px solid rgba(0,0,0,0.3);">
+                <div class="bg-linear-to-r from-amber-500 via-yellow-400 to-amber-500 py-1.5 px-5 pubg-skew shadow-xl" style="border-bottom:2px solid rgba(0,0,0,0.3);">
                     <div class="pubg-unskew flex justify-between items-center">
                         <span class="font-black italic uppercase text-xl text-black">Live Standings</span>
                         <span class="text-sm font-black text-black/60 italic uppercase tracking-wider">{{ $aliveTeamsCount }} Teams Alive</span>

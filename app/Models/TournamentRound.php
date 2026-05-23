@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\Player;
 
 class TournamentRound extends Model
 {
@@ -23,7 +22,8 @@ class TournamentRound extends Model
     }
 
     /**
-     * Auto generate matches for maps inside this round and populate teams and players.
+     * Auto generate matches for maps inside this round.
+     * Teams and players are NOT auto-populated — use the "Populate Teams" action on each match.
      */
     public function autoGenerateMatches()
     {
@@ -48,15 +48,14 @@ class TournamentRound extends Model
         
         // 2. Generate new matches if maps array is larger than existing matches count
         if ($existingMatchCount < $mapsCount) {
-            $tournament = $this->tournament;
-            $teams = $tournament ? $tournament->tournamentTeams()->get() : collect();
-            
             for ($i = $existingMatchCount; $i < $mapsCount; $i++) {
                 $mapItem = $maps[$i];
                 $mapName = $mapItem['map'] ?? 'erangle';
                 $matchIndex = $i + 1;
-                
-                $match = $this->tournamentMatches()->create([
+
+                // Create the match without populating teams/players.
+                // Use the "Populate Teams" action on each match to add teams and players.
+                $this->tournamentMatches()->create([
                     'tournament_id' => $this->tournament_id,
                     'name' => "{$this->name} - Match {$matchIndex}",
                     'map' => $mapName,
@@ -65,25 +64,6 @@ class TournamentRound extends Model
                     'match_date' => now()->toDateString(),
                     'match_time' => now()->toTimeString(),
                 ]);
-                
-                // Populate teams and players
-                foreach ($teams as $team) {
-                    $playerIds = Player::where('tournament_team_id', $team->id)->pluck('id')->toArray();
-                    
-                    $matchStat = $match->matchStats()->create([
-                        'tournament_team_id' => $team->id,
-                        'alive' => count($playerIds) > 0 ? count($playerIds) : 4,
-                        'kills' => 0,
-                        'placement' => 0,
-                        'is_winner' => false,
-                        'points' => 0,
-                    ]);
-                    
-                    if (!empty($playerIds)) {
-                        $matchStat->players()->sync($playerIds);
-                    }
-                    $matchStat->recalculateTotals();
-                }
             }
         }
 
