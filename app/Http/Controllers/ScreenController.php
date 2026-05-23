@@ -278,7 +278,7 @@ class ScreenController extends Controller
     {
         $userId = $request->route('user_id');
         $viewName = $request->input('view'); // 'empty', 'postmatch', 'overallranking'
-        broadcast(new \App\Events\ObsViewSwitched($userId, $viewName));
+        $this->safeBroadcast(new \App\Events\ObsViewSwitched($userId, $viewName));
         return back()->with('status', 'View switched to ' . $viewName);
     }
 
@@ -286,14 +286,14 @@ class ScreenController extends Controller
     {
         $userId = $request->route('user_id');
         $isVisible = $request->input('visible') == '1';
-        broadcast(new \App\Events\ActiveMatchVisibilityToggled($userId, $isVisible));
+        $this->safeBroadcast(new \App\Events\ActiveMatchVisibilityToggled($userId, $isVisible));
         return back()->with('status', 'Active Match visibility toggled to ' . ($isVisible ? 'Visible' : 'Hidden'));
     }
 
     public function refreshScreens(Request $request)
     {
         $userId = $request->route('user_id');
-        broadcast(new \App\Events\RefreshScreensEvent($userId));
+        $this->safeBroadcast(new \App\Events\RefreshScreensEvent($userId));
         return back()->with('status', 'Refresh signal sent to all screens.');
     }
 
@@ -436,7 +436,7 @@ class ScreenController extends Controller
         }
         
         // Broadcast the real-time event to all overlays
-        broadcast(new \App\Events\TimerUpdated($userId, $status, $duration, $remaining, $endsAt, $visible));
+        $this->safeBroadcast(new \App\Events\TimerUpdated($userId, $status, $duration, $remaining, $endsAt, $visible));
         
         return response()->json([
             'success' => true,
@@ -465,7 +465,7 @@ class ScreenController extends Controller
         }
         
         // Broadcast targeted background-change event with full payload
-        broadcast(new \App\Events\BackgroundChanged($userId, $bgType, $customVideoUrl));
+        $this->safeBroadcast(new \App\Events\BackgroundChanged($userId, $bgType, $customVideoUrl));
         
         return response()->json([
             'success' => true,
@@ -505,7 +505,7 @@ class ScreenController extends Controller
             Cache::put($bgTypeKey, 'custom', 86400);
 
             // Broadcast refresh screens event so overlay shifts in real time
-            broadcast(new \App\Events\RefreshScreensEvent($user->id));
+            $this->safeBroadcast(new \App\Events\RefreshScreensEvent($user->id));
 
             return back()->with('status', 'Custom background video uploaded successfully.');
         }
@@ -533,8 +533,21 @@ class ScreenController extends Controller
         Cache::put($bgTypeKey, 'transparent', 86400);
 
         // Broadcast refresh screens event
-        broadcast(new \App\Events\RefreshScreensEvent($user->id));
+        $this->safeBroadcast(new \App\Events\RefreshScreensEvent($user->id));
 
         return back()->with('status', 'Custom background video deleted successfully and reset to transparent background.');
+    }
+
+    /**
+     * Safely attempt to broadcast an event without throwing a 500 if
+     * the WebSocket / Pusher connection is unavailable.
+     */
+    private function safeBroadcast(\Illuminate\Contracts\Broadcasting\ShouldBroadcast $event): void
+    {
+        try {
+            broadcast($event);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('[Broadcasting] Failed to broadcast event: ' . $e->getMessage());
+        }
     }
 }

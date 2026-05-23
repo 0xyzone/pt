@@ -5,62 +5,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slot List — {{ $tournament ? $tournament->name : 'Tournament' }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- High-End Typography & Theme Imports --}}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Rajdhani:wght@600;700;900&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: 'Inter', system-ui, sans-serif; }
-        
+        .font-esports {
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .font-body-esports {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .pubg-skew {
+            transform: skewX(-12deg);
+        }
+        .pubg-unskew {
+            transform: skewX(12deg);
+        }
+
+        .glass-panel {
+            background: rgba(8, 12, 24, 0.85);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(250, 204, 21, 0.25);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+        }
+
         .slot-row {
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            border-left: 4px solid transparent;
         }
         .slot-row:hover {
-            transform: translateX(4px);
-            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(6px);
+            background: rgba(250, 204, 21, 0.05);
+            border-left-color: #f59e0b;
         }
+
+        /* Tech corner brackets */
+        .bracket-corner::before,
+        .bracket-corner::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-color: #f59e0b;
+            border-style: solid;
+            pointer-events: none;
+        }
+        .bracket-corner::before { top: -2px; left: -2px; border-width: 2.5px 0 0 2.5px; }
+        .bracket-corner::after { top: -2px; right: -2px; border-width: 2.5px 2.5px 0 0; }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen p-4 md:p-8">
+<body class="bg-transparent text-slate-100 min-h-screen p-8 overflow-hidden font-esports select-none" style="width: 1920px; height: 1080px; position: relative;">
 
-    <div class="max-w-4xl mx-auto">
+    {{-- High-tech background grid --}}
+    <div class="absolute inset-0 z-0 pointer-events-none opacity-20">
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:45px_45px]"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,#020617_90%)]"></div>
+        <div class="absolute top-[20%] left-[30%] w-[500px] h-[500px] bg-amber-500/5 blur-[120px] rounded-full"></div>
+    </div>
+
+    <div class="max-w-4xl mx-auto relative z-10 flex flex-col h-full justify-between py-12">
+        
         {{-- Header --}}
-        <div class="mb-10 text-center">
-            @if($tournament && $tournament->logo_image)
-                <img src="{{ asset('storage/' . $tournament->logo_image) }}" alt="Tournament Logo" class="w-24 h-24 mx-auto mb-4 object-contain">
-            @endif
-            <h1 class="text-4xl md:text-5xl font-black italic tracking-tighter uppercase text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-500">
-                Slot List
+        <div class="text-center mb-8 relative">
+            <div class="inline-flex items-center gap-3 px-4 py-1 rounded bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm font-bold tracking-[0.25em] uppercase mb-4 pubg-skew">
+                <span class="pubg-unskew font-bold">Lobby Slots</span>
+            </div>
+            
+            <h1 class="text-5xl md:text-6xl font-black italic tracking-tighter uppercase leading-none drop-shadow-2xl text-slate-100">
+                Lobby Slot List
             </h1>
-            <p class="text-slate-400 text-lg font-bold uppercase tracking-widest mt-2">
+            <p class="text-slate-400 text-xl font-bold uppercase tracking-widest mt-2 block">
                 {{ $tournament ? $tournament->name : 'No Active Tournament' }}
             </p>
         </div>
 
         @if($tournament && $teams->count() > 0)
-            <div class="bg-slate-900/80 rounded-2xl border border-slate-800 overflow-hidden shadow-2xl">
+            <div class="glass-panel rounded-xl overflow-hidden shadow-2xl flex-1 flex flex-col justify-start relative">
+                
                 {{-- Table Header --}}
-                <div class="grid grid-cols-[80px_1fr] md:grid-cols-[100px_1fr] items-center gap-4 px-6 py-4 bg-slate-800/80 border-b border-slate-700 text-sm font-black uppercase tracking-[0.15em] text-slate-400">
-                    <span class="text-center text-yellow-500">Slot #</span>
-                    <span>Team Name</span>
+                <div class="pubg-skew bg-slate-950/95 border-b border-yellow-400/40 px-8 py-3 flex items-center gap-6 text-sm font-black uppercase tracking-widest text-slate-400 shadow-md">
+                    <div class="pubg-unskew flex items-center w-full gap-6">
+                        <span class="w-16 text-center text-yellow-500 font-mono">Slot</span>
+                        <span class="flex-1 text-left text-slate-200">Participating Team</span>
+                    </div>
                 </div>
 
                 {{-- Teams List --}}
-                <div class="divide-y divide-slate-800/50">
+                <div class="divide-y divide-slate-800/40 overflow-y-auto flex-1 max-h-[620px] pr-2">
                     @foreach($teams as $index => $team)
-                    <div class="slot-row grid grid-cols-[80px_1fr] md:grid-cols-[100px_1fr] items-center gap-4 px-6 py-4">
+                    <div class="slot-row flex items-center gap-6 px-8 py-3">
                         {{-- Slot Number starts from 2 --}}
-                        <div class="text-center font-black text-2xl text-slate-300 tabular-nums">
-                            {{ $index + 2 }}
+                        <div class="w-16 text-center font-black text-3xl text-yellow-500 font-mono italic">
+                            {{ str_pad($index + 2, 2, '0', STR_PAD_LEFT) }}
                         </div>
                         
                         {{-- Team Info --}}
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center p-1 overflow-hidden shadow-inner flex-shrink-0">
+                        <div class="flex items-center gap-5">
+                            <div class="w-11 h-11 bg-slate-950/80 p-1 border border-slate-800 rounded flex-shrink-0 flex items-center justify-center">
                                 <img src="{{ $team->logo_image ? asset('storage/' . $team->logo_image) : asset('img/defult_team_logo.png') }}"
                                      alt="{{ $team->name }}"
-                                     class="w-full h-full object-contain">
+                                     class="w-full h-full object-contain filter drop-shadow-md">
                             </div>
-                            <div class="flex flex-col">
-                                <span class="font-black text-lg md:text-xl uppercase tracking-wide leading-tight text-white">{{ $team->name }}</span>
+                            <div class="flex flex-col text-left">
+                                <span class="font-black text-2xl uppercase tracking-tight leading-none text-white">{{ $team->name }}</span>
                                 @if($team->short_name)
-                                    <span class="text-xs text-yellow-500 font-bold uppercase tracking-widest">{{ $team->short_name }}</span>
+                                    <span class="text-xs text-slate-500 font-semibold tracking-wider font-body-esports mt-1 uppercase leading-none">{{ $team->short_name }}</span>
                                 @endif
                             </div>
                         </div>
@@ -69,23 +119,19 @@
                 </div>
             </div>
         @else
-            <div class="text-center py-20 bg-slate-900/50 rounded-2xl border border-slate-800 border-dashed">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16 mx-auto text-slate-600 mb-4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-                </svg>
-                <h3 class="text-xl font-bold text-slate-400">No Teams Found</h3>
-                <p class="text-slate-500 mt-2">There are currently no teams assigned to this tournament.</p>
+            <div class="text-center py-20 glass-panel rounded-xl border border-slate-800 border-dashed">
+                <h3 class="text-2xl font-black text-slate-400 uppercase tracking-widest">No Teams Registered</h3>
+                <p class="text-slate-500 mt-2 font-body-esports">Assign teams under the Tournament dashboard to populate slots.</p>
             </div>
         @endif
         
-        <div class="mt-8 text-center text-xs font-bold uppercase tracking-widest text-slate-600">
-            Powered by Tournament Manager
+        <div class="mt-8 text-center text-xs font-bold uppercase tracking-[0.4em] text-slate-650 pt-4 border-t border-slate-900/60">
+            Official Tournament Stream System // lobby_slot_hud
         </div>
     </div>
 
     <script type="module">
         document.addEventListener("DOMContentLoaded", function () {
-            // Use a fallback user ID if tournament isn't present, but usually it should be.
             const userId = '{{ $tournament ? $tournament->user_id : "" }}' || '{{ auth()->id() }}';
             if (userId) {
                 Echo.channel('user-screens.' + userId)

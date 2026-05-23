@@ -1,32 +1,68 @@
 <x-base>
+    {{-- High-End Typography & Theme Imports --}}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Rajdhani:wght@600;700;900&family=Orbitron:wght@800;900&display=swap" rel="stylesheet">
+    
     <style>
+        .font-esports {
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .font-body-esports {
+            font-family: 'Inter', sans-serif;
+        }
+        
         .pubg-skew { transform: skewX(-12deg); }
         .pubg-unskew { transform: skewX(12deg); }
         
         .glass-panel { 
-            background: rgba(8, 12, 24, 0.6); 
-            border: 1px solid rgba(255,255,255,0.08); 
+            background: rgba(8, 12, 24, 0.85); 
+            border: 1px solid rgba(250, 204, 21, 0.25); 
+            backdrop-filter: blur(12px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
         }
         
         /* Entry Animations */
         .hud-slide-right { animation: slideFromRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .hud-slide-down { animation: slideFromTop 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .wwcd-pop { animation: wwcdEntry 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .wwcd-pop { animation: wwcdEntry 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
         
         @keyframes slideFromRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes slideFromTop { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes wwcdEntry { 
-            0% { transform: scale(0.6); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+            0% { transform: scale(0.7) rotate(-2deg); opacity: 0; filter: blur(10px); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; filter: blur(0); }
         }
         
-        /* Alive pip styling */
-        .pip-alive { background: #facc15; box-shadow: 0 0 8px rgba(250,204,21,0.5); }
-        .pip-dead { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.25); }
+        /* Alive pips - glowing high tech indicators */
+        .pip-alive { 
+            background: #f59e0b; 
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.8), 0 0 20px rgba(245, 158, 11, 0.4); 
+            border: 1px solid #fff;
+        }
+        .pip-dead { 
+            background: rgba(255,255,255,0.06); 
+            border: 1px solid rgba(255,255,255,0.15); 
+        }
 
         /* Lower Third */
         .lower-third-slide { animation: slideFromLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes slideFromLeft { from { transform: translateX(-110%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        /* Scanning telemetry line */
+        @keyframes sweep {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        .laser-sweep {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 40%, rgba(250, 204, 21, 0.05) 50%, transparent 60%);
+            animation: sweep 6s infinite linear;
+            pointer-events: none;
+        }
+
+        .text-glow-gold {
+            text-shadow: 0 0 10px rgba(250, 204, 21, 0.6), 0 0 20px rgba(250, 204, 21, 0.3);
+        }
     </style>
     
     @php
@@ -40,43 +76,57 @@
 
     <!-- ELIMINATION TOASTER (Outside hud-root, position controlled by JS) -->
     <div id="elimination-toaster" style="position:fixed; left:50%; transform:translateX(-50%); top:-120px; z-index:300; transition:all 0.7s ease-in-out; opacity:0; pointer-events:none;">
-        <div class="glass-panel shadow-2xl" style="display:flex; align-items:center; gap:16px; padding:14px 24px; border-bottom:5px solid #dc2626; min-width:440px; border-radius:0 0 8px 8px;">
-            <div style="width:52px; height:52px; background:#fff; border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0; border:3px solid #dc2626;">
-                <img id="toaster-logo" src="" style="width:100%; height:100%; object-fit:cover;">
+        <div class="glass-panel" style="display:flex; align-items:center; gap:20px; padding:16px 28px; border-bottom:6px solid #e11d48; min-width:480px; border-radius:0 0 12px 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.9);">
+            <div style="width:60px; height:60px; background:#080c18; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; border:2.5px solid #e11d48; padding:3px;">
+                <img id="toaster-logo" src="" style="width:100%; height:100%; object-fit:contain;">
             </div>
-            <div style="display:flex; flex-direction:column;">
-                <span style="color:#ef4444; font-size:14px; font-weight:900; letter-spacing:0.4em; text-transform:uppercase;">Squad Eliminated</span>
-                <span id="toaster-team-name" style="font-size:36px; font-weight:900; font-style:italic; text-transform:uppercase; color:#fff; letter-spacing:0.1em; line-height:1;"></span>
+            <div style="display:flex; flex-direction:column; text-align:left;">
+                <span class="font-esports" style="color:#f43f5e; font-size:15px; font-weight:900; letter-spacing:0.4em; text-transform:uppercase;">Squad Eliminated</span>
+                <span id="toaster-team-name" class="font-esports" style="font-size:38px; font-weight:900; font-style:italic; text-transform:uppercase; color:#fff; letter-spacing:0.05em; line-height:1.1;"></span>
             </div>
         </div>
     </div>
 
     <!-- HUD ROOT -->
-    <div id="hud-root" class="w-full h-full relative font-main text-white overflow-hidden" data-view="{{ $isWWCD ? 'wwcd' : ($showFinalFour ? 'cards' : 'list') }}">
+    <div id="hud-root" class="w-full h-full relative font-esports text-white overflow-hidden" data-view="{{ $isWWCD ? 'wwcd' : ($showFinalFour ? 'cards' : 'list') }}">
 
         @if($isWWCD)
             {{-- ========== WINNER WINNER CHICKEN DINNER ========== --}}
-            <div id="wwcd-view" class="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-black/75 backdrop-blur-lg">
-                <div class="flex flex-col items-center">
-                    <div class="bg-yellow-400 px-36 py-6 mb-10 pubg-skew shadow-[0_0_80px_rgba(250,204,21,0.4)]">
+            <div id="wwcd-view" class="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-slate-950/85 backdrop-blur-md">
+                
+                {{-- Decorative light rays --}}
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.12)_0px,transparent_60%)] pointer-events-none"></div>
+                <div class="laser-sweep"></div>
+
+                <div class="flex flex-col items-center wwcd-pop relative z-10">
+                    
+                    {{-- Double-skewed gold bar --}}
+                    <div class="bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500 px-40 py-7 mb-10 pubg-skew shadow-[0_0_80px_rgba(250,204,21,0.5)] border-y-2 border-white/50">
                         <div class="pubg-unskew flex flex-col items-center">
-                            <span class="text-black text-xl font-black uppercase tracking-[0.4em] mb-1">Winner Winner</span>
-                            <span class="text-black text-6xl font-black uppercase tracking-widest">Chicken Dinner</span>
+                            <span class="text-black text-2xl font-black uppercase tracking-[0.45em] mb-1 font-esports">Winner Winner</span>
+                            <span class="text-black text-7xl font-black uppercase tracking-widest font-esports italic">Chicken Dinner</span>
                         </div>
                     </div>
-                    <div class="glass-panel p-10 flex flex-col items-center border-t-8 border-yellow-400 shadow-2xl" style="width:550px;">
-                        <div class="w-44 h-44 bg-white/5 rounded-full mb-10">
-                            <img src="{{ $winner->tournamentTeam->logo_image ? asset('storage/' . $winner->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" class="w-44 aspect-square object-fill">
+
+                    {{-- Winner Stats Card --}}
+                    <div class="glass-panel p-12 flex flex-col items-center border-t-8 border-yellow-400 shadow-2xl relative" style="width:600px; border-radius: 4px;">
+                        
+                        <div class="absolute top-3 left-4 text-[9px] font-bold text-slate-500 tracking-widest uppercase">MATCH_VICTORY_HUD // CH_01</div>
+                        
+                        <div class="w-48 h-48 bg-slate-950/80 p-4 border border-yellow-400/40 rounded-full mb-8 flex items-center justify-center shadow-[0_0_40px_rgba(250,204,21,0.2)]">
+                            <img src="{{ $winner->tournamentTeam->logo_image ? asset('storage/' . $winner->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" class="max-w-full max-h-full object-contain">
                         </div>
-                        <h2 class="text-7xl font-black italic uppercase text-white tracking-widest mb-6">{{ $winner->tournamentTeam->name }}</h2>
-                        <div class="flex gap-16 mt-2">
-                            <div class="flex flex-col items-center">
-                                <span class="text-yellow-400 text-2xl font-black uppercase tracking-widest mb-2">Total Kills</span>
-                                <span class="text-5xl font-black text-white italic leading-none">{{ $winner->kills }}</span>
+                        
+                        <h2 class="text-7xl font-black italic uppercase text-slate-100 tracking-widest mb-8 text-glow-gold">{{ $winner->tournamentTeam->name }}</h2>
+                        
+                        <div class="flex gap-20 mt-2 w-full justify-center">
+                            <div class="flex flex-col items-center border-r border-slate-800 pr-12">
+                                <span class="text-yellow-400 text-lg font-black uppercase tracking-[0.2em] mb-2">Total Kills</span>
+                                <span class="text-6xl font-black text-white italic leading-none font-mono" style="font-family: 'Orbitron', sans-serif;">{{ $winner->kills }}</span>
                             </div>
-                            <div class="flex flex-col items-center">
-                                <span class="text-yellow-400 text-2xl font-black uppercase tracking-widest mb-2">Match Points</span>
-                                <span class="text-5xl font-black text-white italic leading-none">{{ $winner->points }}</span>
+                            <div class="flex flex-col items-center pl-12">
+                                <span class="text-yellow-400 text-lg font-black uppercase tracking-[0.2em] mb-2">Match Points</span>
+                                <span class="text-6xl font-black text-white italic leading-none font-mono" style="font-family: 'Orbitron', sans-serif;">{{ $winner->points }}</span>
                             </div>
                         </div>
                     </div>
@@ -86,49 +136,57 @@
         @elseif($showFinalFour)
             {{-- ========== FINAL FOUR CARD VIEW ========== --}}
             <div id="final-four-container" style="position:fixed; top:40px; left:0; width:100%; z-index:50; display:flex; flex-direction:column; align-items:center;">
-                <div class="mb-6 bg-yellow-400 px-20 py-1.5 pubg-skew border-b-4 border-black shadow-2xl">
-                    <span class="pubg-unskew block text-2xl font-black uppercase tracking-[0.4em] text-black italic">Final Duel</span>
+                
+                {{-- Duel Title Badge --}}
+                <div class="mb-8 bg-gradient-to-r from-red-600 via-orange-500 to-red-600 px-24 py-2.5 pubg-skew border-b-4 border-black/35 shadow-[0_10px_25px_rgba(239,68,68,0.3)]">
+                    <span class="pubg-unskew block text-3xl font-black uppercase tracking-[0.45em] text-white italic text-glow-gold">Final Duel</span>
                 </div>
 
-                <div style="display:flex; justify-content:center; gap:14px;">
+                <div style="display:flex; justify-content:center; gap:20px;">
                     @foreach ($aliveTeams->take(4) as $match)
                     @php
                         $weight = ($match->alive * 30) + ($match->points * 0.5);
                         $totalWeight = $aliveTeams->sum(fn($m) => ($m->alive * 30) + ($m->points * 0.5));
                         $winProb = round(($weight / max(1, $totalWeight)) * 100);
                     @endphp
-                    <div class="glass-panel shadow-xl" style="width:240px; border-left:5px solid #facc15; display:flex; flex-direction:column;">
-                        {{-- Card Header: Win % --}}
-                        <div style="display:flex; justify-content:space-between; align-items:center; padding:5px 12px; background:rgba(255,255,255,0.03); border-bottom:1px solid rgba(255,255,255,0.05);">
-                            <span style="font-size:16px; font-weight:900; color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.1em;">Stats</span>
-                            <div style="display:flex; align-items:center; gap:4px; background:rgba(250,204,21,0.15); padding:1px 8px; border-radius:2px; border:1px solid rgba(250,204,21,0.2);">
-                                <span style="font-size:16px; font-weight:900; color:#facc15; text-transform:uppercase;">Win</span>
-                                <span style="font-size:16px; font-weight:900; color:#facc15; font-family:monospace; line-height:1;">{{ $winProb }}%</span>
+                    <div class="glass-panel" style="width:280px; border-left:6px solid #f59e0b; display:flex; flex-direction:column; border-radius: 4px;">
+                        
+                        {{-- Card Header: Win Prob Bar --}}
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 16px; background:rgba(255,255,255,0.02); border-bottom:1px solid rgba(255,255,255,0.05);">
+                            <span style="font-size:13px; font-weight:900; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.15em;">WIN PROB</span>
+                            <div style="display:flex; align-items:center; gap:6px; background:rgba(245,158,11,0.15); padding:2px 8px; border-radius:3px; border:1px solid rgba(245,158,11,0.3);">
+                                <span style="font-size:15px; font-weight:900; color:#f59e0b; font-family:'Orbitron', sans-serif; line-height:1;">{{ $winProb }}%</span>
                             </div>
                         </div>
 
                         {{-- Card Body --}}
-                        <div style="padding:12px 14px; display:flex; flex-direction:column; gap:10px;">
-                            <div style="display:flex; align-items:center; gap:10px;">
-                                <img src="{{ $match->tournamentTeam->logo_image ? asset('storage/' . $match->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" style="width:40px; height:40px; object-fit:contain; flex-shrink:0;">
-                                <div style="flex:1; overflow:hidden; display:flex; flex-direction:column; gap:5px;">
-                                    <span style="font-size:24px; font-weight:900; text-transform:uppercase; color:#fff; letter-spacing:0.25em; line-height:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $match->tournamentTeam->short_name }}</span>
-                                    <div style="display:flex; gap:4px;">
+                        <div style="padding:16px; display:flex; flex-direction:column; gap:12px; text-align:left;">
+                            
+                            {{-- Team Logo and Short Name --}}
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <div style="width:48px; height:48px; background:rgba(0,0,0,0.4); p:1; border:1px solid rgba(255,255,255,0.1); border-radius:4px; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+                                    <img src="{{ $match->tournamentTeam->logo_image ? asset('storage/' . $match->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" style="width:100%; height:100%; object-fit:contain;">
+                                </div>
+                                <div style="flex:1; overflow:hidden; display:flex; flex-direction:column; gap:6px;">
+                                    <span style="font-size:26px; font-weight:900; text-transform:uppercase; color:#fff; letter-spacing:0.05em; line-height:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $match->tournamentTeam->short_name }}</span>
+                                    {{-- Alive Pips --}}
+                                    <div style="display:flex; gap:5px;">
                                         @for($i = 0; $i < 4; $i++)
-                                            <div class="{{ $i < $match->alive ? 'pip-alive' : 'pip-dead' }}" style="width:10px; height:14px; border-radius:2px; transform:skewX(-12deg);"></div>
+                                            <div class="{{ $i < $match->alive ? 'pip-alive' : 'pip-dead' }}" style="width:12px; height:16px; border-radius:2px; transform:skewX(-12deg);"></div>
                                         @endfor
                                     </div>
                                 </div>
                             </div>
 
-                            <div style="display:flex; align-items:flex-end; justify-content:space-between; padding-top:8px; border-top:1px solid rgba(255,255,255,0.05);">
-                                <div style="display:flex; flex-direction:column;">
-                                    <span style="font-size:16px; font-weight:900; color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.1em;">Kills</span>
-                                    <span style="font-size:36px; font-weight:900; font-style:bold; color:#fff; line-height:1;">{{ $match->kills }}</span>
+                            {{-- Stats block --}}
+                            <div style="display:flex; align-items:flex-end; justify-content:space-between; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06);">
+                                <div style="display:flex; flex-direction:column; gap:2px;">
+                                    <span style="font-size:12px; font-weight:700; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.1em;">Kills</span>
+                                    <span style="font-size:36px; font-weight:900; color:#fff; line-height:1; font-family:'Orbitron', sans-serif;">{{ $match->kills }}</span>
                                 </div>
-                                <div style="display:flex; flex-direction:column; align-items:flex-end;">
-                                    <span style="font-size:16px; font-weight:900; color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.1em;">Points</span>
-                                    <span style="font-size:36px; font-weight:900; font-style:bold; color:#facc15; line-height:1;">{{ $match->points }}</span>
+                                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:2px;">
+                                    <span style="font-size:12px; font-weight:700; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.1em;">Points</span>
+                                    <span style="font-size:36px; font-weight:900; color:#f59e0b; line-height:1; font-family:'Orbitron', sans-serif;">{{ $match->points }}</span>
                                 </div>
                             </div>
                         </div>
@@ -139,45 +197,58 @@
 
         @else
             {{-- ========== BOTTOM-RIGHT LIST VIEW ========== --}}
-            <div id="side-list-container" style="position:fixed; bottom:30px; right:30px; width:245px; display:flex; flex-direction:column; gap:3px; z-index:40;">
-                <div class="bg-yellow-400 py-0.5 px-4 pubg-skew shadow-xl" style="border-top:2px solid rgba(0,0,0,0.2);">
+            <div id="side-list-container" style="position:fixed; bottom:30px; right:30px; width:330px; display:flex; flex-direction:column; gap:4px; z-index:40;">
+                
+                {{-- Title bar --}}
+                <div class="bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 py-1.5 px-5 pubg-skew shadow-xl" style="border-bottom:2px solid rgba(0,0,0,0.3);">
                     <div class="pubg-unskew flex justify-between items-center">
-                        <span class="font-black italic uppercase text-lg text-black">Live Standings</span>
-                        <span class="text-lg font-black text-black/50 italic">{{ $aliveTeamsCount }} Teams</span>
+                        <span class="font-black italic uppercase text-xl text-black">Live Standings</span>
+                        <span class="text-sm font-black text-black/60 italic uppercase tracking-wider">{{ $aliveTeamsCount }} Teams Alive</span>
                     </div>
                 </div>
 
                 {{-- Column Headers --}}
-                <div class="pubg-skew" style="display:flex; align-items:center; padding:4px 12px; gap:10px;">
-                    <div class="pubg-unskew" style="display:flex; align-items:center; width:100%; gap:10px;">
-                        <span style="width:24px; flex-shrink:0;"></span>
-                        <span style="flex:1; font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:0.1em; color:rgb(28, 28, 28);">Team</span>
-                        <span style="font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:0.05em; color:rgb(28, 28, 28); width:38px; text-align:center;">Alive</span>
-                        <span style="font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:0.05em; color:rgb(28, 28, 28); width:30px; text-align:center;">Kills</span>
-                        <span style="font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:0.05em; color:rgb(28, 28, 28); width:40px; text-align:center;">Pts</span>
+                <div class="pubg-skew" style="display:flex; align-items:center; padding:3px 14px; gap:8px; background:rgba(0,0,0,0.4);">
+                    <div class="pubg-unskew flex items-center w-full gap-2 text-[10px] font-black uppercase tracking-wider text-slate-400">
+                        <span style="width:28px; flex-shrink:0;"></span>
+                        <span style="flex:1; text-align:left;">Team</span>
+                        <span style="width:50px; text-align:center;">Alive</span>
+                        <span style="width:34px; text-align:center;">Kills</span>
+                        <span style="width:40px; text-align:right;">Pts</span>
                     </div>
                 </div>
 
-                <div style="display:flex; flex-direction:column; gap:2px;" id="live-standings">
+                {{-- Scroll List --}}
+                <div style="display:flex; flex-direction:column; gap:3px;" id="live-standings">
                     @foreach ($allStats as $index => $match)
                     @php $isEliminated = $match->alive == 0; @endphp
-                    <div data-team-id="{{ $match->tournament_team_id }}" class="list-item glass-panel pubg-skew transition-all duration-500 {{ $isEliminated ? 'opacity-40 grayscale' : '' }}" style="border-radius:2px;">
-                        <div class="pubg-unskew" style="display:flex; align-items:center; padding:8px 12px; gap:10px;">
-                            <img src="{{ $match->tournamentTeam->logo_image ? asset('storage/' . $match->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" style="width:24px; height:24px; object-fit:contain; flex-shrink:0;">
-                            {{-- Team Name --}}
-                            <span style="flex:1; font-weight:900; text-transform:uppercase; font-size:20px; line-height:1; letter-spacing:0.1em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; {{ $isEliminated ? 'color:rgba(255,255,255,0.2); text-decoration:line-through;' : 'color:#fff;' }}">{{ $match->tournamentTeam->short_name }}</span>
-                            {{-- Alive pips (centered between name and points) --}}
-                            <div style="display:flex; gap:2px; flex-shrink:0; width:38px; justify-content:center;">
+                    <div data-team-id="{{ $match->tournament_team_id }}" class="list-item glass-panel pubg-skew transition-all duration-500 {{ $isEliminated ? 'opacity-35 grayscale scale-[0.98]' : 'hover:border-yellow-400/40' }}" style="border-radius:2px; border: 1px solid {{ $isEliminated ? 'rgba(255,255,255,0.03)' : 'rgba(250,204,21,0.15)' }};">
+                        <div class="pubg-unskew" style="display:flex; align-items:center; padding:8px 14px; gap:8px;">
+                            
+                            {{-- Logo --}}
+                            <div style="width:28px; height:28px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08); border-radius:3px; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+                                <img src="{{ $match->tournamentTeam->logo_image ? asset('storage/' . $match->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" style="width:100%; height:100%; object-fit:contain;">
+                            </div>
+                            
+                            {{-- Team Short Name --}}
+                            <span class="font-black uppercase" style="flex:1; text-align:left; font-size:22px; line-height:1; letter-spacing:0.05em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; {{ $isEliminated ? 'color:rgba(255,255,255,0.25); text-decoration:line-through;' : 'color:#fff;' }}">{{ $match->tournamentTeam->short_name }}</span>
+                            
+                            {{-- Alive indicators --}}
+                            <div style="display:flex; gap:3px; flex-shrink:0; width:50px; justify-content:center;">
                                 @if(!$isEliminated)
                                     @for($i = 0; $i < 4; $i++)
-                                        <div class="{{ $i < $match->alive ? 'pip-alive' : 'pip-dead' }}" style="width:7px; height:11px; border-radius:1px;"></div>
+                                        <div class="{{ $i < $match->alive ? 'pip-alive' : 'pip-dead' }}" style="width:7px; height:12px; border-radius:1px;"></div>
                                     @endfor
+                                @else
+                                    <span style="font-size:10px; font-weight:900; color:#ef4444; letter-spacing:0.1em; text-transform:uppercase;">OUT</span>
                                 @endif
                             </div>
+                            
                             {{-- Kills --}}
-                            <span style="font-weight:900; font-size:18px; color:rgba(255,255,255,0.6); width:30px; text-align:center; line-height:1;">{{ $match->kills }}</span>
-                            {{-- Points --}}
-                            <span style="font-weight:900; font-size:24px; color:#facc15; width:40px; text-align:center; line-height:1;">{{ $match->points }}</span>
+                            <span class="font-bold font-mono" style="font-size:19px; color:rgba(255,255,255,0.6); width:34px; text-align:center; line-height:1;">{{ $match->kills }}</span>
+                            
+                            {{-- Total Points --}}
+                            <span class="font-black font-mono text-glow-gold" style="font-size:24px; color:#f59e0b; width:40px; text-align:right; line-height:1;">{{ $match->points }}</span>
                         </div>
                     </div>
                     @endforeach
@@ -192,29 +263,31 @@
         $sponsors = $activeMatch->tournament->tournamentSponsors;
     @endphp
     <div id="lower-third" class="lower-third-slide" style="position:fixed; bottom:0; left:0; z-index:60; display:flex; align-items:stretch; gap:0;">
+        
         {{-- Sponsor Logo Carousel --}}
-        <div id="sponsor-carousel" style="width:100px; height:100px; background:rgba(0, 0, 0, 0.5); border:1px solid rgba(255,255,255,0.1); border-right:none; position:relative; flex-shrink:0; overflow:hidden;">
+        <div id="sponsor-carousel" style="width:110px; height:110px; background:rgba(4, 6, 12, 0.9); border:1px solid rgba(250,204,21,0.2); border-right:none; position:relative; flex-shrink:0; overflow:hidden;">
             @if($sponsors->count() > 0)
                 @foreach($sponsors as $index => $sponsor)
                     <img 
                         class="sponsor-logo" 
                         src="{{ asset('storage/' . $sponsor->logo_image) }}" 
                         alt="{{ $sponsor->name }}"
-                        style="position:absolute; inset:0; width:100%; height:100%; object-fit:contain; padding:10px; transition:opacity 0.8s ease-in-out; opacity:{{ $index === 0 ? '1' : '0' }};"
+                        style="position:absolute; inset:0; width:100%; height:100%; object-fit:contain; padding:12px; transition:opacity 0.8s ease-in-out; opacity:{{ $index === 0 ? '1' : '0' }};"
                     >
                 @endforeach
             @else
-                <span style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.15); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em;">Sponsor</span>
+                <span class="font-esports" style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.15); font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:0.15em;">PARTNERS</span>
             @endif
         </div>
+        
         {{-- Tournament Info --}}
-        <div class="glass-panel" style="display:flex; align-items:center; gap:16px; padding:14px 28px 14px 16px; border-left:5px solid #facc15; min-height:100px;">
-            <div style="width:64px; height:64px; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
-                <img src="{{ $activeMatch->tournament->logo_image ? asset('storage/' . $activeMatch->tournament->logo_image) : asset('img/defult_team_logo.png') }}" style="width:100%; height:100%; object-fit:contain;">
+        <div class="glass-panel" style="display:flex; align-items:center; gap:20px; padding:14px 32px 14px 20px; border-left:6px solid #f59e0b; min-height:110px; border-top:1px solid rgba(250,204,21,0.2); border-bottom:none; border-right:none; border-radius:0 8px 0 0;">
+            <div style="width:68px; height:68px; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.3); p:1; border:1px solid rgba(255,255,255,0.06); border-radius:6px;">
+                <img src="{{ $activeMatch->tournament->logo_image ? asset('storage/' . $activeMatch->tournament->logo_image) : asset('img/defult_team_logo.png') }}" style="max-width:100%; max-h-100%; object-fit:contain;">
             </div>
-            <div style="display:flex; flex-direction:column; gap:4px;">
-                <span style="font-size:24px; font-weight:900; font-style:italic; text-transform:uppercase; color:#fff; letter-spacing:0.05em; line-height:1;">{{ $activeMatch->tournament->name }}</span>
-                <span style="font-size:24px; font-weight:700; text-transform:uppercase; color:#facc15; letter-spacing:0.15em; line-height:1;">{{ $activeMatch->name }}</span>
+            <div style="display:flex; flex-direction:column; gap:2px; text-align:left;">
+                <span class="font-esports text-slate-400" style="font-size:18px; font-weight:700; text-transform:uppercase; letter-spacing:0.15em; line-height:1;">{{ $activeMatch->tournament->name }}</span>
+                <span class="font-esports italic text-glow-gold" style="font-size:28px; font-weight:900; text-transform:uppercase; color:#f59e0b; letter-spacing:0.05em; line-height:1.1;">{{ $activeMatch->name }}</span>
             </div>
         </div>
     </div>
@@ -226,7 +299,7 @@
             const logoImg = document.getElementById('toaster-logo');
             let eliminationQueue = [];
             let isProcessing = false;
-
+ 
             function getCurrentView() {
                 const hudRoot = document.getElementById('hud-root');
                 if (hudRoot?.querySelector('#final-four-container')) return 'cards';
@@ -245,14 +318,14 @@
 
                 if (view === 'cards') {
                     // Cards view: appear well BELOW the cards
-                    toasterWrapper.style.top = '280px';
+                    toasterWrapper.style.top = '340px';
                     toasterWrapper.style.opacity = '0';
                     requestAnimationFrame(() => {
-                        toasterWrapper.style.top = '300px';
+                        toasterWrapper.style.top = '360px';
                         toasterWrapper.style.opacity = '1';
                     });
                     setTimeout(() => {
-                        toasterWrapper.style.top = '280px';
+                        toasterWrapper.style.top = '340px';
                         toasterWrapper.style.opacity = '0';
                         setTimeout(() => { isProcessing = false; processQueue(); }, 800);
                     }, 5500);
@@ -261,7 +334,7 @@
                     toasterWrapper.style.top = '-120px';
                     toasterWrapper.style.opacity = '0';
                     requestAnimationFrame(() => {
-                        toasterWrapper.style.top = '15px';
+                        toasterWrapper.style.top = '25px';
                         toasterWrapper.style.opacity = '1';
                     });
                     setTimeout(() => {
@@ -372,6 +445,7 @@
                     console.log('Match updated/activated, reloading...');
                     window.location.reload();
                 });
+            
             // Sponsor Logo Carousel — fade cycle every 4 seconds
             const sponsorLogos = document.querySelectorAll('.sponsor-logo');
             if (sponsorLogos.length > 1) {

@@ -1,5 +1,15 @@
 <x-base>
+    {{-- High-End Typography & Theme Imports --}}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Rajdhani:wght@600;700;900&display=swap" rel="stylesheet">
+
     <style>
+        .font-esports {
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .font-body-esports {
+            font-family: 'Inter', sans-serif;
+        }
+
         .pubg-skew { transform: skewX(-12deg); }
         .pubg-unskew { transform: skewX(12deg); }
         
@@ -8,97 +18,118 @@
             flex-direction: column;
             width: 100%;
             height: 100%;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.6);
-            background: white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+            background: rgba(8, 12, 24, 0.75);
             border-radius: 4px;
-            border: 2px solid rgba(250, 204, 21, 0.25);
-            transition: all 0.3s ease;
+            border: 1px solid rgba(250, 204, 21, 0.2);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .team-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            border-color: rgba(250, 204, 21, 0.6);
+            box-shadow: 0 15px 35px rgba(250, 204, 21, 0.15);
         }
         
         .team-card-top {
             flex: 1;
-            background: #1e293b; /* slate-800 */
+            background: rgba(4, 6, 12, 0.5);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 8px 12px;
+            padding: 12px;
             position: relative;
         }
         
         .team-card-bottom {
-            height: 60px;
-            background: white;
+            height: 52px;
+            background: rgba(15, 23, 42, 0.95);
             display: flex;
             align-items: center;
             justify-content: center;
-            border-top: 2px solid #0f172a;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0 0 4px 4px;
         }
 
-        .map-bg {
-            background: #0f172a; /* slate-900 */
-            /* Add abstract diagonal lines for the sides */
+        /* Abstract diagonal grids */
+        .decor-grid {
             background-image: repeating-linear-gradient(
                 -45deg,
-                rgba(255,255,255,0.02),
-                rgba(255,255,255,0.02) 10px,
+                rgba(255,255,255,0.015),
+                rgba(255,255,255,0.015) 10px,
                 transparent 10px,
                 transparent 20px
             );
         }
     </style>
 
-    <div class="w-full h-full flex font-sans map-bg overflow-hidden relative">
+    <div class="w-full h-full flex font-esports bg-transparent overflow-hidden relative select-none">
 
         {{-- LEFT COLUMN (420px) --}}
-        <div class="w-105 h-full flex flex-col pt-8 px-6 pb-6 z-10 relative bg-black/40 border-r border-slate-700/50">
+        <div class="w-[420px] h-full flex flex-col pt-8 px-6 pb-6 z-10 relative bg-slate-950/80 backdrop-blur-md border-r border-yellow-400/20 shadow-2xl">
+            <div class="absolute inset-0 decor-grid z-0 opacity-40 pointer-events-none"></div>
+
             {{-- Tournament Branding --}}
-            <div class="flex items-center gap-6 mb-10 pl-2">
-                <img src="{{ $tournament->logo_image ? asset('storage/' . $tournament->logo_image) : asset('img/defult_team_logo.png') }}" class="w-24 aspect-square object-contain drop-shadow-2xl">
-                <div class="flex flex-col">
-                    <span class="text-5xl font-black uppercase text-white tracking-widest leading-none drop-shadow-md">PUBG MOBILE</span>
-                    <span class="text-2xl font-black uppercase text-yellow-400 bg-black/60 border border-yellow-400/40 px-3 py-1 inline-block mt-2 tracking-widest rounded">{{ $tournament->name }}</span>
+            <div class="flex items-center gap-5 mb-8 pl-1 relative z-10">
+                <div class="bg-slate-900 border border-yellow-400/40 p-2 rounded-lg shadow-lg">
+                    <img src="{{ $tournament->logo_image ? asset('storage/' . $tournament->logo_image) : asset('img/defult_team_logo.png') }}" 
+                         class="w-14 h-14 object-contain">
+                </div>
+                <div class="flex flex-col text-left">
+                    <span class="text-xs font-bold text-yellow-400 tracking-[0.3em] uppercase leading-none">SYS // MAP_STREAM</span>
+                    <span class="text-2xl font-black uppercase text-slate-100 tracking-wider mt-1.5 leading-none">{{ $tournament->name }}</span>
                 </div>
             </div>
 
+            <div class="w-full h-[1px] bg-gradient-to-r from-yellow-400/30 to-transparent mb-6 relative z-10"></div>
+
             {{-- Left Teams Grid (First 8 teams) --}}
-            <div class="grid grid-cols-2 grid-rows-4 gap-x-4 gap-y-6 w-full flex-1 mt-6 mb-2">
+            <div class="grid grid-cols-2 grid-rows-4 gap-x-4 gap-y-5 w-full flex-1 mb-2 relative z-10">
                 @foreach($teams->take(8) as $team)
                     <div class="team-card overflow-hidden">
                         <div class="team-card-top">
-                            <img src="{{ $team->logo_image ? asset('storage/' . $team->logo_image) : asset('img/defult_team_logo.png') }}" class="max-w-full max-h-full object-contain filter drop-shadow-md">
+                            <img src="{{ $team->logo_image ? asset('storage/' . $team->logo_image) : asset('img/defult_team_logo.png') }}" class="max-w-[80%] max-h-[80%] object-contain filter drop-shadow-md">
                         </div>
-                        <div class="team-card-bottom bg-slate-100">
-                            <span class="font-black text-3xl lg:text-4xl uppercase tracking-wider text-slate-950">{{ $team->short_name }}</span>
+                        <div class="team-card-bottom">
+                            <span class="font-black text-2xl uppercase tracking-wider text-slate-100">{{ $team->short_name }}</span>
                         </div>
                     </div>
                 @endforeach
             </div>
         </div>
 
-        {{-- MIDDLE COLUMN (1080x1080) --}}
-        {{-- This area is kept completely transparent for OBS map source --}}
-        <div class="w-270 h-270 shrink-0 relative bg-transparent">
-            {{-- Optional: We can add an inner glow or border to frame the map --}}
-            <div class="absolute inset-0 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)] pointer-events-none border-x border-slate-800/50"></div>
+        {{-- MIDDLE COLUMN (1080px wide) --}}
+        {{-- Totally transparent container to capture clean OBS game maps --}}
+        <div class="w-[1080px] h-full shrink-0 relative bg-transparent pointer-events-none">
+            {{-- Sleek glowing framing border for the OBS map capture --}}
+            <div class="absolute inset-y-0 left-0 w-[1px] bg-gradient-to-b from-transparent via-yellow-400/25 to-transparent"></div>
+            <div class="absolute inset-y-0 right-0 w-[1px] bg-gradient-to-b from-transparent via-yellow-400/25 to-transparent"></div>
+            <div class="absolute inset-0 shadow-[inset_0_0_60px_rgba(0,0,0,0.85)]"></div>
         </div>
 
         {{-- RIGHT COLUMN (420px) --}}
-        <div class="w-105 h-full flex flex-col pt-8 px-6 pb-6 z-10 relative bg-black/40 border-l border-slate-700/50 font-sans shadow-lg">
+        <div class="w-[420px] h-full flex flex-col pt-8 px-6 pb-6 z-10 relative bg-slate-950/80 backdrop-blur-md border-l border-yellow-400/20 shadow-2xl">
+            <div class="absolute inset-0 decor-grid z-0 opacity-40 pointer-events-none"></div>
+
             {{-- Match Details --}}
-            <div class="flex flex-col items-end mb-10 pr-2">
-                <span class="text-6xl font-black uppercase text-orange-500 tracking-widest leading-none font-display" style="text-shadow: 0 3px 6px rgba(0,0,0,0.5);">{{ $activeMatch->name }}</span>
-                <span class="text-4xl font-black uppercase text-slate-100 tracking-widest mt-4 font-sans bg-orange-600 border-2 border-orange-400 px-5 py-2 inline-block rounded shadow-lg" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">{{ $activeMatch->map }}</span>
+            <div class="flex flex-col items-end mb-8 pr-1 relative z-10">
+                <span class="text-xs font-bold text-slate-500 tracking-[0.3em] uppercase leading-none">SYS // ACTIVE_PHASE</span>
+                <span class="text-3xl font-black uppercase text-slate-200 tracking-widest mt-2 leading-none font-esports">{{ $activeMatch->name }}</span>
+                <div class="pubg-skew bg-gradient-to-r from-yellow-500 to-amber-500 border border-white/20 px-5 py-1.5 inline-block mt-3 shadow-md">
+                    <span class="pubg-unskew block text-black font-black uppercase text-xl tracking-wider font-esports leading-none italic">{{ $activeMatch->map }}</span>
+                </div>
             </div>
 
+            <div class="w-full h-[1px] bg-gradient-to-l from-yellow-400/30 to-transparent mb-6 relative z-10"></div>
+
             {{-- Right Teams Grid (Next 8 teams) --}}
-            <div class="grid grid-cols-2 grid-rows-4 gap-x-4 gap-y-6 w-full flex-1 mt-6 mb-2">
+            <div class="grid grid-cols-2 grid-rows-4 gap-x-4 gap-y-5 w-full flex-1 mb-2 relative z-10">
                 @foreach($teams->slice(8)->take(8) as $team)
                     <div class="team-card overflow-hidden">
                         <div class="team-card-top">
-                            <img src="{{ $team->logo_image ? asset('storage/' . $team->logo_image) : asset('img/defult_team_logo.png') }}" class="max-w-full max-h-full object-contain filter drop-shadow-md">
+                            <img src="{{ $team->logo_image ? asset('storage/' . $team->logo_image) : asset('img/defult_team_logo.png') }}" class="max-w-[80%] max-h-[80%] object-contain filter drop-shadow-md">
                         </div>
-                        <div class="team-card-bottom bg-slate-100">
-                            <span class="font-black text-3xl lg:text-4xl uppercase tracking-wider text-slate-950">{{ $team->short_name }}</span>
+                        <div class="team-card-bottom">
+                            <span class="font-black text-2xl uppercase tracking-wider text-slate-100">{{ $team->short_name }}</span>
                         </div>
                     </div>
                 @endforeach
@@ -110,7 +141,6 @@
     {{-- Live updates listener --}}
     <script type="module">
         document.addEventListener("DOMContentLoaded", function () {
-            // Listen to match updates and global refresh commands
             Echo.channel('user-screens.{{ $user->id }}')
                 .listen('.TournamentMatchUpdated', (e) => {
                     console.log('Match activated/updated, reloading map screen...');
@@ -123,7 +153,6 @@
 
             Echo.channel('active-match.{{ $activeMatch->id }}')
                 .listen('.MatchStatsUpdated', (e) => {
-                    // Usually map teams don't change, but if they do, we can reload
                     fetch(window.location.href, { cache: 'no-store' })
                         .then(response => response.text())
                         .then(html => {
