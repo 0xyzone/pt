@@ -90,6 +90,16 @@ class TournamentTeamsRelationManager extends RelationManager
                                     ->default('player')
                                     ->required()
                                     ->native(false),
+                                FileUpload::make('image')
+                                    ->label('Player Portrait')
+                                    ->image()
+                                    ->directory('player-portraits')
+                                    ->visibility('public')
+                                    ->disk('public')
+                                    ->imageAspectRatio('9:16')
+                                    ->imageEditor()
+                                    ->imageEditorAspectRatioOptions(['9:16'])
+                                    ->columnSpanFull(),
                             ])
                             ->columns(2)
                             ->grid(2)

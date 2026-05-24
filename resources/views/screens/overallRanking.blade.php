@@ -1,4 +1,4 @@
-<x-base>
+<x-base title="OVERALL STANDINGS">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Rajdhani:wght@600;700;900&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
 
     <style>
@@ -57,8 +57,15 @@
         .badge-pop { animation: badgePop 0.7s cubic-bezier(0.34,1.56,0.64,1) both; }
 
         /* ══════════════════════════════════════════════════════
-           LOOPING ANIMATIONS
+           DYNAMIC INTERMISSION BACKGROUND SYSTEM
         ══════════════════════════════════════════════════════ */
+
+        .cyber-bg {
+            background-color: #030712;
+            background-image:
+                radial-gradient(at 15% 15%, rgba(6, 182, 212, 0.08) 0px, transparent 60%),
+                radial-gradient(at 85% 85%, rgba(234, 179, 8, 0.06) 0px, transparent 60%);
+        }
 
         @keyframes scanline {
             from { transform: translateY(-100%); }
@@ -66,8 +73,25 @@
         }
         .scan-sweep {
             position: absolute; inset: 0; z-index: 0;
-            background: linear-gradient(to bottom, transparent 48%, rgba(250,204,21,0.05) 50%, transparent 52%);
+            background: linear-gradient(to bottom, transparent 48%, rgba(6, 182, 212, 0.04) 50%, transparent 52%);
             animation: scanline 12s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes gridScroll {
+            from { background-position: 0 0; }
+            to   { background-position: 0 40px; }
+        }
+
+        .grid-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background-size: 50px 50px;
+            background-image:
+                linear-gradient(to right, rgba(255, 255, 255, 0.012) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
+            animation: gridScroll 20s linear infinite;
             pointer-events: none;
         }
 
@@ -102,7 +126,7 @@
 
         /* ══════════════════════════════════════════════════════
            CARD STYLES
-        ══════════════════════════════════════════════════════ */
+           ══════════════════════════════════════════════════════ */
 
         .glass-row {
             background: rgba(8, 11, 22, 0.88);
@@ -149,12 +173,24 @@
         }
     </style>
 
-    <div class="w-full h-full font-esports text-slate-100 relative overflow-hidden flex flex-col" style="background: transparent;">
+    {{-- Main screen wrapper — id used for live bg switching --}}
+    <div id="screen-wrapper" class="w-full h-full min-h-screen {{ $bgType === 'animated' ? 'cyber-bg' : 'bg-transparent' }} relative flex flex-col justify-between overflow-hidden text-slate-100 font-esports select-none">
+
+        {{-- Custom background video layer --}}
+        <video id="bg-video" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover z-0 {{ ($bgType === 'custom' && $customVideo) ? '' : 'hidden' }}">
+            @if($bgType === 'custom' && $customVideo)
+            <source src="{{ asset('storage/' . $customVideo) }}" type="video/mp4">
+            @endif
+        </video>
+        <div id="bg-video-overlay" class="absolute inset-0 bg-slate-950/85 z-0 backdrop-blur-[1px] {{ ($bgType === 'custom' && $customVideo) ? '' : 'hidden' }}"></div>
+
+        {{-- Interactive Scanning laser overlays --}}
+        <div id="bg-grid" class="grid-bg z-0 opacity-30 {{ $bgType === 'transparent' ? 'hidden' : '' }}"></div>
+        <div id="bg-sweep" class="scan-sweep z-0 {{ $bgType === 'transparent' ? 'hidden' : '' }}"></div>
 
         {{-- Ambient orbs --}}
-        <div class="orb" style="width:400px;height:400px;background:rgba(245,158,11,0.07);top:4%;left:6%;animation-delay:0s;"></div>
-        <div class="orb" style="width:480px;height:480px;background:rgba(234,88,12,0.05);bottom:4%;right:5%;animation-delay:4s;"></div>
-        <div class="scan-sweep"></div>
+        <div class="orb z-0" style="width:400px;height:400px;background:rgba(245,158,11,0.07);top:4%;left:6%;animation-delay:0s;"></div>
+        <div class="orb z-0" style="width:480px;height:480px;background:rgba(234,88,12,0.05);bottom:4%;right:5%;animation-delay:4s;"></div>
 
         {{-- ─── HEADER (slides down) ────────────────────────── --}}
         <div class="slide-down header-bar relative z-10 flex justify-between items-center px-10 py-4" style="animation-delay:0s;">
@@ -163,15 +199,15 @@
                     <img src="{{ $tournament->logo_image ? asset('storage/'.$tournament->logo_image) : asset('img/defult_team_logo.png') }}" class="w-12 h-12 object-contain">
                 </div>
                 <div>
-                    <div class="text-yellow-400 text-xs font-black uppercase tracking-[0.4em] font-body">
+                    <div class="text-yellow-400 text-xs font-black uppercase tracking-[0.4em] font-body leading-none">
                         @if($currentRound) {{ $currentRound->name }} STANDINGS @else OFFICIAL LEADERBOARD @endif
                     </div>
-                    <h1 class="text-3xl font-black uppercase tracking-tight leading-none text-white mt-0.5">{{ $tournament->name }}</h1>
+                    <h1 class="text-3xl font-black uppercase tracking-tight leading-none text-white mt-1.5">{{ $tournament->name }}</h1>
                 </div>
             </div>
             <div class="text-right">
-                <div class="text-slate-500 text-[10px] font-black uppercase tracking-[0.35em] font-body">SYS // STANDINGS_OVERALL</div>
-                <div class="text-3xl font-black uppercase tracking-wide mt-0.5">
+                <div class="text-slate-500 text-[9px] font-black uppercase tracking-[0.35em] font-body leading-none">SYS // STANDINGS_OVERALL</div>
+                <div class="text-3xl font-black uppercase tracking-wide mt-1.5">
                     <span class="badge-shimmer">Overall Rankings</span>
                 </div>
             </div>
@@ -234,10 +270,10 @@
 
                         {{-- Team Name --}}
                         <div class="flex-1 min-w-0 flex flex-col justify-center">
-                            <div class="font-black uppercase leading-tight text-xl {{ $rank === 1 ? 'text-yellow-300' : 'text-white' }}" style="font-family:'Rajdhani',sans-serif;{{ $rank===1 ? 'text-shadow:0 0 14px rgba(250,204,21,0.35);' : '' }}">
+                            <div class="font-black uppercase leading-tight text-xl {{ $rank === 1 ? 'text-yellow-300' : 'text-white' }} truncate max-w-[150px]" style="font-family:'Rajdhani',sans-serif;{{ $rank===1 ? 'text-shadow:0 0 14px rgba(250,204,21,0.35);' : '' }}">
                                 {{ $item['team']->name }}
                             </div>
-                            <div class="text-sm uppercase tracking-wider font-body leading-none {{ $rank===1 ? 'text-yellow-400/70' : 'text-slate-400' }}">
+                            <div class="text-sm uppercase tracking-wider font-body leading-none {{ $rank===1 ? 'text-yellow-400/70' : 'text-slate-400' }} truncate max-w-[150px] mt-0.5">
                                 {{ $item['team']->short_name }}
                             </div>
                         </div>
@@ -281,18 +317,70 @@
         </div>
 
         {{-- ─── FOOTER (slides up) ─────────────────────────── --}}
-        <div class="slide-up-footer footer-bar relative z-10 flex items-center justify-between px-10 py-2 font-body text-[10px] font-bold text-slate-600 tracking-[0.4em] uppercase">
+        <div class="slide-up-footer footer-bar relative z-10 flex items-center justify-between px-10 py-2.5 font-body text-[9px] font-bold text-slate-500 tracking-[0.4em] uppercase">
             <span>SYS_LOC // 0x48FA90</span>
-            <div class="h-px w-32 flex-shrink-0" style="background:linear-gradient(to right,transparent,rgba(250,204,21,0.3),transparent);"></div>
+            <div class="h-px w-36 flex-shrink-0" style="background:linear-gradient(to right,transparent,rgba(250,204,21,0.2),transparent);"></div>
             <span class="text-yellow-400/60">Official Standings Stream Overlay</span>
-            <div class="h-px w-32 flex-shrink-0" style="background:linear-gradient(to right,transparent,rgba(250,204,21,0.3),transparent);"></div>
+            <div class="h-px w-36 flex-shrink-0" style="background:linear-gradient(to right,transparent,rgba(250,204,21,0.2),transparent);"></div>
             <span>SYS_VER_3.5.2</span>
         </div>
     </div>
 
     <script type="module">
         document.addEventListener("DOMContentLoaded", function () {
+            const wrapper = document.getElementById('screen-wrapper');
+            const grid = document.getElementById('bg-grid');
+            const sweep = document.getElementById('bg-sweep');
+            const video = document.getElementById('bg-video');
+            const videoOverlay = document.getElementById('bg-video-overlay');
+
+            function applyBackground(bgType, customVideoUrl) {
+                if (!wrapper) return;
+                
+                // Reset classes
+                wrapper.classList.remove('cyber-bg', 'bg-transparent');
+                
+                if (bgType === 'animated') {
+                    wrapper.classList.add('cyber-bg');
+                    if (grid) grid.classList.remove('hidden');
+                    if (sweep) sweep.classList.remove('hidden');
+                    if (video) video.classList.add('hidden');
+                    if (videoOverlay) videoOverlay.classList.add('hidden');
+                } else if (bgType === 'custom') {
+                    wrapper.classList.add('bg-transparent');
+                    if (grid) grid.classList.add('hidden');
+                    if (sweep) sweep.classList.remove('hidden');
+                    if (video) {
+                        video.classList.remove('hidden');
+                        if (customVideoUrl) {
+                            const source = video.querySelector('source') || document.createElement('source');
+                            source.src = customVideoUrl;
+                            source.type = 'video/mp4';
+                            if (!video.contains(source)) video.appendChild(source);
+                            video.load();
+                            video.play().catch(err => console.log('Video play interrupted:', err));
+                        }
+                    }
+                    if (videoOverlay) videoOverlay.classList.remove('hidden');
+                } else {
+                    // transparent
+                    wrapper.classList.add('bg-transparent');
+                    if (grid) grid.classList.add('hidden');
+                    if (sweep) sweep.classList.add('hidden');
+                    if (video) video.classList.add('hidden');
+                    if (videoOverlay) videoOverlay.classList.add('hidden');
+                }
+            }
+
+            // Apply active background state initially
+            applyBackground("{{ $bgType }}", "{{ $customVideo ? asset('storage/' . $customVideo) : '' }}");
+
+            // Echo channel events
             Echo.channel('user-screens.{{ $activeMatch->tournament->user_id }}')
+                .listen('.BackgroundChanged', (e) => {
+                    console.log('BackgroundChanged received:', e);
+                    applyBackground(e.bgType, e.customVideoUrl);
+                })
                 .listen('.RefreshScreens', (e) => { window.location.reload(); })
                 .listen('.TournamentMatchUpdated', (e) => { window.location.reload(); });
         });

@@ -1,4 +1,4 @@
-<x-base>
+<x-base title="POST MATCH RESULTS">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Rajdhani:wght@600;700;900&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
 
     <style>
@@ -71,8 +71,15 @@
         .stat-reveal { animation: statReveal 0.5s cubic-bezier(0.34,1.56,0.64,1) both; }
 
         /* ══════════════════════════════════════════════════════
-           LOOPING ANIMATIONS
+           DYNAMIC INTERMISSION BACKGROUND SYSTEM
         ══════════════════════════════════════════════════════ */
+
+        .cyber-bg {
+            background-color: #030712;
+            background-image:
+                radial-gradient(at 15% 15%, rgba(6, 182, 212, 0.08) 0px, transparent 60%),
+                radial-gradient(at 85% 85%, rgba(234, 179, 8, 0.06) 0px, transparent 60%);
+        }
 
         @keyframes scanline {
             from { transform: translateY(-100%); }
@@ -80,8 +87,25 @@
         }
         .scan-sweep {
             position: absolute; inset: 0; z-index: 0;
-            background: linear-gradient(to bottom, transparent 48%, rgba(250,204,21,0.05) 50%, transparent 52%);
+            background: linear-gradient(to bottom, transparent 48%, rgba(6, 182, 212, 0.04) 50%, transparent 52%);
             animation: scanline 12s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes gridScroll {
+            from { background-position: 0 0; }
+            to   { background-position: 0 40px; }
+        }
+
+        .grid-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background-size: 50px 50px;
+            background-image:
+                linear-gradient(to right, rgba(255, 255, 255, 0.012) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
+            animation: gridScroll 20s linear infinite;
             pointer-events: none;
         }
 
@@ -96,39 +120,39 @@
         }
 
         @keyframes pulseRing {
-            0%   { box-shadow: 0 0 0 0 rgba(250,204,21,0.55), 0 0 40px rgba(250,204,21,0.25); }
-            70%  { box-shadow: 0 0 0 22px rgba(250,204,21,0), 0 0 70px rgba(250,204,21,0.5); }
-            100% { box-shadow: 0 0 0 0 rgba(250,204,21,0), 0 0 40px rgba(250,204,21,0.25); }
+            0%   { box-shadow: 0 0 0 0 rgba(250,204,21,0.55), 0 0 30px rgba(250,204,21,0.2); }
+            70%  { box-shadow: 0 0 0 15px rgba(250,204,21,0), 0 0 50px rgba(250,204,21,0.4); }
+            100% { box-shadow: 0 0 0 0 rgba(250,204,21,0), 0 0 30px rgba(250,204,21,0.2); }
         }
         .pulse-ring { animation: pulseRing 2.4s ease-in-out infinite; }
 
         @keyframes logoShine {
             0%, 100% { filter: drop-shadow(0 0 8px rgba(250,204,21,0.4)) brightness(1); }
-            50%       { filter: drop-shadow(0 0 28px rgba(250,204,21,1)) brightness(1.2); }
+            50%       { filter: drop-shadow(0 0 24px rgba(250,204,21,0.9)) brightness(1.15); }
         }
         .logo-shine { animation: logoShine 3s ease-in-out infinite; }
 
         @keyframes numFlash {
             0%, 100% { text-shadow: 0 0 8px currentColor; }
-            50%       { text-shadow: 0 0 28px currentColor, 0 0 50px currentColor; }
+            50%       { text-shadow: 0 0 24px currentColor, 0 0 45px currentColor; }
         }
         .num-flash { animation: numFlash 2.6s ease-in-out infinite; }
 
         @keyframes tickerGlow {
             0%, 100% { box-shadow: 0 0 12px rgba(250,204,21,0.4); }
-            50%       { box-shadow: 0 0 40px rgba(250,204,21,0.9), 0 0 70px rgba(250,204,21,0.3); }
+            50%       { box-shadow: 0 0 35px rgba(250,204,21,0.85), 0 0 60px rgba(250,204,21,0.25); }
         }
         .winner-badge { animation: tickerGlow 2.2s ease-in-out infinite; }
 
         @keyframes borderFlicker {
             0%, 100% { border-color: rgba(250,204,21,0.35); }
-            50%       { border-color: rgba(250,204,21,0.75); }
+            50%       { border-color: rgba(250,204,21,0.7); }
         }
         .winner-panel { animation: borderFlicker 3s ease-in-out infinite; }
 
         /* ══════════════════════════════════════════════════════
            CARD & PANEL STYLES
-        ══════════════════════════════════════════════════════ */
+           ══════════════════════════════════════════════════════ */
 
         .glass-card {
             background: rgba(8, 11, 22, 0.88);
@@ -183,14 +207,25 @@
         }
     </style>
 
-    {{-- Transparent root wrapper --}}
-    <div class="w-full h-full font-esports text-slate-100 relative overflow-hidden flex flex-col" style="background: transparent;">
+    {{-- Main screen wrapper — id used for live bg switching --}}
+    <div id="screen-wrapper" class="w-full h-full min-h-screen {{ $bgType === 'animated' ? 'cyber-bg' : 'bg-transparent' }} relative flex flex-col justify-between overflow-hidden text-slate-100 font-esports select-none">
+
+        {{-- Custom background video layer --}}
+        <video id="bg-video" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover z-0 {{ ($bgType === 'custom' && $customVideo) ? '' : 'hidden' }}">
+            @if($bgType === 'custom' && $customVideo)
+            <source src="{{ asset('storage/' . $customVideo) }}" type="video/mp4">
+            @endif
+        </video>
+        <div id="bg-video-overlay" class="absolute inset-0 bg-slate-950/85 z-0 backdrop-blur-[1px] {{ ($bgType === 'custom' && $customVideo) ? '' : 'hidden' }}"></div>
+
+        {{-- Interactive Scanning laser overlays --}}
+        <div id="bg-grid" class="grid-bg z-0 opacity-30 {{ $bgType === 'transparent' ? 'hidden' : '' }}"></div>
+        <div id="bg-sweep" class="scan-sweep z-0 {{ $bgType === 'transparent' ? 'hidden' : '' }}"></div>
 
         {{-- Ambient orbs (subtle, not solid bg) --}}
-        <div class="orb" style="width:380px;height:380px;background:rgba(245,158,11,0.07);top:4%;left:6%;animation-delay:0s;"></div>
-        <div class="orb" style="width:460px;height:460px;background:rgba(234,88,12,0.05);bottom:4%;right:5%;animation-delay:3.5s;"></div>
-        <div class="orb" style="width:260px;height:260px;background:rgba(250,204,21,0.04);top:45%;left:38%;animation-delay:1.8s;"></div>
-        <div class="scan-sweep"></div>
+        <div class="orb z-0" style="width:380px;height:380px;background:rgba(245,158,11,0.07);top:4%;left:6%;animation-delay:0s;"></div>
+        <div class="orb z-0" style="width:460px;height:460px;background:rgba(234,88,12,0.05);bottom:4%;right:5%;animation-delay:3.5s;"></div>
+        <div class="orb z-0" style="width:260px;height:260px;background:rgba(250,204,21,0.04);top:45%;left:38%;animation-delay:1.8s;"></div>
 
         {{-- ─── HEADER ──────────────────────────────────────── --}}
         <div class="slide-down header-bar relative z-10 flex justify-between items-center px-10 py-4" style="animation-delay:0s;">
@@ -199,18 +234,18 @@
                     <img src="{{ $activeMatch->tournament->logo_image ? asset('storage/'.$activeMatch->tournament->logo_image) : asset('img/defult_team_logo.png') }}" class="w-12 h-12 object-contain">
                 </div>
                 <div>
-                    <div class="text-yellow-400 text-xs font-black uppercase tracking-[0.4em] font-body">MATCH COMPLETED</div>
-                    <h1 class="text-3xl font-black uppercase tracking-tight leading-none text-white mt-0.5">{{ $activeMatch->tournament->name }}</h1>
+                    <div class="text-yellow-400 text-xs font-black uppercase tracking-[0.4em] font-body leading-none">MATCH COMPLETED</div>
+                    <h1 class="text-3xl font-black uppercase tracking-tight leading-none text-white mt-1.5">{{ $activeMatch->tournament->name }}</h1>
                 </div>
             </div>
             <div class="flex items-center gap-6">
                 <div class="px-5 py-2 rounded-lg text-center" style="background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.35);">
-                    <div class="text-yellow-400/70 text-[10px] font-black uppercase tracking-[0.3em] font-body">MAP</div>
-                    <div class="text-yellow-400 text-xl font-black uppercase leading-none mt-0.5">{{ $activeMatch->map }}</div>
+                    <div class="text-yellow-400/70 text-[10px] font-black uppercase tracking-[0.3em] font-body leading-none">MAP</div>
+                    <div class="text-yellow-400 text-xl font-black uppercase leading-none mt-1.5">{{ $activeMatch->map }}</div>
                 </div>
                 <div class="text-right">
-                    <div class="text-slate-500 text-[10px] font-black uppercase tracking-[0.3em] font-body">RESULT SUMMARY</div>
-                    <div class="text-2xl font-black uppercase tracking-wide" style="background:linear-gradient(to right,#facc15,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">{{ $activeMatch->name }}</div>
+                    <div class="text-slate-500 text-[9px] font-black uppercase tracking-[0.3em] font-body leading-none">RESULT SUMMARY</div>
+                    <div class="text-2xl font-black uppercase tracking-wide mt-1.5" style="background:linear-gradient(to right,#facc15,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">{{ $activeMatch->name }}</div>
                 </div>
             </div>
         </div>
@@ -240,10 +275,10 @@
 
                     {{-- 🏆 Badge (drops in) --}}
                     <div class="badge-drop winner-badge rounded-md px-6 py-2 text-center mt-2" style="animation-delay:0.5s;background:linear-gradient(to right,#d97706,#facc15,#d97706);">
-                        <span class="text-black font-black text-lg uppercase tracking-[0.2em] leading-none block">🏆 CHICKEN DINNER</span>
+                        <span class="text-black font-black text-lg uppercase tracking-[0.2em] block leading-none">🏆 CHICKEN DINNER</span>
                     </div>
 
-                    <div class="text-yellow-400/50 text-[10px] font-black tracking-[0.5em] uppercase font-body mt-1">MATCH WINNER</div>
+                    <div class="text-yellow-400/50 text-[10px] font-black tracking-[0.5em] uppercase font-body mt-1 leading-none">MATCH WINNER</div>
 
                     {{-- Logo (scales up) --}}
                     <div class="logo-reveal pulse-ring w-36 h-36 rounded-full flex items-center justify-center my-4" style="animation-delay:0.6s;background:rgba(250,204,21,0.08);border:2px solid rgba(250,204,21,0.4);">
@@ -252,31 +287,31 @@
 
                     {{-- Team Name (slides up) --}}
                     <div class="text-center slide-up" style="animation-delay:0.75s;">
-                        <div class="text-4xl font-black uppercase leading-none text-white" style="text-shadow:0 0 30px rgba(250,204,21,0.45);">
+                        <div class="text-4xl font-black uppercase leading-none text-white max-w-[240px] truncate" style="text-shadow:0 0 30px rgba(250,204,21,0.45);">
                             {{ $winner ? $winner->tournamentTeam->name : 'No Winner' }}
                         </div>
-                        <div class="text-yellow-400/60 text-sm font-bold tracking-[0.3em] uppercase font-body mt-1">
+                        <div class="text-yellow-400/60 text-sm font-bold tracking-[0.3em] uppercase font-body mt-2.5">
                             {{ $winner ? $winner->tournamentTeam->short_name : '' }}
                         </div>
                     </div>
 
                     <div class="gold-divider w-full my-3"></div>
 
-                    {{-- Stats (each reveals with delay) --}}
+                    {{-- Stats --}}
                     <div class="flex w-full justify-around text-center">
                         <div class="stat-reveal" style="animation-delay:0.85s;">
                             <div class="text-yellow-400 text-[10px] font-black uppercase tracking-widest font-body">ELIMS</div>
-                            <div class="num-flash text-4xl font-black font-hud mt-1" style="color:#fde68a;">{{ $winner ? $winner->kills : 0 }}</div>
+                            <div class="num-flash text-4xl font-black font-hud mt-1.5" style="color:#fde68a;">{{ $winner ? $winner->kills : 0 }}</div>
                         </div>
-                        <div class="w-px" style="background:rgba(250,204,21,0.2);"></div>
+                        <div class="w-px" style="background:rgba(250,204,21,0.2); height: 40px; align-self: center;"></div>
                         <div class="stat-reveal" style="animation-delay:0.95s;">
                             <div class="text-yellow-400 text-[10px] font-black uppercase tracking-widest font-body">PLACE PTS</div>
-                            <div class="text-3xl font-black text-slate-200 font-hud mt-1">{{ $winner ? ($winner->points - $winner->kills) : 0 }}</div>
+                            <div class="text-3xl font-black text-slate-200 font-hud mt-1.5">{{ $winner ? ($winner->points - $winner->kills) : 0 }}</div>
                         </div>
-                        <div class="w-px" style="background:rgba(250,204,21,0.2);"></div>
+                        <div class="w-px" style="background:rgba(250,204,21,0.2); height: 40px; align-self: center;"></div>
                         <div class="stat-reveal" style="animation-delay:1.05s;">
                             <div class="text-yellow-400 text-[10px] font-black uppercase tracking-widest font-body">TOTAL</div>
-                            <div class="num-flash text-4xl font-black font-hud mt-1" style="color:#fb923c;">{{ $winner ? $winner->points : 0 }}</div>
+                            <div class="num-flash text-4xl font-black font-hud mt-1.5" style="color:#fb923c;">{{ $winner ? $winner->points : 0 }}</div>
                         </div>
                     </div>
 
@@ -331,8 +366,8 @@
 
                             {{-- Name --}}
                             <div class="flex-1 min-w-0">
-                                <div class="font-black uppercase text-xl leading-tight text-white" style="font-family:'Rajdhani',sans-serif;">{{ $match->tournamentTeam->name }}</div>
-                                <div class="text-sm text-slate-400 uppercase tracking-wider font-body leading-none">{{ $match->tournamentTeam->short_name }}</div>
+                                <div class="font-black uppercase text-xl leading-tight text-white truncate max-w-[140px]" style="font-family:'Rajdhani',sans-serif;">{{ $match->tournamentTeam->name }}</div>
+                                <div class="text-sm text-slate-400 uppercase tracking-wider font-body leading-none truncate max-w-[140px] mt-0.5">{{ $match->tournamentTeam->short_name }}</div>
                             </div>
 
                             {{-- Elims --}}
@@ -357,20 +392,73 @@
         </div>
 
         {{-- ─── FOOTER ─────────────────────────────────────── --}}
-        <div class="slide-up-footer footer-bar relative z-10 flex items-center justify-between px-10 py-2 font-body text-[10px] font-bold text-slate-600 tracking-[0.4em] uppercase">
+        <div class="slide-up-footer footer-bar relative z-10 flex items-center justify-between px-10 py-2.5 font-body text-[9px] font-bold text-slate-500 tracking-[0.4em] uppercase">
             <span>SYS_LOC // 0x58BF12</span>
-            <div class="h-px w-32 flex-shrink-0" style="background:linear-gradient(to right,transparent,rgba(250,204,21,0.3),transparent);"></div>
+            <div class="h-px w-36 flex-shrink-0" style="background:linear-gradient(to right,transparent,rgba(250,204,21,0.2),transparent);"></div>
             <span class="text-yellow-400/60">Official Match Summary Overlay</span>
-            <div class="h-px w-32 flex-shrink-0" style="background:linear-gradient(to right,transparent,rgba(250,204,21,0.3),transparent);"></div>
+            <div class="h-px w-36 flex-shrink-0" style="background:linear-gradient(to right,transparent,rgba(250,204,21,0.2),transparent);"></div>
             <span>SYS_VER_3.5.2</span>
         </div>
     </div>
 
     <script type="module">
         document.addEventListener("DOMContentLoaded", function () {
+            const wrapper = document.getElementById('screen-wrapper');
+            const grid = document.getElementById('bg-grid');
+            const sweep = document.getElementById('bg-sweep');
+            const video = document.getElementById('bg-video');
+            const videoOverlay = document.getElementById('bg-video-overlay');
+
+            function applyBackground(bgType, customVideoUrl) {
+                if (!wrapper) return;
+                
+                // Reset classes
+                wrapper.classList.remove('cyber-bg', 'bg-transparent');
+                
+                if (bgType === 'animated') {
+                    wrapper.classList.add('cyber-bg');
+                    if (grid) grid.classList.remove('hidden');
+                    if (sweep) sweep.classList.remove('hidden');
+                    if (video) video.classList.add('hidden');
+                    if (videoOverlay) videoOverlay.classList.add('hidden');
+                } else if (bgType === 'custom') {
+                    wrapper.classList.add('bg-transparent');
+                    if (grid) grid.classList.add('hidden');
+                    if (sweep) sweep.classList.remove('hidden');
+                    if (video) {
+                        video.classList.remove('hidden');
+                        if (customVideoUrl) {
+                            const source = video.querySelector('source') || document.createElement('source');
+                            source.src = customVideoUrl;
+                            source.type = 'video/mp4';
+                            if (!video.contains(source)) video.appendChild(source);
+                            video.load();
+                            video.play().catch(err => console.log('Video play interrupted:', err));
+                        }
+                    }
+                    if (videoOverlay) videoOverlay.classList.remove('hidden');
+                } else {
+                    // transparent
+                    wrapper.classList.add('bg-transparent');
+                    if (grid) grid.classList.add('hidden');
+                    if (sweep) sweep.classList.add('hidden');
+                    if (video) video.classList.add('hidden');
+                    if (videoOverlay) videoOverlay.classList.add('hidden');
+                }
+            }
+
+            // Apply active background state initially
+            applyBackground("{{ $bgType }}", "{{ $customVideo ? asset('storage/' . $customVideo) : '' }}");
+
+            // Echo channel events
             Echo.channel('user-screens.{{ $activeMatch->tournament->user_id }}')
+                .listen('.BackgroundChanged', (e) => {
+                    console.log('BackgroundChanged received:', e);
+                    applyBackground(e.bgType, e.customVideoUrl);
+                })
                 .listen('.RefreshScreens', (e) => { window.location.reload(); })
                 .listen('.TournamentMatchUpdated', (e) => { window.location.reload(); });
+            
             Echo.channel('active-match.{{ $activeMatch->id }}')
                 .listen('.MatchStatsUpdated', (e) => { window.location.reload(); });
         });

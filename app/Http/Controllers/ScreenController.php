@@ -21,7 +21,12 @@ class ScreenController extends Controller
         $user = User::find($request->route('user_id'));
         $activeMatch = $user->getActiveMatch();
 
-        return view('screens.postMatch', compact('activeMatch'));
+        $bgTypeKey = "bg_type_{$user->id}";
+        $bgType = Cache::get($bgTypeKey, 'transparent');
+        $customVideoKey = "custom_video_{$user->id}";
+        $customVideo = Cache::get($customVideoKey);
+
+        return view('screens.postMatch', compact('activeMatch', 'bgType', 'customVideo'));
     }
 
     public function overallRanking(Request $request)
@@ -77,7 +82,12 @@ class ScreenController extends Controller
             ['total_kills', 'desc'],
         ])->values();
 
-        return view('screens.overallRanking', compact('tournament', 'rankings', 'activeMatch', 'currentRound'));
+        $bgTypeKey = "bg_type_{$user->id}";
+        $bgType = Cache::get($bgTypeKey, 'transparent');
+        $customVideoKey = "custom_video_{$user->id}";
+        $customVideo = Cache::get($customVideoKey);
+
+        return view('screens.overallRanking', compact('tournament', 'rankings', 'activeMatch', 'currentRound', 'bgType', 'customVideo'));
     }
 
     public function teamElimination(Request $request)
@@ -185,7 +195,13 @@ class ScreenController extends Controller
         $customVideoKey = "custom_video_{$user->id}";
         $customVideo = Cache::get($customVideoKey);
 
-        return view('screens.controlPanel', compact('user', 'timerState', 'bgType', 'customVideo'));
+        $activeMatch = $user->getActiveMatch();
+        $teams = collect();
+        if ($activeMatch) {
+            $teams = $activeMatch->tournament->tournamentTeams()->orderBy('name')->get();
+        }
+
+        return view('screens.controlPanel', compact('user', 'timerState', 'bgType', 'customVideo', 'activeMatch', 'teams'));
     }
 
     public function statsControl(Request $request)
@@ -605,6 +621,147 @@ class ScreenController extends Controller
 
         return back()->with('status', 'Custom background video deleted successfully and reset to transparent background.');
     }
+
+    public function updateH2H(Request $request)
+    {
+        $userId = $request->route('user_id');
+        $team1 = $request->input('team1');
+        $team2 = $request->input('team2');
+        
+        Cache::put("h2h_team_1_{$userId}", $team1, 86400);
+        Cache::put("h2h_team_2_{$userId}", $team2, 86400);
+        
+        $this->safeBroadcast(new \App\Events\ObsViewSwitched($userId, 'refresh'));
+        
+        return back()->with('status', 'Head-to-head comparison matchup updated successfully.');
+    }
+
+    public function headToHead(Request $request)
+    {
+        $user = User::findOrFail($request->route('user_id'));
+        $activeMatch = $user->getActiveMatch();
+        
+        if (!$activeMatch) {
+            return response()->json(['error' => 'No active match found'], 404);
+        }
+        
+        $tournament = $activeMatch->tournament;
+        
+        // Auto-select matchup teams based on top fraggers of the active match
+        $stats = $activeMatch->matchStats()->with(['tournamentTeam', 'players'])->get();
+        if ($stats->isEmpty()) {
+            return response()->json(['error' => 'No teams registered in the active match'], 404);
+        }
+        
+        $playersColl = collect();
+        foreach ($stats as $stat) {
+            foreach ($stat->players as $player) {
+                $playersColl->push([
+                    'team_id' => $stat->tournament_team_id,
+                    'kills' => (int) $player->pivot->kills,
+                ]);
+            }
+        }
+        
+        $sortedFraggers = $playersColl->sortByDesc('kills')->values();
+        
+        $team1Id = null;
+        $team2Id = null;
+        
+        if ($sortedFraggers->isNotEmpty()) {
+            $team1Id = $sortedFraggers->first()['team_id'];
+            // Find the next fragger that belongs to a different team
+            $nextDifferent = $sortedFraggers->first(fn($p) => $p['team_id'] !== $team1Id);
+            if ($nextDifferent) {
+                $team2Id = $nextDifferent['team_id'];
+            }
+        }
+        
+        // Fallbacks
+        if (!$team1Id) {
+            $team1Id = $stats->get(0)->tournament_team_id ?? null;
+        }
+        if (!$team2Id) {
+            $team2Id = $stats->get(1)->tournament_team_id ?? ($stats->get(0)->tournament_team_id ?? null);
+        }
+        
+        // Get matchup data
+        $stat1 = $stats->firstWhere('tournament_team_id', $team1Id);
+        $stat2 = $stats->firstWhere('tournament_team_id', $team2Id);
+        
+        // Let's compute overall tournament statistics for both teams
+        $round = $activeMatch->tournamentRound;
+        if ($round) {
+            $allMatches = $round->tournamentMatches()->get();
+        } else {
+            $allMatches = $tournament->tournamentMatches()->get();
+        }
+        
+        $team1Overall = ['points' => 0, 'kills' => 0, 'wwcd' => 0];
+        $team2Overall = ['points' => 0, 'kills' => 0, 'wwcd' => 0];
+        
+        foreach ($allMatches as $match) {
+            $mStats = $match->matchStats()->get();
+            $s1 = $mStats->firstWhere('tournament_team_id', $team1Id);
+            $s2 = $mStats->firstWhere('tournament_team_id', $team2Id);
+            
+            if ($s1) {
+                $team1Overall['points'] += $s1->points;
+                $team1Overall['kills'] += $s1->kills;
+                if ($s1->placement === 1) $team1Overall['wwcd']++;
+            }
+            if ($s2) {
+                $team2Overall['points'] += $s2->points;
+                $team2Overall['kills'] += $s2->kills;
+            }
+        }
+        
+        $bgTypeKey = "bg_type_{$user->id}";
+        $bgType = Cache::get($bgTypeKey, 'transparent');
+        $customVideoKey = "custom_video_{$user->id}";
+        $customVideo = Cache::get($customVideoKey);
+        
+        return view('screens.headToHead', compact('user', 'activeMatch', 'tournament', 'stat1', 'stat2', 'team1Overall', 'team2Overall', 'bgType', 'customVideo'));
+    }
+
+    public function topFraggers(Request $request)
+    {
+        $user = User::findOrFail($request->route('user_id'));
+        $activeMatch = $user->getActiveMatch();
+        
+        if (!$activeMatch) {
+            return response()->json(['error' => 'No active match found'], 404);
+        }
+        
+        // Get all player stats in the active match
+        $stats = $activeMatch->matchStats()->with(['players', 'tournamentTeam'])->get();
+        $playersColl = collect();
+        
+        foreach ($stats as $stat) {
+            foreach ($stat->players as $player) {
+                $playersColl->push([
+                    'ign' => $player->ign,
+                    'name' => $player->name,
+                    'role' => $player->role,
+                    'image' => $player->image,
+                    'kills' => (int) $player->pivot->kills,
+                    'is_alive' => (bool) $player->pivot->is_alive,
+                    'team_name' => $stat->tournamentTeam->name,
+                    'team_logo' => $stat->tournamentTeam->logo_image,
+                ]);
+            }
+        }
+        
+        $topFraggers = $playersColl->sortByDesc('kills')->take(5)->values();
+        
+        $bgTypeKey = "bg_type_{$user->id}";
+        $bgType = Cache::get($bgTypeKey, 'transparent');
+        $customVideoKey = "custom_video_{$user->id}";
+        $customVideo = Cache::get($customVideoKey);
+        
+        return view('screens.topFraggers', compact('user', 'activeMatch', 'topFraggers', 'bgType', 'customVideo'));
+    }
+
 
     /**
      * Safely attempt to broadcast an event without throwing a 500 if
