@@ -99,6 +99,7 @@ class TournamentTeamsRelationManager extends RelationManager
                                     ->imageAspectRatio('9:16')
                                     ->imageEditor()
                                     ->imageEditorAspectRatioOptions(['9:16'])
+                                    ->automaticallyOpenImageEditorForAspectRatio()
                                     ->columnSpanFull(),
                             ])
                             ->columns(2)
