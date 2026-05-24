@@ -5,7 +5,6 @@ namespace App\Filament\Maidan\Resources\Tournaments\Schemas;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -13,6 +12,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Auth;
 
 class TournamentForm
 {
@@ -21,7 +21,7 @@ class TournamentForm
         return $schema
             ->components([
                 Hidden::make('user_id')
-                    ->default(auth()->id()),
+                    ->default(Auth::id()),
 
                 Grid::make(3)
                     ->columnSpanFull() // Makes the grid take the full width of the form
@@ -67,8 +67,6 @@ class TournamentForm
                                             ->panelAspectRatio('1:1')
                                             ->imageEditor()
                                             ->imageEditorAspectRatioOptions(['1:1'])
-                                            ->imageEditorViewportWidth('1080')
-                                            ->imageEditorViewportHeight('1080')
                                             ->automaticallyOpenImageEditorForAspectRatio(),
 
                                         FileUpload::make('banner_image')
@@ -81,8 +79,6 @@ class TournamentForm
                                             ->panelAspectRatio('16:9')
                                             ->imageEditor()
                                             ->imageEditorAspectRatioOptions(['16:9'])
-                                            ->imageEditorViewportWidth('1920')
-                                            ->imageEditorViewportHeight('1080')
                                             ->automaticallyOpenImageEditorForAspectRatio(),
                                     ]),
                             ]),
