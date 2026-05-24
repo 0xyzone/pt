@@ -13,6 +13,7 @@ use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class TournamentForm
 {
@@ -67,7 +68,13 @@ class TournamentForm
                                             ->panelAspectRatio('1:1')
                                             ->imageEditor()
                                             ->imageEditorAspectRatioOptions(['1:1'])
-                                            ->automaticallyOpenImageEditorForAspectRatio(),
+                                            ->automaticallyOpenImageEditorForAspectRatio()
+                                            ->maxSize(800 * 1024)
+                                            ->rules([Rule::dimensions()->ratio(1 / 1)])
+                                            ->validationMessages([
+                                                'dimensions' => 'The logo must have a square aspect ratio of 1:1 (e.g. 512x512 pixels).',
+                                                'max' => 'The logo file size must not exceed 800MB.',
+                                            ]),
 
                                         FileUpload::make('banner_image')
                                             ->label('Tournament Banner')
@@ -79,7 +86,13 @@ class TournamentForm
                                             ->panelAspectRatio('16:9')
                                             ->imageEditor()
                                             ->imageEditorAspectRatioOptions(['16:9'])
-                                            ->automaticallyOpenImageEditorForAspectRatio(),
+                                            ->automaticallyOpenImageEditorForAspectRatio()
+                                            ->maxSize(800 * 1024)
+                                            ->rules([Rule::dimensions()->ratio(16 / 9)])
+                                            ->validationMessages([
+                                                'dimensions' => 'The banner must have a landscape aspect ratio of 16:9 (e.g. 1920x1080 pixels).',
+                                                'max' => 'The banner file size must not exceed 800MB.',
+                                            ]),
                                     ]),
                             ]),
 
