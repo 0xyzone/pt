@@ -488,7 +488,7 @@
                     </div>
 
                     {{-- PLAYER PORTRAIT BOX (STRICT 9:16 ASPECT RATIO) --}}
-                    <div class="w-full aspect-[9/16] shrink-0 rounded-xl overflow-hidden relative mt-2.5 flex items-center justify-center bg-slate-950/80 border border-slate-900 shadow-inner">
+                    <div class="w-full aspect-9/16 shrink-0 rounded-xl overflow-hidden relative mt-2.5 flex items-center justify-center bg-slate-950/80 border border-slate-900 shadow-inner">
 
                         {{-- Concentric Tech HUD Indicators --}}
                         <div class="absolute inset-0 z-10 pointer-events-none overflow-hidden">
@@ -589,7 +589,7 @@
                             <div class="w-5 h-5 bg-slate-950 border border-slate-900 p-0.5 rounded-full flex items-center justify-center shrink-0 shadow-inner">
                                 <img src="{{ $player['team_logo'] ? asset('storage/'.$player['team_logo']) : asset('img/defult_team_logo.png') }}" onerror="this.src='{{ asset('img/defult_team_logo.png') }}';" class="w-3.5 h-3.5 object-contain">
                             </div>
-                            <span class="text-slate-300 font-bold uppercase tracking-widest text-[9px] truncate max-w-[130px] font-body">
+                            <span class="text-slate-300 font-bold uppercase tracking-widest text-[9px] truncate max-w-32.5 font-body">
                                 {{ $player['team_name'] }}
                             </span>
                         </div>
@@ -598,7 +598,7 @@
                     {{-- HOLOGRAPHIC STATS CORE (TOTAL ELIMS HIGHLIGHT) --}}
                     <div class="w-full mt-4.5 bg-slate-950/90 border {{ $isLeader ? 'border-yellow-500/50 shadow-[0_0_15px_rgba(234,179,8,0.15)]' : 'border-cyan-500/28 shadow-[0_0_15px_rgba(6,182,212,0.08)]' }} rounded-xl py-2.5 px-3 shadow-inner relative overflow-hidden">
                         <div class="absolute inset-0 bg-grid-tiny opacity-15 pointer-events-none"></div>
-                        <div class="absolute inset-0 bg-gradient-to-r {{ $isLeader ? 'from-yellow-500/5 to-transparent' : 'from-cyan-500/5 to-transparent' }} pointer-events-none"></div>
+                        <div class="absolute inset-0 bg-linear-to-r {{ $isLeader ? 'from-yellow-500/5 to-transparent' : 'from-cyan-500/5 to-transparent' }} pointer-events-none"></div>
 
                         <div class="w-full flex flex-col items-center justify-center relative z-10">
                             <span class="text-[9px] font-black tracking-[0.3em] uppercase font-hud leading-none {{ $isLeader ? 'text-yellow-400' : 'text-cyan-400' }}">TOTAL ELIMS</span>

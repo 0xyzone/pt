@@ -229,8 +229,8 @@
         <div id="split-bg-right" class="absolute inset-0 left-[45%] w-[55%] h-full split-bg-right z-0 transition-all duration-300 {{ $bgType === 'transparent' ? 'hidden' : '' }}" style="clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%); border-left: 2.5px solid rgba(250, 204, 21, 0.25);"></div>
 
         {{-- Enormous background watermarked crests to organically absorb whitespace --}}
-        <img id="bg-watermark-left" src="{{ $stat1 && $stat1->tournamentTeam->logo_image ? asset('storage/'.$stat1->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" onerror="this.src='{{ asset('img/defult_team_logo.png') }}';" class="absolute left-[6%] top-[25%] w-[420px] h-[420px] opacity-10 pointer-events-none z-0 object-contain {{ $bgType === 'transparent' ? 'hidden' : '' }}">
-        <img id="bg-watermark-right" src="{{ $stat2 && $stat2->tournamentTeam->logo_image ? asset('storage/'.$stat2->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" onerror="this.src='{{ asset('img/defult_team_logo.png') }}';" class="absolute right-[6%] top-[25%] w-[420px] h-[420px] opacity-10 pointer-events-none z-0 object-contain {{ $bgType === 'transparent' ? 'hidden' : '' }}">
+        <img id="bg-watermark-left" src="{{ $stat1 && $stat1->tournamentTeam->logo_image ? asset('storage/'.$stat1->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" onerror="this.src='{{ asset('img/defult_team_logo.png') }}';" class="absolute left-[6%] top-[25%] w-105 h-105 opacity-10 pointer-events-none z-0 object-contain {{ $bgType === 'transparent' ? 'hidden' : '' }}">
+        <img id="bg-watermark-right" src="{{ $stat2 && $stat2->tournamentTeam->logo_image ? asset('storage/'.$stat2->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" onerror="this.src='{{ asset('img/defult_team_logo.png') }}';" class="absolute right-[6%] top-[25%] w-105 h-105 opacity-10 pointer-events-none z-0 object-contain {{ $bgType === 'transparent' ? 'hidden' : '' }}">
 
         {{-- Custom background video layer --}}
         <video id="bg-video" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover z-0 {{ ($bgType === 'custom' && $customVideo) ? '' : 'hidden' }}">
@@ -275,7 +275,7 @@
         <div class="relative z-10 flex-1 flex px-12 py-5 min-h-0 items-center justify-between">
 
             {{-- ── LEFT FOREGROUND COLUMN: TEAM A (slides from left) ── --}}
-            <div class="slide-left flex flex-col items-center justify-center z-10 w-[380px] ml-[4%] relative" style="animation-delay:0.08s;">
+            <div class="slide-left flex flex-col items-center justify-center z-10 w-95 ml-[4%] relative" style="animation-delay:0.08s;">
                 
                 {{-- Rotating Technical Target Crosshair Scope behind the crest logo --}}
                 <div class="absolute inset-0 flex items-center justify-center opacity-30 z-0 pointer-events-none -top-16">
@@ -304,7 +304,7 @@
             </div>
 
             {{-- ── CENTER COLUMN: FLOATING TACTICAL HUD TOWER (slides up) ── --}}
-            <div class="slide-up w-[540px] flex flex-col gap-4.5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20" style="animation-delay: 0.16s;">
+            <div class="slide-up w-135 flex flex-col gap-4.5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20" style="animation-delay: 0.16s;">
                 
                 {{-- Holographic red versus badge --}}
                 <div class="bg-slate-900/95 border border-red-500/50 py-1.5 px-4 rounded-full flex items-center justify-center gap-2.5 mx-auto shadow-[0_0_15px_rgba(239,68,68,0.25)] shrink-0 mb-1 leading-none">
@@ -375,7 +375,7 @@
             </div>
 
             {{-- ── RIGHT FOREGROUND COLUMN: TEAM B (slides from right) ── --}}
-            <div class="slide-right flex flex-col items-center justify-center z-10 w-[380px] mr-[4%] relative" style="animation-delay:0.08s;">
+            <div class="slide-right flex flex-col items-center justify-center z-10 w-95 mr-[4%] relative" style="animation-delay:0.08s;">
                 
                 {{-- Rotating Technical Target Crosshair Scope behind the crest logo --}}
                 <div class="absolute inset-0 flex items-center justify-center opacity-30 z-0 pointer-events-none -top-16">

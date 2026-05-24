@@ -264,7 +264,7 @@
         <div class="relative z-10 flex-1 flex gap-6 px-8 py-4 min-h-0">
 
             {{-- ── WINNER SPOTLIGHT (slides from LEFT) ──────── --}}
-            <div class="slide-left w-72 flex-shrink-0" style="animation-delay:0.15s;">
+            <div class="slide-left w-72 shrink-0" style="animation-delay:0.15s;">
                 <div class="winner-panel-bg winner-panel rounded-2xl h-full flex flex-col items-center justify-between py-7 px-5 relative overflow-hidden">
 
                     {{-- Corner brackets --}}
@@ -287,7 +287,7 @@
 
                     {{-- Team Name (slides up) --}}
                     <div class="text-center slide-up" style="animation-delay:0.75s;">
-                        <div class="text-4xl font-black uppercase leading-none text-white max-w-[240px] truncate" style="text-shadow:0 0 30px rgba(250,204,21,0.45);">
+                        <div class="text-4xl font-black uppercase leading-none text-white max-w-60 truncate" style="text-shadow:0 0 30px rgba(250,204,21,0.45);">
                             {{ $winner ? $winner->tournamentTeam->name : 'No Winner' }}
                         </div>
                         <div class="text-yellow-400/60 text-sm font-bold tracking-[0.3em] uppercase font-body mt-2.5">
@@ -366,8 +366,8 @@
 
                             {{-- Name --}}
                             <div class="flex-1 min-w-0">
-                                <div class="font-black uppercase text-xl leading-tight text-white truncate max-w-[140px]" style="font-family:'Rajdhani',sans-serif;">{{ $match->tournamentTeam->name }}</div>
-                                <div class="text-sm text-slate-400 uppercase tracking-wider font-body leading-none truncate max-w-[140px] mt-0.5">{{ $match->tournamentTeam->short_name }}</div>
+                                <div class="font-black uppercase text-xl leading-tight text-white truncate max-w-35" style="font-family:'Rajdhani',sans-serif;">{{ $match->tournamentTeam->name }}</div>
+                                <div class="text-sm text-slate-400 uppercase tracking-wider font-body leading-none truncate max-w-35 mt-0.5">{{ $match->tournamentTeam->short_name }}</div>
                             </div>
 
                             {{-- Elims --}}
@@ -394,9 +394,9 @@
         {{-- ─── FOOTER ─────────────────────────────────────── --}}
         <div class="slide-up-footer footer-bar relative z-10 flex items-center justify-between px-10 py-2.5 font-body text-[9px] font-bold text-slate-500 tracking-[0.4em] uppercase">
             <span>SYS_LOC // 0x58BF12</span>
-            <div class="h-px w-36 flex-shrink-0" style="background:linear-gradient(to right,transparent,rgba(250,204,21,0.2),transparent);"></div>
+            <div class="h-px w-36 shrink-0" style="background:linear-gradient(to right,transparent,rgba(250,204,21,0.2),transparent);"></div>
             <span class="text-yellow-400/60">Official Match Summary Overlay</span>
-            <div class="h-px w-36 flex-shrink-0" style="background:linear-gradient(to right,transparent,rgba(250,204,21,0.2),transparent);"></div>
+            <div class="h-px w-36 shrink-0" style="background:linear-gradient(to right,transparent,rgba(250,204,21,0.2),transparent);"></div>
             <span>SYS_VER_3.5.2</span>
         </div>
     </div>

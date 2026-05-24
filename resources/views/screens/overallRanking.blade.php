@@ -270,10 +270,10 @@
 
                         {{-- Team Name --}}
                         <div class="flex-1 min-w-0 flex flex-col justify-center">
-                            <div class="font-black uppercase leading-tight text-xl {{ $rank === 1 ? 'text-yellow-300' : 'text-white' }} truncate max-w-[150px]" style="font-family:'Rajdhani',sans-serif;{{ $rank===1 ? 'text-shadow:0 0 14px rgba(250,204,21,0.35);' : '' }}">
+                            <div class="font-black uppercase leading-tight text-xl {{ $rank === 1 ? 'text-yellow-300' : 'text-white' }} truncate max-w-37.5" style="font-family:'Rajdhani',sans-serif;{{ $rank===1 ? 'text-shadow:0 0 14px rgba(250,204,21,0.35);' : '' }}">
                                 {{ $item['team']->name }}
                             </div>
-                            <div class="text-sm uppercase tracking-wider font-body leading-none {{ $rank===1 ? 'text-yellow-400/70' : 'text-slate-400' }} truncate max-w-[150px] mt-0.5">
+                            <div class="text-sm uppercase tracking-wider font-body leading-none {{ $rank===1 ? 'text-yellow-400/70' : 'text-slate-400' }} truncate max-w-37.5 mt-0.5">
                                 {{ $item['team']->short_name }}
                             </div>
                         </div>
@@ -319,9 +319,9 @@
         {{-- ─── FOOTER (slides up) ─────────────────────────── --}}
         <div class="slide-up-footer footer-bar relative z-10 flex items-center justify-between px-10 py-2.5 font-body text-[9px] font-bold text-slate-500 tracking-[0.4em] uppercase">
             <span>SYS_LOC // 0x48FA90</span>
-            <div class="h-px w-36 flex-shrink-0" style="background:linear-gradient(to right,transparent,rgba(250,204,21,0.2),transparent);"></div>
+            <div class="h-px w-36 shrink-0" style="background:linear-gradient(to right,transparent,rgba(250,204,21,0.2),transparent);"></div>
             <span class="text-yellow-400/60">Official Standings Stream Overlay</span>
-            <div class="h-px w-36 flex-shrink-0" style="background:linear-gradient(to right,transparent,rgba(250,204,21,0.2),transparent);"></div>
+            <div class="h-px w-36 shrink-0" style="background:linear-gradient(to right,transparent,rgba(250,204,21,0.2),transparent);"></div>
             <span>SYS_VER_3.5.2</span>
         </div>
     </div>
