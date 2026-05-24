@@ -59,7 +59,7 @@ class TournamentResource extends Resource
         return [
             'index' => ListTournaments::route('/'),
             'create' => CreateTournament::route('/create'),
-            'view' => ViewTournament::route('/{record}'),
+            // 'view' => ViewTournament::route('/{record}'),
             'edit' => EditTournament::route('/{record}/edit'),
             'rounds' => ListTournamentRounds::route('/{record}/rounds'),
             'settings' => EditTournamentSetting::route('/{record}/settings'),
@@ -68,12 +68,12 @@ class TournamentResource extends Resource
     public static function getRecordSubNavigation(Page $page): array
     {
         return $page->generateNavigationItems([
-            ViewTournament::class,
+            // ViewTournament::class,
             EditTournament::class,
-            ListTournamentTeams::class,
-            ListTournamentMatches::class,
-            ListTournamentRounds::class,
             EditTournamentSetting::class,
+            ListTournamentTeams::class,
+            ListTournamentRounds::class,
+            ListTournamentMatches::class,
         ]);
     }
 }

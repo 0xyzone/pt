@@ -25,6 +25,7 @@ class TournamentTeamResource extends Resource
     protected static ?string $parentResource = TournamentResource::class;
 
     protected static ?string $recordTitleAttribute = 'name';
+    protected static ?int $navigationSort = 3;
 
     public static function form(Schema $schema): Schema
     {

@@ -8,7 +8,6 @@ use App\Models\TournamentSetting;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Forms\Components\TextInput;
@@ -27,7 +26,31 @@ class EditTournamentSetting extends Page
     public int|string|null $tournamentId;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCog;
     protected static string $resource = TournamentResource::class;
+    protected static ?int $navigationSort = 3;
+    protected static ?string $navigationLabel = 'Edit Tournament Settings';
     protected string $view = 'filament.maidan.resources.tournaments.pages.tournament-setting';
+
+    public static function getNavigationBadge(): ?string
+    {
+        // Show a warning badge if this tournament has no settings configured yet.
+        // We read the tournamentId from the current route parameter.
+        $tournamentId = request()->route('record');
+        if (!$tournamentId) {
+            return null;
+        }
+        $exists = TournamentSetting::where('tournament_id', $tournamentId)->exists();
+        return $exists ? null : '!';
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        $tournamentId = request()->route('record');
+        if (!$tournamentId) {
+            return null;
+        }
+        $exists = TournamentSetting::where('tournament_id', $tournamentId)->exists();
+        return $exists ? null : 'warning';
+    }
 
     public function getSubNavigation(): array
     {

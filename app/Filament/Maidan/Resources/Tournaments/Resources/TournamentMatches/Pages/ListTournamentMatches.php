@@ -15,6 +15,7 @@ class ListTournamentMatches extends ListRecords
     protected static string $resource = TournamentMatchResource::class;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPuzzlePiece;
     protected static ?string $navigationLabel = 'Manage Games';
+    protected static ?int $navigationSort = 6;
 
     public function getSubNavigation(): array
     {

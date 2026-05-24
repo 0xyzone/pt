@@ -16,6 +16,7 @@ class ListTournamentRounds extends ListRecords
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedFlag;
     
     protected static ?string $navigationLabel = 'Manage Rounds';
+    protected static ?int $navigationSort = 5;
 
     public function getSubNavigation(): array
     {

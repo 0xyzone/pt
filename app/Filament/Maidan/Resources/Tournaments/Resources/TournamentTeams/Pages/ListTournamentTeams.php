@@ -21,6 +21,7 @@ class ListTournamentTeams extends ListRecords
     protected static string $resource = TournamentTeamResource::class;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
     protected static ?string $navigationLabel = 'Manage Teams';
+    protected static ?int $navigationSort = 4;
 
     public function getSubNavigation(): array
     {
