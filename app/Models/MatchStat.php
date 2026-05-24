@@ -10,6 +10,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class MatchStat extends Model
 {
     /**
+     * Cast database columns to correct PHP primitives so JSON serialisation
+     * always produces real booleans / integers (never "0" / "1" strings).
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'is_winner' => 'boolean',
+        'alive'     => 'integer',
+        'kills'     => 'integer',
+        'placement' => 'integer',
+        'points'    => 'integer',
+    ];
+
+    /**
      * The event map for the model.
      *
      * @var array
