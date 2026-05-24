@@ -66,7 +66,42 @@
     </style>
     
     @php
-        $allStats = $activeMatch->matchStats->sortByDesc(['points'])->values();
+        // 1. Retrieve all matches in the same round (or tournament, if no round)
+        $currentRound = $activeMatch->tournamentRound;
+        if ($currentRound) {
+            $matches = $currentRound->tournamentMatches()->with('matchStats')->get();
+        } else {
+            $matches = $activeMatch->tournament->tournamentMatches()->with('matchStats')->get();
+        }
+
+        // 2. Aggregate points and kills per team ID across those matches
+        $roundPoints = [];
+        $roundKills = [];
+        foreach ($matches as $match) {
+            foreach ($match->matchStats as $stat) {
+                $teamId = $stat->tournament_team_id;
+                $roundPoints[$teamId] = ($roundPoints[$teamId] ?? 0) + $stat->points;
+                $roundKills[$teamId] = ($roundKills[$teamId] ?? 0) + $stat->kills;
+            }
+        }
+
+        // 3. Map these overall round standings points and kills to matchStats
+        foreach ($activeMatch->matchStats as $stat) {
+            $teamId = $stat->tournament_team_id;
+            $stat->round_points = $roundPoints[$teamId] ?? $stat->points;
+            $stat->round_kills = $roundKills[$teamId] ?? $stat->kills;
+            // Back up the current match points for win probability weights
+            $stat->match_points = $stat->points;
+            // Override the points attribute so references to $stat->points output overall round points
+            $stat->points = $stat->round_points;
+        }
+
+        // 4. Sort primarily by overall round points, then by overall round kills
+        $allStats = $activeMatch->matchStats->sortBy([
+            ['round_points', 'desc'],
+            ['round_kills', 'desc'],
+        ])->values();
+
         $aliveTeams = $allStats->where('alive', '>', 0);
         $aliveTeamsCount = $aliveTeams->count();
         $showFinalFour = $aliveTeamsCount > 1 && $aliveTeamsCount <= 4;
@@ -125,7 +160,7 @@
                                 <span class="text-6xl font-black text-white italic leading-none font-mono" style="font-family: 'Orbitron', sans-serif;">{{ $winner->kills }}</span>
                             </div>
                             <div class="flex flex-col items-center pl-12">
-                                <span class="text-yellow-400 text-lg font-black uppercase tracking-[0.2em] mb-2">Match Points</span>
+                                <span class="text-yellow-400 text-lg font-black uppercase tracking-[0.2em] mb-2">Total Points</span>
                                 <span class="text-6xl font-black text-white italic leading-none font-mono" style="font-family: 'Orbitron', sans-serif;">{{ $winner->points }}</span>
                             </div>
                         </div>
@@ -145,8 +180,8 @@
                 <div style="display:flex; justify-content:center; gap:20px;">
                     @foreach ($aliveTeams->take(4) as $match)
                     @php
-                        $weight = ($match->alive * 30) + ($match->points * 0.5);
-                        $totalWeight = $aliveTeams->sum(fn($m) => ($m->alive * 30) + ($m->points * 0.5));
+                        $weight = ($match->alive * 30) + ($match->match_points * 0.5);
+                        $totalWeight = $aliveTeams->sum(fn($m) => ($m->alive * 30) + ($m->match_points * 0.5));
                         $winProb = round(($weight / max(1, $totalWeight)) * 100);
                     @endphp
                     <div class="glass-panel" style="width:280px; border-left:6px solid #f59e0b; display:flex; flex-direction:column; border-radius: 4px;">
