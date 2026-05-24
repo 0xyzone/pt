@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Tournament extends Model
 {
@@ -68,5 +69,13 @@ class Tournament extends Model
     public function tournamentSponsors(): HasMany
     {
         return $this->hasMany(TournamentSponsor::class)->orderBy('sort_order');
+    }
+
+    /**
+     * Get the casters associated with the tournament.
+     */
+    public function casters(): BelongsToMany
+    {
+        return $this->belongsToMany(Caster::class);
     }
 }

@@ -106,13 +106,15 @@ class ScreenController extends Controller
         $endsAtKey = "timer_ends_at_{$user->id}";
         $remainingKey = "timer_remaining_{$user->id}";
         $visibleKey = "timer_visible_{$user->id}";
+        $showHoursKey = "timer_show_hours_{$user->id}";
 
         $timerState = [
-            'duration' => (int)Cache::get($durationKey, 10),
+            'duration' => (int)Cache::get($durationKey, 600),
             'status' => Cache::get($statusKey, 'stopped'),
             'endsAt' => (int)Cache::get($endsAtKey, 0),
             'remainingSeconds' => (int)Cache::get($remainingKey, 600),
             'visible' => (bool)Cache::get($visibleKey, true),
+            'showHours' => (bool)Cache::get($showHoursKey, false),
         ];
 
         return view('screens.upcomingMatches', compact('activeMatch', 'user', 'tournament', 'matches', 'sponsors', 'timerState'));
@@ -134,6 +136,23 @@ class ScreenController extends Controller
         return view('screens.mapScreen', compact('activeMatch', 'user', 'tournament', 'teams'));
     }
 
+    public function castersScreen(Request $request)
+    {
+        $user = User::findOrFail($request->route('user_id'));
+        $activeMatch = $user->getActiveMatch();
+        $tournament = $activeMatch ? $activeMatch->tournament : null;
+        
+        // Load the casters associated with this tournament
+        $casters = $tournament ? $tournament->casters()->get() : collect();
+
+        $bgTypeKey = "bg_type_{$user->id}";
+        $bgType = Cache::get($bgTypeKey, 'transparent');
+        $customVideoKey = "custom_video_{$user->id}";
+        $customVideo = Cache::get($customVideoKey);
+
+        return view('screens.castersScreen', compact('user', 'tournament', 'casters', 'activeMatch', 'bgType', 'customVideo'));
+    }
+
     public function obsMaster(Request $request)
     {
         $user = User::findOrFail($request->route('user_id'));
@@ -150,13 +169,15 @@ class ScreenController extends Controller
         $endsAtKey = "timer_ends_at_{$user->id}";
         $remainingKey = "timer_remaining_{$user->id}";
         $visibleKey = "timer_visible_{$user->id}";
+        $showHoursKey = "timer_show_hours_{$user->id}";
 
         $timerState = [
-            'duration' => (int)Cache::get($durationKey, 10),
+            'duration' => (int)Cache::get($durationKey, 600),
             'status' => Cache::get($statusKey, 'stopped'),
             'endsAt' => (int)Cache::get($endsAtKey, 0),
             'remainingSeconds' => (int)Cache::get($remainingKey, 600),
             'visible' => (bool)Cache::get($visibleKey, true),
+            'showHours' => (bool)Cache::get($showHoursKey, false),
         ];
 
         $bgTypeKey = "bg_type_{$user->id}";
@@ -360,13 +381,15 @@ class ScreenController extends Controller
         $endsAtKey = "timer_ends_at_{$user->id}";
         $remainingKey = "timer_remaining_{$user->id}";
         $visibleKey = "timer_visible_{$user->id}";
+        $showHoursKey = "timer_show_hours_{$user->id}";
 
         $timerState = [
-            'duration' => (int)Cache::get($durationKey, 10),
+            'duration' => (int)Cache::get($durationKey, 600),
             'status' => Cache::get($statusKey, 'stopped'),
             'endsAt' => (int)Cache::get($endsAtKey, 0),
             'remainingSeconds' => (int)Cache::get($remainingKey, 600),
             'visible' => (bool)Cache::get($visibleKey, true),
+            'showHours' => (bool)Cache::get($showHoursKey, false),
         ];
 
         $bgTypeKey = "bg_type_{$user->id}";
@@ -389,13 +412,15 @@ class ScreenController extends Controller
         $endsAtKey = "timer_ends_at_{$user->id}";
         $remainingKey = "timer_remaining_{$user->id}";
         $visibleKey = "timer_visible_{$user->id}";
+        $showHoursKey = "timer_show_hours_{$user->id}";
 
         $timerState = [
-            'duration' => (int)Cache::get($durationKey, 10),
+            'duration' => (int)Cache::get($durationKey, 600),
             'status' => Cache::get($statusKey, 'stopped'),
             'endsAt' => (int)Cache::get($endsAtKey, 0),
             'remainingSeconds' => (int)Cache::get($remainingKey, 600),
             'visible' => (bool)Cache::get($visibleKey, true),
+            'showHours' => (bool)Cache::get($showHoursKey, false),
         ];
 
         $bgTypeKey = "bg_type_{$user->id}";
@@ -411,31 +436,43 @@ class ScreenController extends Controller
         $userId = $request->route('user_id');
         $action = $request->input('action');
         
-        $durationKey = "timer_duration_{$userId}";
-        $statusKey = "timer_status_{$userId}";
-        $endsAtKey = "timer_ends_at_{$userId}";
-        $remainingKey = "timer_remaining_{$userId}";
-        $visibleKey = "timer_visible_{$userId}";
+        $durationKey   = "timer_duration_{$userId}";    // total seconds
+        $statusKey     = "timer_status_{$userId}";
+        $endsAtKey     = "timer_ends_at_{$userId}";
+        $remainingKey  = "timer_remaining_{$userId}";
+        $visibleKey    = "timer_visible_{$userId}";
+        $showHoursKey  = "timer_show_hours_{$userId}";
         
-        // Defaults
-        $duration = (int)Cache::get($durationKey, 10);
-        $status = Cache::get($statusKey, 'stopped');
-        $endsAt = (int)Cache::get($endsAtKey, 0);
-        $remaining = (int)Cache::get($remainingKey, $duration * 60);
-        $visible = (bool)Cache::get($visibleKey, true);
+        // Defaults (duration now stores total seconds)
+        $duration  = (int)Cache::get($durationKey, 600);  // seconds
+        $status    = Cache::get($statusKey, 'stopped');
+        $endsAt    = (int)Cache::get($endsAtKey, 0);
+        $remaining = (int)Cache::get($remainingKey, $duration);
+        $visible   = (bool)Cache::get($visibleKey, true);
+        $showHours = (bool)Cache::get($showHoursKey, false);
         
         if ($action === 'set-duration') {
-            $duration = (int)$request->input('duration', 10);
-            if ($duration < 1) $duration = 1;
-            Cache::put($durationKey, $duration, 86400);
+            // Accept hours / minutes / seconds as separate inputs
+            $hours   = max(0, (int)$request->input('hours', 0));
+            $minutes = max(0, (int)$request->input('minutes', 10));
+            $seconds = max(0, (int)$request->input('seconds', 0));
             
-            // If stopped, reset remaining seconds to new duration
+            $totalSeconds = ($hours * 3600) + ($minutes * 60) + $seconds;
+            if ($totalSeconds < 1) $totalSeconds = 60; // minimum 1 second
+            
+            $showHours = $hours > 0;
+            
+            Cache::put($durationKey, $totalSeconds, 86400);
+            Cache::put($showHoursKey, $showHours, 86400);
+            $duration = $totalSeconds;
+            
+            // If stopped, reset remaining seconds to new total
             if ($status === 'stopped') {
-                $remaining = $duration * 60;
+                $remaining = $totalSeconds;
                 Cache::put($remainingKey, $remaining, 86400);
             } else if ($status === 'running') {
-                // Adjust active running timer
-                $endsAt = time() + ($duration * 60);
+                // Adjust active running timer endpoint
+                $endsAt = time() + $totalSeconds;
                 Cache::put($endsAtKey, $endsAt, 86400);
             }
         } elseif ($action === 'start') {
@@ -454,9 +491,9 @@ class ScreenController extends Controller
                 Cache::put($endsAtKey, 0, 86400);
             }
         } elseif ($action === 'reset') {
-            $status = 'stopped';
-            $remaining = $duration * 60;
-            $endsAt = 0;
+            $status    = 'stopped';
+            $remaining = $duration;   // duration is already total seconds
+            $endsAt    = 0;
             Cache::put($statusKey, $status, 86400);
             Cache::put($remainingKey, $remaining, 86400);
             Cache::put($endsAtKey, $endsAt, 86400);
@@ -466,15 +503,16 @@ class ScreenController extends Controller
         }
         
         // Broadcast the real-time event to all overlays
-        $this->safeBroadcast(new \App\Events\TimerUpdated($userId, $status, $duration, $remaining, $endsAt, $visible));
+        $this->safeBroadcast(new \App\Events\TimerUpdated($userId, $status, $duration, $remaining, $endsAt, $visible, $showHours));
         
         return response()->json([
-            'success' => true,
-            'status' => $status,
-            'duration' => $duration,
+            'success'        => true,
+            'status'         => $status,
+            'duration'       => $duration,
             'remainingSeconds' => $remaining,
-            'endsAt' => $endsAt,
-            'visible' => $visible
+            'endsAt'         => $endsAt,
+            'visible'        => $visible,
+            'showHours'      => $showHours,
         ]);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Caster;
 use App\Models\Tournament;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -19,8 +20,7 @@ use Spatie\LaravelPasskeys\Models\Concerns\InteractsWithPasskeys;
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail, HasPasskeys, FilamentUser
 {
-    /** @use HasFactory<UserFactory> */
-    use Notifiable, InteractsWithPasskeys, HasFilamentQuickNotes;
+    use HasFactory, Notifiable, InteractsWithPasskeys, HasFilamentQuickNotes;
 
     /**
      * Get the attributes that should be cast.
@@ -66,5 +66,15 @@ class User extends Authenticatable implements MustVerifyEmail, HasPasskeys, Fila
         }
 
         return $activeMatch;
+    }
+
+    /**
+     * Get all of the casters for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function casters(): HasMany
+    {
+        return $this->hasMany(Caster::class);
     }
 }

@@ -18,11 +18,12 @@ class TimerUpdated implements ShouldBroadcastNow
     public $remainingSeconds;
     public $endsAt;
     public $visible;
+    public $showHours;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($userId, $status, $duration, $remainingSeconds, $endsAt, $visible)
+    public function __construct($userId, $status, $duration, $remainingSeconds, $endsAt, $visible, $showHours = false)
     {
         $this->userId = $userId;
         $this->status = $status;
@@ -30,6 +31,7 @@ class TimerUpdated implements ShouldBroadcastNow
         $this->remainingSeconds = $remainingSeconds;
         $this->endsAt = $endsAt;
         $this->visible = (bool)$visible;
+        $this->showHours = (bool)$showHours;
     }
 
     /**

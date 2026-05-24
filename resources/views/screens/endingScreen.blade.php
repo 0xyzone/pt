@@ -187,7 +187,7 @@
                 <div class="absolute top-2 left-4 text-[8px] font-bold text-slate-600 tracking-widest uppercase">SYS.TIME_COUNTDOWN // CH-2</div>
                 <div class="absolute bottom-2 right-4 text-[8px] font-bold text-slate-600 tracking-widest uppercase">PUBG_OB_SYS // LIVE</div>
 
-                <div id="timer-display" class="font-esports text-[11rem] md:text-[13rem] font-black text-rose-500 tracking-widest select-none leading-none" style="text-shadow: 0 0 25px rgba(244, 63, 94, 0.7); font-weight: 900;">
+                <div id="timer-display" class="font-esports text-[11rem] md:text-[10rem] font-black text-rose-500 tracking-widest select-none leading-none" style="text-shadow: 0 0 25px rgba(244, 63, 94, 0.7); font-weight: 900;">
                     00:00
                 </div>
                 
@@ -252,11 +252,17 @@
             let timerStatus = "{{ $timerState['status'] }}";
             let timerEndsAt = {{ $timerState['endsAt'] }};
             let timerRemaining = {{ $timerState['remainingSeconds'] }};
+            let timerShowHours = {{ $timerState['showHours'] ? 'true' : 'false' }};
             let timerInterval = null;
 
-            function formatTime(seconds) {
-                const mins = Math.floor(seconds / 60);
+            function formatTime(seconds, showHoursFlag = false) {
+                const hrs = Math.floor(seconds / 3600);
+                const mins = Math.floor((seconds % 3600) / 60);
                 const secs = seconds % 60;
+                
+                if (showHoursFlag || hrs > 0) {
+                    return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                }
                 return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
             }
 
@@ -267,16 +273,16 @@
                 if (timerStatus === 'running') {
                     const now = Math.floor(Date.now() / 1000);
                     const remaining = Math.max(0, timerEndsAt - now);
-                    display.innerText = formatTime(remaining);
+                    display.innerText = formatTime(remaining, timerShowHours);
                     if (remaining <= 0) {
-                        display.innerText = "00:00";
+                        display.innerText = timerShowHours ? "00:00:00" : "00:00";
                         timerStatus = 'stopped';
                         clearInterval(timerInterval);
                     }
                 } else if (timerStatus === 'paused') {
-                    display.innerText = formatTime(timerRemaining);
+                    display.innerText = formatTime(timerRemaining, timerShowHours);
                 } else {
-                    display.innerText = formatTime(timerDuration * 60);
+                    display.innerText = formatTime(timerDuration, timerShowHours);
                 }
             }
 
@@ -350,6 +356,7 @@
                     timerDuration = e.duration;
                     timerRemaining = e.remainingSeconds;
                     timerEndsAt = e.endsAt;
+                    timerShowHours = e.showHours;
                     
                     const container = document.getElementById('timer-container');
                     if (container) {

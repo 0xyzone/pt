@@ -142,11 +142,26 @@
                 {{-- Middle: Configure Timer duration --}}
                 <div class="flex flex-col gap-4">
                     <div class="flex flex-col">
-                        <label class="text-xs font-black uppercase tracking-wider text-slate-400 mb-1.5">Timer Duration (Minutes)</label>
-                        <div class="flex gap-2">
-                            <input type="number" id="timer-duration-input" min="1" max="120" value="{{ $timerState['duration'] }}" 
-                                class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white font-mono font-black text-lg focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 w-full">
-                            <button onclick="setTimerDuration()" class="bg-yellow-400 hover:bg-yellow-500 text-black font-black uppercase tracking-wider px-5 py-3 rounded-xl transition-all hover:scale-[1.02] text-sm shrink-0 active:scale-95 shadow-md">
+                        <label class="text-xs font-black uppercase tracking-wider text-slate-400 mb-1.5">Timer Duration (H:M:S)</label>
+                        <div class="flex gap-2 items-center">
+                            <div class="flex flex-col w-16">
+                                <span class="text-[8px] text-slate-500 font-bold uppercase mb-1">Hours</span>
+                                <input type="number" id="timer-hours-input" min="0" max="23" value="{{ floor($timerState['duration'] / 3600) }}" 
+                                    class="bg-slate-950 border border-slate-800 rounded-xl px-2 py-2.5 text-white font-mono font-black text-center focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 w-full">
+                            </div>
+                            <div class="text-slate-600 font-black pt-4">:</div>
+                            <div class="flex flex-col w-16">
+                                <span class="text-[8px] text-slate-500 font-bold uppercase mb-1">Minutes</span>
+                                <input type="number" id="timer-minutes-input" min="0" max="59" value="{{ floor(($timerState['duration'] % 3600) / 60) }}" 
+                                    class="bg-slate-950 border border-slate-800 rounded-xl px-2 py-2.5 text-white font-mono font-black text-center focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 w-full">
+                            </div>
+                            <div class="text-slate-600 font-black pt-4">:</div>
+                            <div class="flex flex-col w-16">
+                                <span class="text-[8px] text-slate-500 font-bold uppercase mb-1">Seconds</span>
+                                <input type="number" id="timer-seconds-input" min="0" max="59" value="{{ $timerState['duration'] % 60 }}" 
+                                    class="bg-slate-950 border border-slate-800 rounded-xl px-2 py-2.5 text-white font-mono font-black text-center focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 w-full">
+                            </div>
+                            <button onclick="setTimerDuration()" class="self-end bg-yellow-400 hover:bg-yellow-500 text-black font-black uppercase tracking-wider px-4 py-2.5 rounded-xl transition-all hover:scale-[1.02] text-xs shrink-0 active:scale-95 shadow-md">
                                 Apply
                             </button>
                         </div>
@@ -372,6 +387,14 @@
                     </div>
                     <a href="{{ route('screens.mapscreen', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-blue-500/10 text-blue-400 border border-blue-500/30 hover:border-blue-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-blue-500/20 text-center transition-all">Open Overlay</a>
                 </li>
+
+                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-slate-950 p-3 rounded-xl border border-slate-850">
+                    <div>
+                        <strong class="text-yellow-400 uppercase text-xs tracking-wider font-extrabold font-orbitron">7. Caster Screen Desk:</strong>
+                        <span class="text-slate-500 block text-xs mt-0.5 font-body-esports">Beautiful 2-caster layout overlaying transparent VDO.Ninja feeds on top of profile images. Dimensions: 1920x1080.</span>
+                    </div>
+                    <a href="{{ route('screens.castersscreen', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 hover:border-yellow-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-yellow-500/20 text-center transition-all">Open Overlay</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -383,11 +406,17 @@
         let timerEndsAt = {{ $timerState['endsAt'] }};
         let timerRemaining = {{ $timerState['remainingSeconds'] }};
         let timerVisible = {{ $timerState['visible'] ? 'true' : 'false' }};
+        let timerShowHours = {{ $timerState['showHours'] ? 'true' : 'false' }};
         let timerInterval = null;
 
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60);
+        function formatTime(seconds, showHoursFlag = false) {
+            const hrs = Math.floor(seconds / 3600);
+            const mins = Math.floor((seconds % 3600) / 60);
             const secs = seconds % 60;
+            
+            if (showHoursFlag || hrs > 0) {
+                return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
             return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
@@ -398,16 +427,16 @@
                 if (timerStatus === 'running') {
                     const now = Math.floor(Date.now() / 1000);
                     const remaining = Math.max(0, timerEndsAt - now);
-                    display.innerText = formatTime(remaining);
+                    display.innerText = formatTime(remaining, timerShowHours);
                     if (remaining <= 0) {
-                        display.innerText = "00:00";
+                        display.innerText = timerShowHours ? "00:00:00" : "00:00";
                         timerStatus = 'stopped';
                         clearInterval(timerInterval);
                     }
                 } else if (timerStatus === 'paused') {
-                    display.innerText = formatTime(timerRemaining);
+                    display.innerText = formatTime(timerRemaining, timerShowHours);
                 } else {
-                    display.innerText = formatTime(timerDuration * 60);
+                    display.innerText = formatTime(timerDuration, timerShowHours);
                 }
             }
 
@@ -446,6 +475,7 @@
                     timerRemaining = data.remainingSeconds;
                     timerEndsAt = data.endsAt;
                     timerVisible = data.visible;
+                    timerShowHours = data.showHours;
                     
                     updateControlPanelUI();
                     if (timerStatus === 'running') {
@@ -508,11 +538,16 @@
         }
 
         window.setTimerDuration = function() {
-            const input = document.getElementById('timer-duration-input');
-            if (!input) return;
-            const minutes = parseInt(input.value);
-            if (isNaN(minutes) || minutes < 1) return;
-            triggerTimerAction('set-duration', { duration: minutes });
+            const hInput = document.getElementById('timer-hours-input');
+            const mInput = document.getElementById('timer-minutes-input');
+            const sInput = document.getElementById('timer-seconds-input');
+            if (!hInput || !mInput || !sInput) return;
+            
+            const hours = parseInt(hInput.value) || 0;
+            const minutes = parseInt(mInput.value) || 0;
+            const seconds = parseInt(sInput.value) || 0;
+            
+            triggerTimerAction('set-duration', { hours, minutes, seconds });
         }
 
         window.toggleTimerVisibility = function(visible) {
@@ -544,10 +579,16 @@
                     timerRemaining = e.remainingSeconds;
                     timerEndsAt = e.endsAt;
                     timerVisible = e.visible;
+                    timerShowHours = e.showHours;
                     
-                    const input = document.getElementById('timer-duration-input');
-                    if (input) {
-                        input.value = timerDuration;
+                    const hInput = document.getElementById('timer-hours-input');
+                    const mInput = document.getElementById('timer-minutes-input');
+                    const sInput = document.getElementById('timer-seconds-input');
+                    
+                    if (hInput && mInput && sInput) {
+                        hInput.value = Math.floor(timerDuration / 3600);
+                        mInput.value = Math.floor((timerDuration % 3600) / 60);
+                        sInput.value = timerDuration % 60;
                     }
 
                     updateControlPanelUI();
