@@ -82,6 +82,10 @@ class TournamentTeamForm
                                         ->imageAspectRatio('9:16')
                                         ->imageEditor()
                                         ->imageEditorAspectRatioOptions(['9:16'])
+                                        ->automaticallyOpenImageEditorForAspectRatio()
+                                        ->validationMessages([
+                                            'dimensions' => 'The player portrait must have a portrait aspect ratio of 9:16. Please crop the image using the crop tool.',
+                                        ])
                                         ->columnSpanFull(),
                                 ])
                                 ->columns(2)
