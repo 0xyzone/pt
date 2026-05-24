@@ -29,56 +29,76 @@
         }
 
         /* ══════════════════════════════════════════════════════
-            ENTRANCE ANIMATIONS (STAGGERED POP-UP REVEAL)
+            ENTRANCE ANIMATIONS — GPU-accelerated, expo-out easing
         ══════════════════════════════════════════════════════ */
 
         @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-60px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-44px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-
         .slide-down {
-            animation: slideDown 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+            animation: slideDown 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
         }
 
         @keyframes cardReveal {
-            from {
-                opacity: 0;
-                transform: translateY(120px) scale(0.92);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            from { opacity: 0; transform: translateY(50px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
         }
-
         .card-reveal {
-            animation: cardReveal 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+            animation: cardReveal 0.78s cubic-bezier(0.22, 1, 0.36, 1) both;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
         }
 
         @keyframes slideUpFooter {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(32px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .slide-up-footer {
+            animation: slideUpFooter 0.62s cubic-bezier(0.22, 1, 0.36, 1) both;
+            animation-delay: 0.85s;
+            will-change: transform, opacity;
         }
 
-        .slide-up-footer {
-            animation: slideUpFooter 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
-            animation-delay: 0.9s;
+        /* ══════════════════════════════════════════════════════
+            STAGGERED CARD INNER ELEMENTS ANIMATIONS
+        ══════════════════════════════════════════════════════ */
+        @keyframes badgeDrop {
+            from { opacity: 0; transform: translate(-50%, -24px) scaleY(0.7); }
+            to   { opacity: 1; transform: translate(-50%, 0) scaleY(1); }
+        }
+        .badge-drop-anim {
+            animation: badgeDrop 0.58s cubic-bezier(0.22, 1, 0.36, 1) both;
+            will-change: transform, opacity;
+        }
+
+        @keyframes portraitReveal {
+            from { opacity: 0; transform: scale(0.92) translateY(16px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .portrait-anim {
+            animation: portraitReveal 0.68s cubic-bezier(0.22, 1, 0.36, 1) both;
+            will-change: transform, opacity;
+        }
+
+        @keyframes detailsReveal {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .details-anim {
+            animation: detailsReveal 0.62s cubic-bezier(0.22, 1, 0.36, 1) both;
+            will-change: transform, opacity;
+        }
+
+        @keyframes statsCoreReveal {
+            from { opacity: 0; transform: scale(0.9) translateY(18px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .stats-core-anim {
+            animation: statsCoreReveal 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+            will-change: transform, opacity;
         }
 
         /* ══════════════════════════════════════════════════════
@@ -481,14 +501,14 @@
                     <div class="bracket-inner {{ $isLeader ? 'leader-brackets-inner' : '' }} absolute inset-0 pointer-events-none"></div>
 
                     {{-- Hexagonal/Polygon Rank Badge --}}
-                    <div class="absolute top-0 left-1/2 -translate-x-1/2 rank-badge {{ $isLeader ? 'leader-rank-badge' : '' }} px-6 py-1 z-20">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 rank-badge {{ $isLeader ? 'leader-rank-badge' : '' }} px-6 py-1 z-20 badge-drop-anim" style="animation-delay:{{ 0.08 + $idx * 0.08 + 0.18 }}s;">
                         <span class="font-hud text-base font-black tracking-wider leading-none {{ $isLeader ? 'text-yellow-400 animate-pulse' : 'text-slate-400' }}">
                             #0{{ $rank }}
                         </span>
                     </div>
 
                     {{-- PLAYER PORTRAIT BOX (STRICT 9:16 ASPECT RATIO) --}}
-                    <div class="w-full aspect-9/16 shrink-0 rounded-xl overflow-hidden relative mt-2.5 flex items-center justify-center bg-slate-950/80 border border-slate-900 shadow-inner">
+                    <div class="w-full aspect-9/16 shrink-0 rounded-xl overflow-hidden relative mt-2.5 flex items-center justify-center bg-slate-950/80 border border-slate-900 shadow-inner portrait-anim" style="animation-delay:{{ 0.08 + $idx * 0.08 + 0.12 }}s;">
 
                         {{-- Concentric Tech HUD Indicators --}}
                         <div class="absolute inset-0 z-10 pointer-events-none overflow-hidden">
@@ -574,7 +594,7 @@
                     </div>
 
                     {{-- PLAYER DETAILS --}}
-                    <div class="text-center w-full flex flex-col items-center justify-center mt-3">
+                    <div class="text-center w-full flex flex-col items-center justify-center mt-3 details-anim" style="animation-delay:{{ 0.08 + $idx * 0.08 + 0.22 }}s;">
                         <h3 class="text-2xl font-black uppercase leading-none tracking-wider font-esports truncate max-w-full {{ $isLeader ? 'leader-text-pulse text-3xl' : 'text-white' }}">
                             {{ $player['ign'] }}
                         </h3>
@@ -596,7 +616,7 @@
                     </div>
 
                     {{-- HOLOGRAPHIC STATS CORE (TOTAL ELIMS HIGHLIGHT) --}}
-                    <div class="w-full mt-4.5 bg-slate-950/90 border {{ $isLeader ? 'border-yellow-500/50 shadow-[0_0_15px_rgba(234,179,8,0.15)]' : 'border-cyan-500/28 shadow-[0_0_15px_rgba(6,182,212,0.08)]' }} rounded-xl py-2.5 px-3 shadow-inner relative overflow-hidden">
+                    <div class="w-full mt-4.5 bg-slate-950/90 border {{ $isLeader ? 'border-yellow-500/50 shadow-[0_0_15px_rgba(234,179,8,0.15)]' : 'border-cyan-500/28 shadow-[0_0_15px_rgba(6,182,212,0.08)]' }} rounded-xl py-2.5 px-3 shadow-inner relative overflow-hidden stats-core-anim" style="animation-delay:{{ 0.08 + $idx * 0.08 + 0.28 }}s;">
                         <div class="absolute inset-0 bg-grid-tiny opacity-15 pointer-events-none"></div>
                         <div class="absolute inset-0 bg-linear-to-r {{ $isLeader ? 'from-yellow-500/5 to-transparent' : 'from-cyan-500/5 to-transparent' }} pointer-events-none"></div>
 
@@ -678,20 +698,25 @@
             // Apply active background state initially
             applyBackground("{{ $bgType }}", "{{ $customVideo ? asset('storage/' . $customVideo) : '' }}");
 
-            // Echo channel events for real-time director background switching & stats update
+            // Echo channel events for real-time director background switching
             Echo.channel('user-screens.{{ $user->id }}')
                 .listen('.BackgroundChanged', (e) => {
                     console.log('BackgroundChanged received:', e);
                     applyBackground(e.bgType, e.customVideoUrl);
-                })
-                .listen('.RefreshScreens', (e) => { window.location.reload(); })
-                .listen('.ObsViewSwitched', (e) => {
-                    if (e.viewName === 'refresh') window.location.reload();
                 });
-            @if($activeMatch)
-            Echo.channel('active-match.{{ $activeMatch->id }}')
-                .listen('.MatchStatsUpdated', (e) => { window.location.reload(); });
-            @endif
+
+            // Prevent reload listeners from executing inside the parent OBS Master View context
+            if (!window.isObsMaster) {
+                Echo.channel('user-screens.{{ $user->id }}')
+                    .listen('.RefreshScreens', (e) => { window.location.reload(); })
+                    .listen('.ObsViewSwitched', (e) => {
+                        if (e.viewName === 'refresh') window.location.reload();
+                    });
+                @if($activeMatch)
+                Echo.channel('active-match.{{ $activeMatch->id }}')
+                    .listen('.MatchStatsUpdated', (e) => { window.location.reload(); });
+                @endif
+            }
         });
     </script>
 </x-base>

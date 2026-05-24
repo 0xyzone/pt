@@ -10,51 +10,67 @@
         .font-hud     { font-family: 'Orbitron', sans-serif; }
 
         /* ══════════════════════════════════════════════════════
-           ENTRANCE ANIMATIONS
+           ENTRANCE ANIMATIONS — GPU-accelerated, expo-out
         ══════════════════════════════════════════════════════ */
 
-        /* Header slides down */
         @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-60px); }
+            from { opacity: 0; transform: translateY(-44px); }
             to   { opacity: 1; transform: translateY(0); }
         }
-        .slide-down { animation: slideDown 0.7s cubic-bezier(0.16,1,0.3,1) both; }
+        .slide-down {
+            animation: slideDown 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+        }
 
-        /* Left column slides from left */
         @keyframes slideFromLeft {
-            from { opacity: 0; transform: translateX(-70px); }
+            from { opacity: 0; transform: translateX(-50px); }
             to   { opacity: 1; transform: translateX(0); }
         }
-        .slide-from-left { animation: slideFromLeft 0.7s cubic-bezier(0.16,1,0.3,1) both; }
+        .slide-from-left {
+            animation: slideFromLeft 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+        }
 
-        /* Right column slides from right */
         @keyframes slideFromRight {
-            from { opacity: 0; transform: translateX(70px); }
+            from { opacity: 0; transform: translateX(50px); }
             to   { opacity: 1; transform: translateX(0); }
         }
-        .slide-from-right { animation: slideFromRight 0.7s cubic-bezier(0.16,1,0.3,1) both; }
+        .slide-from-right {
+            animation: slideFromRight 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+        }
 
-        /* Each row slides up with stagger */
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(24px); }
+            from { opacity: 0; transform: translateY(18px); }
             to   { opacity: 1; transform: translateY(0); }
         }
-        .slide-up { animation: slideUp 0.48s cubic-bezier(0.16,1,0.3,1) both; }
+        .slide-up {
+            animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+            will-change: transform, opacity;
+        }
 
-        /* Footer slides up */
         @keyframes slideUpFooter {
-            from { opacity: 0; transform: translateY(40px); }
+            from { opacity: 0; transform: translateY(32px); }
             to   { opacity: 1; transform: translateY(0); }
         }
-        .slide-up-footer { animation: slideUpFooter 0.65s cubic-bezier(0.16,1,0.3,1) both; animation-delay:0.9s; }
-
-        /* Rank #1 badge pops */
-        @keyframes badgePop {
-            from { opacity:0; transform: scale(0.6); }
-            60%  { transform: scale(1.15); }
-            to   { opacity:1; transform: scale(1); }
+        .slide-up-footer {
+            animation: slideUpFooter 0.62s cubic-bezier(0.22, 1, 0.36, 1) both;
+            animation-delay: 0.85s;
+            will-change: transform, opacity;
         }
-        .badge-pop { animation: badgePop 0.7s cubic-bezier(0.34,1.56,0.64,1) both; }
+
+        @keyframes badgePop {
+            from { opacity: 0; transform: scale(0.65); }
+            65%  { transform: scale(1.12); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+        .badge-pop {
+            animation: badgePop 0.68s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+            will-change: transform, opacity;
+        }
 
         /* ══════════════════════════════════════════════════════
            DYNAMIC INTERMISSION BACKGROUND SYSTEM
@@ -380,9 +396,14 @@
                 .listen('.BackgroundChanged', (e) => {
                     console.log('BackgroundChanged received:', e);
                     applyBackground(e.bgType, e.customVideoUrl);
-                })
-                .listen('.RefreshScreens', (e) => { window.location.reload(); })
-                .listen('.TournamentMatchUpdated', (e) => { window.location.reload(); });
+                });
+
+            // Prevent reload listeners from executing inside the parent OBS Master View context
+            if (!window.isObsMaster) {
+                Echo.channel('user-screens.{{ $activeMatch->tournament->user_id }}')
+                    .listen('.RefreshScreens', (e) => { window.location.reload(); })
+                    .listen('.TournamentMatchUpdated', (e) => { window.location.reload(); });
+            }
         });
     </script>
 </x-base>

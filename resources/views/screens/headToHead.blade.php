@@ -29,83 +29,57 @@
         }
 
         /* ══════════════════════════════════════════════════════
-           ENTRANCE & EXIT TRANSITIONS (CINEMATIC ARENA SPLIT)
+           ENTRANCE ANIMATIONS — GPU-accelerated, expo-out
            ══════════════════════════════════════════════════════ */
 
         @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-60px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-44px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-
         .slide-down {
-            animation: slideDown 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+            animation: slideDown 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
         }
 
         @keyframes slideLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-150px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0) scale(1);
-            }
+            from { opacity: 0; transform: translateX(-55px) scale(0.97); }
+            to   { opacity: 1; transform: translateX(0) scale(1); }
         }
-
         .slide-left {
-            animation: slideLeft 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+            animation: slideLeft 0.82s cubic-bezier(0.22, 1, 0.36, 1) both;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
         }
 
         @keyframes slideRight {
-            from {
-                opacity: 0;
-                transform: translateX(150px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0) scale(1);
-            }
+            from { opacity: 0; transform: translateX(55px) scale(0.97); }
+            to   { opacity: 1; transform: translateX(0) scale(1); }
         }
-
         .slide-right {
-            animation: slideRight 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+            animation: slideRight 0.82s cubic-bezier(0.22, 1, 0.36, 1) both;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
         }
 
         @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(80px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(44px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-
         .slide-up {
-            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+            animation: slideUp 0.76s cubic-bezier(0.22, 1, 0.36, 1) both;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
         }
 
         @keyframes slideUpFooter {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(32px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-
         .slide-up-footer {
-            animation: slideUpFooter 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
-            animation-delay: 0.9s;
+            animation: slideUpFooter 0.62s cubic-bezier(0.22, 1, 0.36, 1) both;
+            animation-delay: 0.85s;
+            will-change: transform, opacity;
         }
 
         @keyframes logoReveal {
@@ -120,7 +94,9 @@
         }
 
         .logo-reveal {
-            animation: logoReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+            animation: logoReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
         }
 
         /* ══════════════════════════════════════════════════════
@@ -484,15 +460,20 @@
                 .listen('.BackgroundChanged', (e) => {
                     console.log('BackgroundChanged received:', e);
                     applyBackground(e.bgType, e.customVideoUrl);
-                })
-                .listen('.RefreshScreens', (e) => { window.location.reload(); })
-                .listen('.ObsViewSwitched', (e) => {
-                    if (e.viewName === 'refresh') window.location.reload();
                 });
-            @if($activeMatch)
-            Echo.channel('active-match.{{ $activeMatch->id }}')
-                .listen('.MatchStatsUpdated', (e) => { window.location.reload(); });
-            @endif
+
+            // Prevent reload listeners from executing inside the parent OBS Master View context
+            if (!window.isObsMaster) {
+                Echo.channel('user-screens.{{ $user->id }}')
+                    .listen('.RefreshScreens', (e) => { window.location.reload(); })
+                    .listen('.ObsViewSwitched', (e) => {
+                        if (e.viewName === 'refresh') window.location.reload();
+                    });
+                @if($activeMatch)
+                Echo.channel('active-match.{{ $activeMatch->id }}')
+                    .listen('.MatchStatsUpdated', (e) => { window.location.reload(); });
+                @endif
+            }
         });
     </script>
 </x-base>

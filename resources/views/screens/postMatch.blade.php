@@ -10,65 +10,85 @@
         .font-hud     { font-family: 'Orbitron', sans-serif; }
 
         /* ══════════════════════════════════════════════════════
-           ENTRANCE ANIMATIONS — all page elements slide in
+           ENTRANCE ANIMATIONS — GPU-accelerated, expo-out
         ══════════════════════════════════════════════════════ */
 
-        /* Header slides down from top */
         @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-60px); }
+            from { opacity: 0; transform: translateY(-44px); }
             to   { opacity: 1; transform: translateY(0); }
         }
-        .slide-down { animation: slideDown 0.7s cubic-bezier(0.16,1,0.3,1) both; }
+        .slide-down {
+            animation: slideDown 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+        }
 
-        /* Winner panel slides in from the left */
         @keyframes slideLeft {
-            from { opacity: 0; transform: translateX(-80px) scale(0.95); }
+            from { opacity: 0; transform: translateX(-55px) scale(0.97); }
             to   { opacity: 1; transform: translateX(0) scale(1); }
         }
-        .slide-left { animation: slideLeft 0.75s cubic-bezier(0.16,1,0.3,1) both; }
+        .slide-left {
+            animation: slideLeft 0.76s cubic-bezier(0.22, 1, 0.36, 1) both;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+        }
 
-        /* Leaderboard columns slide in from the right */
         @keyframes slideRight {
-            from { opacity: 0; transform: translateX(60px); }
+            from { opacity: 0; transform: translateX(50px); }
             to   { opacity: 1; transform: translateX(0); }
         }
-        .slide-right { animation: slideRight 0.65s cubic-bezier(0.16,1,0.3,1) both; }
+        .slide-right {
+            animation: slideRight 0.68s cubic-bezier(0.22, 1, 0.36, 1) both;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+        }
 
-        /* Each row slides up with stagger */
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(28px); }
+            from { opacity: 0; transform: translateY(18px); }
             to   { opacity: 1; transform: translateY(0); }
         }
-        .slide-up { animation: slideUp 0.5s cubic-bezier(0.16,1,0.3,1) both; }
+        .slide-up {
+            animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+            will-change: transform, opacity;
+        }
 
-        /* Footer slides up from bottom */
         @keyframes slideUpFast {
-            from { opacity: 0; transform: translateY(40px); }
+            from { opacity: 0; transform: translateY(32px); }
             to   { opacity: 1; transform: translateY(0); }
         }
-        .slide-up-footer { animation: slideUpFast 0.6s cubic-bezier(0.16,1,0.3,1) both; animation-delay: 0.9s; }
+        .slide-up-footer {
+            animation: slideUpFast 0.62s cubic-bezier(0.22, 1, 0.36, 1) both;
+            animation-delay: 0.85s;
+            will-change: transform, opacity;
+        }
 
-        /* Winner badge drops in with bounce */
         @keyframes badgeDrop {
-            from { opacity: 0; transform: translateY(-30px) scale(0.8); }
-            60%  { transform: translateY(6px) scale(1.04); }
+            from { opacity: 0; transform: translateY(-24px) scale(0.82); }
+            62%  { transform: translateY(4px) scale(1.03); }
             to   { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .badge-drop { animation: badgeDrop 0.8s cubic-bezier(0.34,1.56,0.64,1) both; }
+        .badge-drop {
+            animation: badgeDrop 0.78s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+            will-change: transform, opacity;
+        }
 
-        /* Logo scale up */
         @keyframes logoReveal {
-            from { opacity: 0; transform: scale(0.5) rotate(-10deg); }
+            from { opacity: 0; transform: scale(0.55) rotate(-6deg); }
             to   { opacity: 1; transform: scale(1) rotate(0deg); }
         }
-        .logo-reveal { animation: logoReveal 0.9s cubic-bezier(0.34,1.56,0.64,1) both; }
+        .logo-reveal {
+            animation: logoReveal 0.82s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+            will-change: transform, opacity;
+        }
 
-        /* Stats count reveal */
         @keyframes statReveal {
-            from { opacity: 0; transform: translateY(20px) scale(0.8); }
+            from { opacity: 0; transform: translateY(16px) scale(0.85); }
             to   { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .stat-reveal { animation: statReveal 0.5s cubic-bezier(0.34,1.56,0.64,1) both; }
+        .stat-reveal {
+            animation: statReveal 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+            will-change: transform, opacity;
+        }
 
         /* ══════════════════════════════════════════════════════
            DYNAMIC INTERMISSION BACKGROUND SYSTEM
@@ -455,12 +475,17 @@
                 .listen('.BackgroundChanged', (e) => {
                     console.log('BackgroundChanged received:', e);
                     applyBackground(e.bgType, e.customVideoUrl);
-                })
-                .listen('.RefreshScreens', (e) => { window.location.reload(); })
-                .listen('.TournamentMatchUpdated', (e) => { window.location.reload(); });
-            
-            Echo.channel('active-match.{{ $activeMatch->id }}')
-                .listen('.MatchStatsUpdated', (e) => { window.location.reload(); });
+                });
+
+            // Prevent reload listeners from executing inside the parent OBS Master View context
+            if (!window.isObsMaster) {
+                Echo.channel('user-screens.{{ $activeMatch->tournament->user_id }}')
+                    .listen('.RefreshScreens', (e) => { window.location.reload(); })
+                    .listen('.TournamentMatchUpdated', (e) => { window.location.reload(); });
+                
+                Echo.channel('active-match.{{ $activeMatch->id }}')
+                    .listen('.MatchStatsUpdated', (e) => { window.location.reload(); });
+            }
         });
     </script>
 </x-base>
