@@ -23,6 +23,36 @@ class ListTournamentTeams extends ListRecords
     protected static ?string $navigationLabel = 'Manage Teams';
     protected static ?int $navigationSort = 4;
 
+
+
+
+    protected static function getTournamentId(): ?string
+    {
+        $tournament = request()->route('tournament') ?? request()->route('record');
+        
+        return $tournament instanceof \Illuminate\Database\Eloquent\Model ? $tournament->getKey() : $tournament;
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        $tournamentId = self::getTournamentId();
+        if (!$tournamentId) {
+            return null;
+        }
+        $exists = TournamentTeam::where('tournament_id', $tournamentId)->exists();
+        return $exists ? null : '!';
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        $tournamentId = self::getTournamentId();
+        if (!$tournamentId) {
+            return null;
+        }
+        $exists = TournamentTeam::where('tournament_id', $tournamentId)->exists();
+        return $exists ? null : 'warning';
+    }
+
     public function getSubNavigation(): array
     {
         return TournamentResource::getRecordSubNavigation($this);

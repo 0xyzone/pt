@@ -4,11 +4,13 @@ namespace App\Filament\Maidan\Resources\Tournaments\Pages;
 
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches\TournamentMatchResource;
 use App\Filament\Maidan\Resources\Tournaments\TournamentResource;
+use App\Models\TournamentMatch;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Facades\Auth;
 
 class ListTournamentMatches extends ListRecords
 {
@@ -16,6 +18,33 @@ class ListTournamentMatches extends ListRecords
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPuzzlePiece;
     protected static ?string $navigationLabel = 'Manage Games';
     protected static ?int $navigationSort = 6;
+
+    protected static function getTournamentId(): ?string
+    {
+        $tournament = request()->route('tournament') ?? request()->route('record');
+        
+        return $tournament instanceof \Illuminate\Database\Eloquent\Model ? $tournament->getKey() : $tournament;
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        $tournamentId = self::getTournamentId();
+        if (!$tournamentId) {
+            return null;
+        }
+        $exists = TournamentMatch::where('tournament_id', $tournamentId)->exists();
+        return $exists ? null : '!';
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        $tournamentId = self::getTournamentId();
+        if (!$tournamentId) {
+            return null;
+        }
+        $exists = TournamentMatch::where('tournament_id', $tournamentId)->exists();
+        return $exists ? null : 'warning';
+    }
 
     public function getSubNavigation(): array
     {
@@ -34,9 +63,9 @@ class ListTournamentMatches extends ListRecords
         return [
             CreateAction::make(),
             Action::make('Overall Ranking')
-                ->url(fn() => route('screens.overallranking', ['user_id' => auth()->id()]))
+                ->url(fn() => route('screens.overallranking', ['user_id' => Auth::id()]))
                 ->openUrlInNewTab()
-                ->visible(fn() => \App\Models\Tournament::where('user_id', auth()->id())->where('is_active', true)->exists())
+                ->visible(fn() => \App\Models\Tournament::where('user_id', Auth::id())->where('is_active', true)->exists())
                 ->color('info')
         ];
     }

@@ -60,4 +60,27 @@ class TournamentTeamResource extends Resource
             CreateTournamentTeam::class,
         ]);
     }
+
+
+    public static function getNavigationBadge(): ?string
+    {
+        // Show a warning badge if this tournament has no settings configured yet.
+        // We read the tournamentId from the current route parameter.
+        $tournamentId = request()->route('record');
+        if (!$tournamentId) {
+            return null;
+        }
+        $exists = TournamentTeam::where('tournament_id', $tournamentId)->exists();
+        return $exists ? null : '!';
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        $tournamentId = request()->route('record');
+        if (!$tournamentId) {
+            return null;
+        }
+        $exists = TournamentTeam::where('tournament_id', $tournamentId)->exists();
+        return $exists ? null : 'warning';
+    }
 }

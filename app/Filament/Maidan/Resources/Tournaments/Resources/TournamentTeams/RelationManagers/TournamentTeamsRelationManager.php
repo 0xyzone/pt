@@ -2,6 +2,7 @@
 
 namespace App\Filament\Maidan\Resources\Tournaments\Resources\TournamentTeams\RelationManagers;
 
+use App\Models\TournamentTeam;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
@@ -147,7 +148,7 @@ class TournamentTeamsRelationManager extends RelationManager
                         Select::make('team_ids')
                             ->label('Select Teams')
                             ->options(function () {
-                                return \App\Models\TournamentTeam::query()
+                                return TournamentTeam::query()
                                     ->whereHas('tournament', fn($q) => $q->where('user_id', Auth::id()))
                                     ->where('tournament_id', '!=', $this->getOwnerRecord()->id)
                                     ->pluck('name', 'id');
@@ -160,7 +161,7 @@ class TournamentTeamsRelationManager extends RelationManager
                         $teamIds = $data['team_ids'] ?? [];
 
                         foreach ($teamIds as $teamId) {
-                            $team = \App\Models\TournamentTeam::find($teamId);
+                            $team = TournamentTeam::find($teamId);
                             if ($team) {
                                 $team->tournament_id = $this->getOwnerRecord()->id;
                                 $team->save();

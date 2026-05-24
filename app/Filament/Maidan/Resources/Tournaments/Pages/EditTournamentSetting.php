@@ -30,11 +30,16 @@ class EditTournamentSetting extends Page
     protected static ?string $navigationLabel = 'Edit Tournament Settings';
     protected string $view = 'filament.maidan.resources.tournaments.pages.tournament-setting';
 
+    protected static function getTournamentId(): ?string
+    {
+        $tournament = request()->route('tournament') ?? request()->route('record');
+        
+        return $tournament instanceof \Illuminate\Database\Eloquent\Model ? $tournament->getKey() : $tournament;
+    }
+
     public static function getNavigationBadge(): ?string
     {
-        // Show a warning badge if this tournament has no settings configured yet.
-        // We read the tournamentId from the current route parameter.
-        $tournamentId = request()->route('record');
+        $tournamentId = self::getTournamentId();
         if (!$tournamentId) {
             return null;
         }
@@ -44,7 +49,7 @@ class EditTournamentSetting extends Page
 
     public static function getNavigationBadgeColor(): ?string
     {
-        $tournamentId = request()->route('record');
+        $tournamentId = self::getTournamentId();
         if (!$tournamentId) {
             return null;
         }

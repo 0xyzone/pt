@@ -13,6 +13,7 @@ use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class TournamentsTable
 {
@@ -35,7 +36,7 @@ class TournamentsTable
                     ToggleColumn::make('is_active')
                     ->label('Activate?')
                     ->beforeStateUpdated(function (Tournament $record) {
-                        Tournament::where('user_id', auth()->id())->where('id', '!=', $record->id)->update(['is_active' => false]);
+                        Tournament::where('user_id', Auth::id())->where('id', '!=', $record->id)->update(['is_active' => false]);
                     }),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -46,7 +47,7 @@ class TournamentsTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->modifyQueryUsing(fn($query) => $query->where('user_id', auth()->id()))
+            ->modifyQueryUsing(fn($query) => $query->where('user_id', Auth::id()))
             ->emptyStateHeading('No tournaments organized yet.')
             ->emptyStateDescription('Get started by creating a new tournament.')
             ->emptyStateIcon(icon: 'heroicon-o-trophy')
