@@ -588,18 +588,18 @@
                     button.classList.remove('bg-emerald-600', 'text-white', 'border-transparent');
                 }, 1500);
 
-                // Spawn cursor tooltip
-                showCursorTooltip(event, 'Link Copied!');
+                // Spawn cursor tooltip above the button
+                showCursorTooltip(button, 'Link Copied!');
             }).catch(err => {
                 console.error('Could not copy link: ', err);
-                showCursorTooltip(event, 'Copy Failed!');
+                showCursorTooltip(button, 'Copy Failed!');
             });
         }
 
-        function showCursorTooltip(event, text) {
+        function showCursorTooltip(element, text) {
             const tooltip = document.createElement('div');
             tooltip.innerText = text;
-            tooltip.style.position = 'absolute';
+            tooltip.style.position = 'fixed';
             tooltip.style.background = '#10b981'; // Emerald
             tooltip.style.color = '#ffffff';
             tooltip.style.padding = '6px 12px';
@@ -610,16 +610,21 @@
             tooltip.style.zIndex = '99999';
             tooltip.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.3)';
             tooltip.style.transition = 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
-            
-            // Adjust position slightly above cursor
-            const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            tooltip.style.left = (event.clientX + scrollLeft - 40) + 'px';
-            tooltip.style.top = (event.clientY + scrollTop - 35) + 'px';
             tooltip.style.opacity = '0';
             tooltip.style.transform = 'translateY(8px)';
             
             document.body.appendChild(tooltip);
+            
+            // Calculate element position in viewport
+            const rect = element.getBoundingClientRect();
+            const tipRect = tooltip.getBoundingClientRect();
+            
+            // Position centered above the element
+            const x = rect.left + (rect.width / 2) - (tipRect.width / 2);
+            const y = rect.top - tipRect.height - 8;
+
+            tooltip.style.left = x + 'px';
+            tooltip.style.top = y + 'px';
             
             // Force reflow
             tooltip.offsetHeight;

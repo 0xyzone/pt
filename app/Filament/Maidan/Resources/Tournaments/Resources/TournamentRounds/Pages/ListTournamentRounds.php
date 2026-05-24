@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Maidan\Resources\Tournaments\Pages;
+namespace App\Filament\Maidan\Resources\Tournaments\Resources\TournamentRounds\Pages;
 
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentRounds\TournamentRoundResource;
 use App\Filament\Maidan\Resources\Tournaments\TournamentResource;

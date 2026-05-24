@@ -15,6 +15,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use TinusG\FilamentHoverImageColumn\HoverImageColumn;
 
 class TournamentSponsorsRelationManager extends RelationManager
 {
@@ -48,7 +49,7 @@ class TournamentSponsorsRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->reorderable('sort_order')
             ->columns([
-                ImageColumn::make('logo_image')
+                HoverImageColumn::make('logo_image')
                     ->label('Logo')
                     ->imageSize(60)
                     ->disk('public')

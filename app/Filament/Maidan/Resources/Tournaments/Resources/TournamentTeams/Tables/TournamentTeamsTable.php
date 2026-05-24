@@ -8,6 +8,7 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use TinusG\FilamentHoverImageColumn\HoverImageColumn;
 
 class TournamentTeamsTable
 {
@@ -21,7 +22,7 @@ class TournamentTeamsTable
                     ->searchable(),
                 TextColumn::make('short_name')
                     ->searchable(),
-                ImageColumn::make('logo_image'),
+                HoverImageColumn::make('logo_image'),
                 TextColumn::make('contact_number')
                     ->searchable(),
                 TextColumn::make('contact_email')

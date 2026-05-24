@@ -14,6 +14,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
+use TinusG\FilamentHoverImageColumn\HoverImageColumn;
 
 class TournamentsTable
 {
@@ -21,9 +22,9 @@ class TournamentsTable
     {
         return $table
             ->columns([
-                ImageColumn::make('logo_image')
+                HoverImageColumn::make('logo_image')
                 ->disk('public'),
-                ImageColumn::make('banner_image')
+                HoverImageColumn::make('banner_image')
                 ->disk('public'),
                 TextColumn::make('name')
                     ->searchable(),

@@ -5,10 +5,10 @@ namespace App\Filament\Maidan\Resources\Tournaments;
 use App\Filament\Maidan\Resources\Tournaments\Pages\CreateTournament;
 use App\Filament\Maidan\Resources\Tournaments\Pages\EditTournament;
 use App\Filament\Maidan\Resources\Tournaments\Pages\EditTournamentSetting;
-use App\Filament\Maidan\Resources\Tournaments\Pages\ListTournamentMatches;
+use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches\Pages\ListTournamentMatches;
 use App\Filament\Maidan\Resources\Tournaments\Pages\ListTournaments;
-use App\Filament\Maidan\Resources\Tournaments\Pages\ListTournamentTeams;
-use App\Filament\Maidan\Resources\Tournaments\Pages\ListTournamentRounds;
+use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentTeams\Pages\ListTournamentTeams;
+use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentRounds\Pages\ListTournamentRounds;
 use App\Filament\Maidan\Resources\Tournaments\Pages\ViewTournament;
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches\RelationManagers\TournamentMatchesRelationManager;
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches\TournamentMatchResource;
@@ -32,7 +32,10 @@ class TournamentResource extends Resource
     // protected static ?string $relatedResource = TournamentTeamResource::class;
     protected static ?string $relatedResource = TournamentMatchResource::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTrophy;
+    protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::Trophy;
+
+    protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'name';
 

@@ -20,6 +20,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use TinusG\FilamentHoverImageColumn\HoverImageColumn;
 
 class ManageTournamentTeams extends ManageRelatedRecords
 {
@@ -54,7 +55,7 @@ class ManageTournamentTeams extends ManageRelatedRecords
                     ->searchable(),
                 TextColumn::make('short_name')
                     ->searchable(),
-                ImageColumn::make('logo_image'),
+                HoverImageColumn::make('logo_image'),
                 TextColumn::make('contact_number')
                     ->searchable(),
                 TextColumn::make('contact_email')

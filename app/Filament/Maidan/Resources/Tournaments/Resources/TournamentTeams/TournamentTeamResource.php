@@ -2,7 +2,7 @@
 
 namespace App\Filament\Maidan\Resources\Tournaments\Resources\TournamentTeams;
 
-use App\Filament\Maidan\Resources\Tournaments\Pages\ListTournamentTeams;
+use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentTeams\Pages\ListTournamentTeams;
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentTeams\Pages\CreateTournamentTeam;
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentTeams\Pages\EditTournamentTeam;
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentTeams\Schemas\TournamentTeamForm;

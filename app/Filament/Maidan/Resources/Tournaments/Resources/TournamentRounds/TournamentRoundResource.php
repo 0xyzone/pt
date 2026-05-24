@@ -2,7 +2,7 @@
 
 namespace App\Filament\Maidan\Resources\Tournaments\Resources\TournamentRounds;
 
-use App\Filament\Maidan\Resources\Tournaments\Pages\ListTournamentRounds;
+use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentRounds\Pages\ListTournamentRounds;
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentRounds\Pages\CreateTournamentRound;
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentRounds\Pages\EditTournamentRound;
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentRounds\Schemas\TournamentRoundForm;

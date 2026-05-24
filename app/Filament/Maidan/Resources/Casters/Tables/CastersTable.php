@@ -8,6 +8,7 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use TinusG\FilamentHoverImageColumn\HoverImageColumn;
 
 class CastersTable
 {
@@ -15,7 +16,8 @@ class CastersTable
     {
         return $table
             ->columns([
-                ImageColumn::make('image'),
+                HoverImageColumn::make('image')
+                ->disk('public'),
                 TextColumn::make('display_name')
                     ->searchable(),
                 TextColumn::make('display_handle')

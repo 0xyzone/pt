@@ -18,7 +18,10 @@ class CasterResource extends Resource
 {
     protected static ?string $model = Caster::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMicrophone;
+    protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::Microphone;
+
+    protected static ?int $navigationSort = 2;
 
     protected static ?string $recordTitleAttribute = 'name';
 

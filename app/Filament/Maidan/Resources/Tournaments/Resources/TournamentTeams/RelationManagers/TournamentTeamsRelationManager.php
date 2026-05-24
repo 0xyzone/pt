@@ -22,6 +22,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
+use TinusG\FilamentHoverImageColumn\HoverImageColumn;
 
 class TournamentTeamsRelationManager extends RelationManager
 {
@@ -118,7 +119,7 @@ class TournamentTeamsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                ImageColumn::make('logo_image')
+                HoverImageColumn::make('logo_image')
                     ->label('Logo')
                     ->circular()
                     ->imageSize(50)

@@ -11,6 +11,7 @@ use Filament\Tables\Table;
 use Filament\Actions\AttachAction;
 use Filament\Actions\DetachAction;
 use Filament\Actions\DetachBulkAction;
+use TinusG\FilamentHoverImageColumn\HoverImageColumn;
 
 class TournamentCastersRelationManager extends RelationManager
 {
@@ -30,7 +31,7 @@ class TournamentCastersRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('display_name')
             ->columns([
-                ImageColumn::make('image')
+                HoverImageColumn::make('image')
                     ->label('Photo')
                     ->circular()
                     ->imageSize(50)

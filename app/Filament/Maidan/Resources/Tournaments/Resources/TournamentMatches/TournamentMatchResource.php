@@ -2,7 +2,7 @@
 
 namespace App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches;
 
-use App\Filament\Maidan\Resources\Tournaments\Pages\ListTournamentMatches;
+use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches\Pages\ListTournamentMatches;
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches\Pages\CreateTournamentMatch;
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches\Pages\EditTournamentMatch;
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches\Resources\MatchStats\RelationManagers\MatchStatsRelationManager;
