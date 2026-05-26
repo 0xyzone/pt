@@ -713,6 +713,7 @@ class ScreenController extends Controller
             if ($s2) {
                 $team2Overall['points'] += $s2->points;
                 $team2Overall['kills'] += $s2->kills;
+                if ($s2->placement === 1) $team2Overall['wwcd']++;
             }
         }
         
