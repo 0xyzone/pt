@@ -2,56 +2,121 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Rajdhani:wght@600;700;900&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
 
     <style>
-        * { box-sizing: border-box; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: transparent; }
+        * {
+            box-sizing: border-box;
+        }
 
-        .font-esports { font-family: 'Rajdhani', sans-serif; }
-        .font-body    { font-family: 'Inter', sans-serif; }
-        .font-hud     { font-family: 'Orbitron', sans-serif; }
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        .font-esports {
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .font-body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-hud {
+            font-family: 'Orbitron', sans-serif;
+        }
 
         /* ══════════════════════════════════════════════════════
            ENTRANCE & EXIT ANIMATIONS — obsMaster compatible
         ══════════════════════════════════════════════════════ */
         @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-44px); }
-            to   { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-44px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         .slide-down {
             animation: slideDown 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
             will-change: transform, opacity;
         }
 
         @keyframes cardRevealLeft {
-            from { opacity: 0; transform: translateX(-60px) scale(0.98); filter: blur(8px); }
-            to   { opacity: 1; transform: translateX(0) scale(1); filter: blur(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-60px) scale(0.98);
+                filter: blur(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+                filter: blur(0);
+            }
         }
+
         @keyframes cardRevealRight {
-            from { opacity: 0; transform: translateX(60px) scale(0.98); filter: blur(8px); }
-            to   { opacity: 1; transform: translateX(0) scale(1); filter: blur(0); }
+            from {
+                opacity: 0;
+                transform: translateX(60px) scale(0.98);
+                filter: blur(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+                filter: blur(0);
+            }
         }
 
         .card-left-reveal {
             animation: cardRevealLeft 1.2s cubic-bezier(0.075, 0.82, 0.165, 1) both;
             will-change: transform, opacity;
         }
+
         .card-right-reveal {
             animation: cardRevealRight 1.2s cubic-bezier(0.075, 0.82, 0.165, 1) both;
             will-change: transform, opacity;
         }
 
         @keyframes gridItemReveal {
-            from { opacity: 0; transform: translateY(24px) scale(0.96); filter: blur(4px); }
-            to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+            from {
+                opacity: 0;
+                transform: translateY(24px) scale(0.96);
+                filter: blur(4px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
         }
+
         .grid-item-animate {
             animation: gridItemReveal 0.8s cubic-bezier(0.075, 0.82, 0.165, 1) both;
             will-change: transform, opacity;
         }
 
         @keyframes slideUpFooter {
-            from { opacity: 0; transform: translateY(32px); }
-            to   { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(32px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         .slide-up-footer {
             animation: slideUpFooter 0.62s cubic-bezier(0.22, 1, 0.36, 1) both;
             animation-delay: 0.85s;
@@ -108,9 +173,15 @@
 
         /* Scanline sweeps inside HUD */
         @keyframes scanline {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100%); }
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(100%);
+            }
         }
+
         .scanline-sweep::after {
             content: '';
             position: absolute;
@@ -130,9 +201,19 @@
 
         /* Target locking pulse */
         @keyframes reticlePulse {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.05); opacity: 1; }
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
         }
+
         .reticle-glow {
             animation: reticlePulse 3.5s ease-in-out infinite;
         }
@@ -140,19 +221,24 @@
         .text-glow-emerald {
             text-shadow: 0 0 10px rgba(16, 185, 129, 0.5), 0 0 20px rgba(16, 185, 129, 0.2);
         }
+
         .text-glow-yellow {
             text-shadow: 0 0 10px rgba(250, 204, 21, 0.5), 0 0 20px rgba(250, 204, 21, 0.2);
         }
+
         .text-glow-cyan {
             text-shadow: 0 0 10px rgba(6, 182, 212, 0.5), 0 0 20px rgba(6, 182, 212, 0.2);
         }
+
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
+
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
     </style>
 
     {{-- Main screen wrapper --}}
@@ -193,7 +279,7 @@
 
             {{-- LEFT COLUMN: Elimination Points (Dynamic HUD scope design) --}}
             <div class="w-2/5 flex flex-col justify-center">
-                <div class="card-left-reveal hud-card scanline-sweep relative overflow-hidden rounded-2xl flex flex-col justify-between p-8 h-[550px]" style="animation-delay: 0.15s;">
+                <div class="card-left-reveal hud-card scanline-sweep relative overflow-hidden rounded-2xl flex flex-col justify-between p-8 h-137.5" style="animation-delay: 0.15s;">
                     <div class="absolute inset-0 bg-grid-tiny opacity-10 pointer-events-none"></div>
 
                     {{-- Header telemetry line --}}
@@ -233,13 +319,13 @@
                                 <circle cx="50" cy="50" r="44" stroke="currentColor" stroke-width="0.8" stroke-dasharray="4 8" fill="none" opacity="0.4" />
                                 <circle cx="50" cy="50" r="36" stroke="currentColor" stroke-width="1.5" stroke-dasharray="32 16 8 16" fill="none" opacity="0.85" />
                                 <circle cx="50" cy="50" r="12" stroke="currentColor" stroke-width="0.5" stroke-dasharray="2 2" fill="none" opacity="0.3" />
-                                
+
                                 {{-- Scope ticks --}}
                                 <line x1="50" y1="5" x2="50" y2="15" stroke="currentColor" stroke-width="2" />
                                 <line x1="50" y1="85" x2="50" y2="95" stroke="currentColor" stroke-width="2" />
                                 <line x1="5" y1="50" x2="15" y2="50" stroke="currentColor" stroke-width="2" />
                                 <line x1="85" y1="50" x2="95" y2="50" stroke="currentColor" stroke-width="2" />
-                                
+
                                 {{-- Target locking box --}}
                                 <path d="M 38,38 L 42,38 M 38,38 L 38,42" stroke="currentColor" stroke-width="1.5" fill="none" />
                                 <path d="M 62,38 L 58,38 M 62,38 L 62,42" stroke="currentColor" stroke-width="1.5" fill="none" />
@@ -276,7 +362,7 @@
 
             {{-- RIGHT COLUMN: Placement Points (Adaptive dynamic grid layout) --}}
             <div class="w-3/5 flex flex-col justify-center">
-                <div class="card-right-reveal hud-card scanline-sweep relative overflow-hidden rounded-2xl flex flex-col p-8 h-[550px]" style="animation-delay: 0.3s;">
+                <div class="card-right-reveal hud-card scanline-sweep relative overflow-hidden rounded-2xl flex flex-col p-8 h-137.5" style="animation-delay: 0.3s;">
                     <div class="absolute inset-0 bg-grid-tiny opacity-10 pointer-events-none"></div>
 
                     {{-- Header telemetry line --}}
@@ -288,60 +374,54 @@
                     {{-- Grid scrollable or fixed container --}}
                     <div class="flex-1 overflow-y-auto no-scrollbar pr-1 select-none">
                         @if($placementPoints->isEmpty())
-                            {{-- Visual stunning empty fallback --}}
-                            <div class="h-full flex flex-col justify-center items-center">
-                                <svg class="w-16 h-16 text-slate-700 mb-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
-                                </svg>
-                                <span class="text-slate-400 font-hud text-sm">NO PLACEMENT POINTS DEFINED</span>
-                                <span class="text-slate-500 font-body text-[10px] mt-1 uppercase tracking-widest">PLEASE CHECK TOURNAMENT SETTINGS</span>
-                            </div>
+                        {{-- Visual stunning empty fallback --}}
+                        <div class="h-full flex flex-col justify-center items-center">
+                            <svg class="w-16 h-16 text-slate-700 mb-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+                            </svg>
+                            <span class="text-slate-400 font-hud text-sm">NO PLACEMENT POINTS DEFINED</span>
+                            <span class="text-slate-500 font-body text-[10px] mt-1 uppercase tracking-widest">PLEASE CHECK TOURNAMENT SETTINGS</span>
+                        </div>
                         @else
-                            <div class="grid grid-cols-4 gap-3">
-                                @foreach($placementPoints as $pt)
-                                    @php
-                                        // Aesthetic styles for different tiers of placements
-                                        $bgClass = 'bg-slate-950/60 border-slate-800/80 hover:border-slate-700/60';
-                                        $glowClass = 'text-white';
-                                        $crown = '';
+                        <div class="grid grid-cols-4 gap-3">
+                            @foreach($placementPoints as $pt)
+                            @php
+                            // Aesthetic styles for different tiers of placements
+                            $bgClass = 'bg-slate-950/60 border-slate-800/80 hover:border-slate-700/60';
+                            $glowClass = 'text-white';
+                            $crown = '';
 
-                                        if ($pt->placement == 1) {
-                                            $bgClass = 'bg-gradient-to-br from-yellow-500/10 to-amber-500/5 border-yellow-500/40 hover:border-yellow-400';
-                                            $glowClass = 'text-yellow-400 text-glow-yellow';
-                                            $crown = '👑 ';
-                                        } elseif ($pt->placement == 2) {
-                                            $bgClass = 'bg-gradient-to-br from-slate-200/10 to-slate-300/5 border-slate-300/45 hover:border-slate-200';
-                                            $glowClass = 'text-slate-200';
-                                        } elseif ($pt->placement == 3) {
-                                            $bgClass = 'bg-gradient-to-br from-amber-600/15 to-amber-700/5 border-amber-600/40 hover:border-amber-500';
-                                            $glowClass = 'text-amber-500';
-                                        } elseif ($pt->placement <= 8) {
-                                            $bgClass = 'bg-slate-950/80 border-cyan-500/20 hover:border-cyan-500/40';
-                                            $glowClass = 'text-cyan-400 text-glow-cyan';
-                                        }
+                            if ($pt->placement == 1) {
+                            $bgClass = 'bg-gradient-to-br from-yellow-500/10 to-amber-500/5 border-yellow-500/40 hover:border-yellow-400';
+                            $glowClass = 'text-yellow-400 text-glow-yellow';
+                            $crown = '👑 ';
+                            } elseif ($pt->placement == 2) {
+                            $bgClass = 'bg-gradient-to-br from-slate-200/10 to-slate-300/5 border-slate-300/45 hover:border-slate-200';
+                            $glowClass = 'text-slate-200';
+                            } elseif ($pt->placement == 3) {
+                            $bgClass = 'bg-gradient-to-br from-amber-600/15 to-amber-700/5 border-amber-600/40 hover:border-amber-500';
+                            $glowClass = 'text-amber-500';
+                            } elseif ($pt->placement <= 8) { $bgClass='bg-slate-950/80 border-cyan-500/20 hover:border-cyan-500/40' ; $glowClass='text-cyan-400 text-glow-cyan' ; } $itemDelay=0.08 * $loop->iteration;
+                                @endphp
+                                <div class="grid-item-animate {{ $bgClass }} border rounded-xl p-3 flex flex-col justify-between items-center transition-all duration-300 transform hover:-translate-y-1 shadow-md relative" style="animation-delay: {{ $itemDelay }}s; height: 95px;">
 
-                                        $itemDelay = 0.08 * $loop->iteration;
-                                    @endphp
-                                    <div class="grid-item-animate {{ $bgClass }} border rounded-xl p-3 flex flex-col justify-between items-center transition-all duration-300 transform hover:-translate-y-1 shadow-md relative" 
-                                         style="animation-delay: {{ $itemDelay }}s; height: 95px;">
-                                        
-                                        <div class="absolute inset-0 bg-grid-tiny opacity-5 pointer-events-none rounded-xl"></div>
-                                        <span class="text-[9px] font-black text-slate-400/60 font-hud tracking-[0.2em] uppercase leading-none mt-1">
-                                            RANK {{ str_pad($pt->placement, 2, '0', STR_PAD_LEFT) }}
-                                        </span>
+                                    <div class="absolute inset-0 bg-grid-tiny opacity-5 pointer-events-none rounded-xl"></div>
+                                    <span class="text-[9px] font-black text-slate-400/60 font-hud tracking-[0.2em] uppercase leading-none mt-1">
+                                        RANK {{ str_pad($pt->placement, 2, '0', STR_PAD_LEFT) }}
+                                    </span>
 
-                                        <div class="text-glow flex items-center gap-1 my-1">
-                                            <span class="text-sm font-black tracking-widest uppercase font-hud truncate max-w-full {{ $glowClass }}">
-                                                {!! $crown !!}{{ $pt->placement == 1 ? 'WINNER' : ($pt->placement == 2 ? '2ND PLACE' : ($pt->placement == 3 ? '3RD PLACE' : $pt->placement . 'TH')) }}
-                                            </span>
-                                        </div>
-
-                                        <span class="font-hud text-xl font-black tracking-wider {{ $pt->placement == 1 ? 'text-yellow-400 text-glow-yellow' : ($pt->placement <= 8 ? 'text-cyan-400' : 'text-emerald-400 text-glow-emerald') }} mb-1">
-                                            {{ $pt->points }} <span class="text-[9px] font-bold text-slate-500/80">PTS</span>
+                                    <div class="text-glow flex items-center gap-1 my-1">
+                                        <span class="text-sm font-black tracking-widest uppercase font-hud truncate max-w-full {{ $glowClass }}">
+                                            {!! $crown !!}{{ $pt->placement == 1 ? 'WINNER' : ($pt->placement == 2 ? '2ND PLACE' : ($pt->placement == 3 ? '3RD PLACE' : $pt->placement . 'TH')) }}
                                         </span>
                                     </div>
+
+                                    <span class="font-hud text-xl font-black tracking-wider {{ $pt->placement == 1 ? 'text-yellow-400 text-glow-yellow' : ($pt->placement <= 8 ? 'text-cyan-400' : 'text-emerald-400 text-glow-emerald') }} mb-1">
+                                        {{ $pt->points }} <span class="text-[9px] font-bold text-slate-500/80">PTS</span>
+                                    </span>
+                                </div>
                                 @endforeach
-                            </div>
+                        </div>
                         @endif
                     </div>
                 </div>
@@ -352,9 +432,9 @@
         {{-- ─── FOOTER ─────────────────────────────────────── --}}
         <div class="slide-up-footer glass-footer relative z-10 flex items-center justify-between px-12 py-3.5 font-body text-[10px] font-bold text-slate-500 tracking-[0.4em] uppercase">
             <span>SYS_LOC // 0x58BF12</span>
-            <div class="h-px w-48 shrink-0 bg-gradient-to-r from-transparent via-emerald-400/20 to-transparent"></div>
+            <div class="h-px w-48 shrink-0 bg-linear-to-r from-transparent via-emerald-400/20 to-transparent"></div>
             <span class="text-emerald-400/60 font-black">Official Point System & Breakdown</span>
-            <div class="h-px w-48 shrink-0 bg-gradient-to-r from-transparent via-emerald-400/20 to-transparent"></div>
+            <div class="h-px w-48 shrink-0 bg-linear-to-r from-transparent via-emerald-400/20 to-transparent"></div>
             <span>SYS_VER_3.5.2</span>
         </div>
 

@@ -9,7 +9,6 @@ use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Page;
@@ -90,6 +89,13 @@ class EditTournamentSetting extends Page
                         ->label('Kill Points')
                         ->required()
                         ->default(0),
+                    TextInput::make('obs_password')
+                        ->label('OBS Panel Password')
+                        ->helperText('Set a password to protect the OBS Control Panel and Live Stats pages. Leave blank for open access.')
+                        ->password()
+                        ->revealable()
+                        ->nullable()
+                        ->maxLength(255),
                     Actions::make([
                         Action::make('populatePositions')
                             ->label('Auto-Populate Positions')
@@ -228,23 +234,23 @@ class EditTournamentSetting extends Page
                     Repeater::make('tournamentSettingPlacementPoints')
                         ->relationship()
                         ->columns(2)
-                        ->grid(2)
+                        ->grid(6)
                         ->label('Placement Points')
-                        ->table([
-                            TableColumn::make('Placement'),
-                            TableColumn::make('Points'),
-                        ])
                         ->schema([
                             TextInput::make('placement')
-                                ->label('Position')
+                                ->label('Pos')
                                 ->numeric()
                                 ->required(),
                             TextInput::make('points')
-                                ->label('Points')
+                                ->label('Pts')
                                 ->numeric()
                                 ->required()
                                 ->default(0),
-                        ]),
+                        ])
+                        ->reorderable(false)
+                        ->addActionLabel('Add Position')
+                        ->deleteAction(fn ($action) => $action->icon('heroicon-o-trash')->color('danger')),
+
                 ])
                     ->livewireSubmitHandler('save')
                     ->footer([

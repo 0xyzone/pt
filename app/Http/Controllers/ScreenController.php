@@ -201,7 +201,10 @@ class ScreenController extends Controller
             $teams = $activeMatch->tournament->tournamentTeams()->orderBy('name')->get();
         }
 
-        return view('screens.controlPanel', compact('user', 'timerState', 'bgType', 'customVideo', 'activeMatch', 'teams'));
+        $tournamentSetting = $activeMatch?->tournament?->tournamentSettings()->first();
+        $obsPassword = $tournamentSetting?->obs_password;
+
+        return view('screens.controlPanel', compact('user', 'timerState', 'bgType', 'customVideo', 'activeMatch', 'teams', 'obsPassword'));
     }
 
     public function statsControl(Request $request)
@@ -224,7 +227,9 @@ class ScreenController extends Controller
         $orderedTeams = $activeMatch->tournament->tournamentTeams()->orderBy('id')->get();
         $teamSlots = $orderedTeams->pluck('id')->flip()->map(fn($i) => $i + 2);
 
-        return view('screens.statsControl', compact('user', 'activeMatch', 'placementOptions', 'teamSlots'));
+        $obsPassword = $tournamentSetting?->obs_password;
+
+        return view('screens.statsControl', compact('user', 'activeMatch', 'placementOptions', 'teamSlots', 'obsPassword'));
     }
 
     public function updateMatchStat(Request $request)

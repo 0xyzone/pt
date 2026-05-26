@@ -10,6 +10,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TournamentSetting extends Model
 {
+    protected $fillable = [
+        'tournament_id',
+        'kill_points',
+        'obs_password',
+    ];
+
     /**
      * Get the tournament that owns the TournamentSetting
      *

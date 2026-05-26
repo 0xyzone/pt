@@ -12,23 +12,216 @@
             box-shadow: 0 0 15px rgba(250, 204, 21, 0.15);
             border-color: rgba(250, 204, 21, 0.2);
         }
+
         .neon-border-yellow:hover {
             box-shadow: 0 0 25px rgba(250, 204, 21, 0.35);
             border-color: rgba(250, 204, 21, 0.6);
         }
+
         @keyframes pulse-timer {
-            0%, 100% { opacity: 1; text-shadow: 0 0 10px rgba(250, 204, 21, 0.4); }
-            50% { opacity: 0.8; text-shadow: 0 0 20px rgba(250, 204, 21, 0.7); }
+
+            0%,
+            100% {
+                opacity: 1;
+                text-shadow: 0 0 10px rgba(250, 204, 21, 0.4);
+            }
+
+            50% {
+                opacity: 0.8;
+                text-shadow: 0 0 20px rgba(250, 204, 21, 0.7);
+            }
         }
+
         .pulse-timer {
             animation: pulse-timer 2s infinite ease-in-out;
         }
+
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-yellow-500 selection:text-black">
 
-    <div class="min-h-screen p-6 md:p-12 flex flex-col items-center w-full max-w-6xl mx-auto">
-        
+    @php $obsPassword = $obsPassword ?? null; @endphp
+    @if($obsPassword)
+    {{-- ============================================================ --}}
+    {{-- PASSWORD GATE OVERLAY                                        --}}
+    {{-- ============================================================ --}}
+    <div id="obs-auth-overlay" class="fixed inset-0 z-9999 flex items-center justify-center bg-slate-950/95 backdrop-blur-xl" style="display:flex!important">
+        <div class="relative flex flex-col items-center gap-6 w-full max-w-sm mx-4">
+
+            {{-- Animated glow ring --}}
+            <div class="absolute inset-0 rounded-3xl bg-yellow-500/5 blur-3xl pointer-events-none"></div>
+
+            {{-- Card --}}
+            <div class="relative w-full bg-slate-900/80 border border-slate-700/60 rounded-3xl p-8 shadow-2xl backdrop-blur-sm" id="auth-card">
+
+                {{-- Lock icon --}}
+                <div class="flex flex-col items-center mb-6">
+                    <div class="w-16 h-16 rounded-2xl bg-yellow-400/10 border border-yellow-400/20 flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 text-yellow-400" id="lock-icon">
+                            <path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <h2 class="text-xl font-black uppercase tracking-widest text-white">Director Access</h2>
+                    <p class="text-xs text-slate-400 font-medium mt-1 text-center uppercase tracking-wider">OBS Control Panel is password protected</p>
+                </div>
+
+                {{-- Input --}}
+                <div class="flex flex-col gap-3">
+                    <div class="relative">
+                        <input type="password" id="obs-password-input" placeholder="Enter password" autocomplete="current-password" class="w-full bg-slate-950 border border-slate-700 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 rounded-xl px-4 py-3 text-white font-bold text-sm placeholder-slate-500 outline-none transition-all pr-12" onkeydown="if(event.key==='Enter') submitObsPassword()">
+                        <button type="button" onclick="togglePwVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-yellow-400 transition-colors">
+                            <svg id="pw-eye-show" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <svg id="pw-eye-hide" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 hidden">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <p id="auth-error-msg" class="text-rose-400 text-xs font-bold uppercase tracking-wider text-center hidden">
+                        Incorrect password. Try again.
+                    </p>
+
+                    <button onclick="submitObsPassword()" class="w-full py-3 bg-yellow-400 hover:bg-yellow-300 text-black font-black uppercase tracking-widest text-sm rounded-xl transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-yellow-400/20">
+                        Unlock Console
+                    </button>
+                </div>
+            </div>
+
+            <p class="text-[10px] text-slate-600 uppercase tracking-widest font-bold">Session valid for 24 hours</p>
+        </div>
+    </div>
+
+    <style>
+        @keyframes auth-shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            15% {
+                transform: translateX(-8px);
+            }
+
+            30% {
+                transform: translateX(8px);
+            }
+
+            45% {
+                transform: translateX(-6px);
+            }
+
+            60% {
+                transform: translateX(6px);
+            }
+
+            75% {
+                transform: translateX(-3px);
+            }
+
+            90% {
+                transform: translateX(3px);
+            }
+        }
+
+        .auth-shake {
+            animation: auth-shake 0.5s ease;
+        }
+
+    </style>
+
+    <script>
+        (function() {
+            const STORAGE_KEY = 'obs_cp_auth_{{ $user->id }}';
+            const CORRECT_PW = @json($obsPassword);
+            const TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+            function isAuthenticated() {
+                try {
+                    const raw = localStorage.getItem(STORAGE_KEY);
+                    if (!raw) return false;
+                    const {
+                        password
+                        , timestamp
+                    } = JSON.parse(raw);
+                    return password === CORRECT_PW && (Date.now() - timestamp) < TTL_MS;
+                } catch {
+                    return false;
+                }
+            }
+
+            function hideOverlay() {
+                const overlay = document.getElementById('obs-auth-overlay');
+                if (overlay) {
+                    overlay.style.transition = 'opacity 0.4s ease';
+                    overlay.style.opacity = '0';
+                    setTimeout(() => overlay.remove(), 400);
+                }
+            }
+
+            // Check session immediately on load
+            if (isAuthenticated()) {
+                hideOverlay();
+            }
+
+            window.submitObsPassword = function() {
+                const input = document.getElementById('obs-password-input');
+                const entered = input.value;
+
+                if (entered === CORRECT_PW) {
+                    // Store session
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                        password: entered
+                        , timestamp: Date.now()
+                    }));
+                    // Unlock icon
+                    const lockIcon = document.getElementById('lock-icon');
+                    if (lockIcon) {
+                        lockIcon.innerHTML = '<path fill-rule="evenodd" d="M18 1.5c2.9 0 5.25 2.35 5.25 5.25v3.75a.75.75 0 01-1.5 0V6.75a3.75 3.75 0 10-7.5 0v3a3 3 0 013 3v6.75a3 3 0 01-3 3H3.75a3 3 0 01-3-3v-6.75a3 3 0 013-3h9v-3c0-2.9 2.35-5.25 5.25-5.25z" clip-rule="evenodd" />';
+                    }
+                    hideOverlay();
+                } else {
+                    // Wrong password
+                    const card = document.getElementById('auth-card');
+                    const errMsg = document.getElementById('auth-error-msg');
+                    const inputEl = document.getElementById('obs-password-input');
+
+                    errMsg.classList.remove('hidden');
+                    card.classList.remove('auth-shake');
+                    void card.offsetWidth; // reflow
+                    card.classList.add('auth-shake');
+                    inputEl.value = '';
+                    inputEl.focus();
+
+                    inputEl.classList.add('border-rose-500', 'focus:border-rose-500');
+                    setTimeout(() => inputEl.classList.remove('border-rose-500', 'focus:border-rose-500'), 1500);
+                }
+            };
+
+            window.togglePwVisibility = function() {
+                const input = document.getElementById('obs-password-input');
+                const showIcon = document.getElementById('pw-eye-show');
+                const hideIcon = document.getElementById('pw-eye-hide');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    showIcon.classList.add('hidden');
+                    hideIcon.classList.remove('hidden');
+                } else {
+                    input.type = 'password';
+                    showIcon.classList.remove('hidden');
+                    hideIcon.classList.add('hidden');
+                }
+            };
+        })();
+
+    </script>
+    @endif
+
+    <div class="min-h-screen p-6 md:p-12 flex flex-col items-center w-full max-w-7xl mx-auto">
+
         {{-- Header Section --}}
         <div class="text-center w-full mb-8">
             <h1 class="text-4xl md:text-5xl font-black italic tracking-tighter uppercase drop-shadow-md pb-2 text-transparent bg-clip-text bg-linear-to-r from-yellow-400 to-amber-500">
@@ -38,11 +231,11 @@
                 Active User Environment: <span class="text-yellow-400 font-extrabold">{{ $user->name }}</span>
             </p>
         </div>
-        
+
         @if(session('status'))
-            <div class="w-full bg-emerald-500/10 text-emerald-400 p-4 rounded-xl mb-8 border border-emerald-500/20 text-center font-bold tracking-wide shadow-[0_0_15px_rgba(16,185,129,0.15)] animate-pulse">
-                {{ session('status') }}
-            </div>
+        <div class="w-full bg-emerald-500/10 text-emerald-400 p-4 rounded-xl mb-8 border border-emerald-500/20 text-center font-bold tracking-wide shadow-[0_0_15px_rgba(16,185,129,0.15)] animate-pulse">
+            {{ session('status') }}
+        </div>
         @endif
 
         {{-- 7-Grid Quick Overlays Actions --}}
@@ -58,7 +251,7 @@
                     <span class="text-sm font-black uppercase tracking-widest text-center">Post Match</span>
                 </button>
             </form>
-            
+
             <!-- OVERALL RANKING BTN -->
             <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
                 @csrf
@@ -70,7 +263,7 @@
                     <span class="text-sm font-black uppercase tracking-widest text-center">Overall Rank</span>
                 </button>
             </form>
- 
+
             <!-- HEAD TO HEAD BTN -->
             <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
                 @csrf
@@ -82,7 +275,7 @@
                     <span class="text-sm font-black uppercase tracking-widest text-center">Head To Head</span>
                 </button>
             </form>
- 
+
             <!-- TOP 5 FRAGGERS BTN -->
             <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
                 @csrf
@@ -95,7 +288,7 @@
                     <span class="text-sm font-black uppercase tracking-widest text-center">Top Fraggers</span>
                 </button>
             </form>
- 
+
             <!-- MAP POOL BTN -->
             <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
                 @csrf
@@ -119,7 +312,7 @@
                     <span class="text-sm font-black uppercase tracking-widest text-center">Point System</span>
                 </button>
             </form>
- 
+
             <!-- EMPTY SCREEN BTN -->
             <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
                 @csrf
@@ -171,14 +364,14 @@
             </h2>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
-                
+
                 {{-- Left: Live Timer Display & Visibility State --}}
                 <div class="flex flex-col items-center justify-center bg-slate-950 rounded-2xl border border-slate-850 p-6 shadow-inner relative overflow-hidden group">
                     <div class="absolute top-2 right-3 text-[9px] uppercase tracking-widest font-black" id="visibility-status-badge">
                         @if($timerState['visible'])
-                            <span class="text-emerald-400">VISIBLE ON OVERLAYS</span>
+                        <span class="text-emerald-400">VISIBLE ON OVERLAYS</span>
                         @else
-                            <span class="text-rose-500">HIDDEN ON OVERLAYS</span>
+                        <span class="text-rose-500">HIDDEN ON OVERLAYS</span>
                         @endif
                     </div>
                     <span class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-1">Director View Clock</span>
@@ -197,27 +390,24 @@
                         <div class="flex gap-2 items-center">
                             <div class="flex flex-col w-16">
                                 <span class="text-[8px] text-slate-500 font-bold uppercase mb-1">Hours</span>
-                                <input type="number" id="timer-hours-input" min="0" max="23" value="{{ floor($timerState['duration'] / 3600) }}" 
-                                    class="bg-slate-950 border border-slate-800 rounded-xl px-2 py-2.5 text-white font-mono font-black text-center focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 w-full">
+                                <input type="number" id="timer-hours-input" min="0" max="23" value="{{ floor($timerState['duration'] / 3600) }}" class="bg-slate-950 border border-slate-800 rounded-xl px-2 py-2.5 text-white font-mono font-black text-center focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 w-full">
                             </div>
                             <div class="text-slate-600 font-black pt-4">:</div>
                             <div class="flex flex-col w-16">
                                 <span class="text-[8px] text-slate-500 font-bold uppercase mb-1">Minutes</span>
-                                <input type="number" id="timer-minutes-input" min="0" max="59" value="{{ floor(($timerState['duration'] % 3600) / 60) }}" 
-                                    class="bg-slate-950 border border-slate-800 rounded-xl px-2 py-2.5 text-white font-mono font-black text-center focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 w-full">
+                                <input type="number" id="timer-minutes-input" min="0" max="59" value="{{ floor(($timerState['duration'] % 3600) / 60) }}" class="bg-slate-950 border border-slate-800 rounded-xl px-2 py-2.5 text-white font-mono font-black text-center focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 w-full">
                             </div>
                             <div class="text-slate-600 font-black pt-4">:</div>
                             <div class="flex flex-col w-16">
                                 <span class="text-[8px] text-slate-500 font-bold uppercase mb-1">Seconds</span>
-                                <input type="number" id="timer-seconds-input" min="0" max="59" value="{{ $timerState['duration'] % 60 }}" 
-                                    class="bg-slate-950 border border-slate-800 rounded-xl px-2 py-2.5 text-white font-mono font-black text-center focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 w-full">
+                                <input type="number" id="timer-seconds-input" min="0" max="59" value="{{ $timerState['duration'] % 60 }}" class="bg-slate-950 border border-slate-800 rounded-xl px-2 py-2.5 text-white font-mono font-black text-center focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 w-full">
                             </div>
                             <button onclick="setTimerDuration()" class="self-end bg-yellow-400 hover:bg-yellow-500 text-black font-black uppercase tracking-wider px-4 py-2.5 rounded-xl transition-all hover:scale-[1.02] text-xs shrink-0 active:scale-95 shadow-md">
                                 Apply
                             </button>
                         </div>
                     </div>
-                    
+
                     {{-- Toggle timer visibility --}}
                     <div class="grid grid-cols-2 gap-3 mt-1">
                         <button onclick="toggleTimerVisibility(1)" id="btn-show-timer" class="py-2.5 bg-emerald-950/20 border border-emerald-500/30 hover:border-emerald-500 text-emerald-400 font-bold uppercase text-xs tracking-wider rounded-xl transition-all hover:scale-[1.01] active:scale-95">
@@ -237,7 +427,7 @@
                         </svg>
                         Start Countdown
                     </button>
-                    
+
                     <div class="grid grid-cols-2 gap-4">
                         <button onclick="triggerTimerAction('pause')" class="py-3 bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/30 hover:border-orange-500 text-orange-400 font-black uppercase text-xs tracking-widest rounded-xl transition-all hover:scale-[1.01] active:scale-95 flex items-center justify-center gap-1.5">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5">
@@ -265,7 +455,7 @@
                 </svg>
                 Intermission Background Type (Starting & Ending Screens)
             </h2>
-            
+
             <div class="flex flex-col gap-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                     <div class="text-slate-400 text-sm">
@@ -276,19 +466,15 @@
                     </div>
 
                     <div class="grid grid-cols-3 gap-3">
-                        <button onclick="updateBackgroundType('transparent')" id="btn-bg-transparent" 
-                            class="py-3 px-2 rounded-xl font-black uppercase text-[10px] tracking-wider transition-all active:scale-95 shadow-md flex flex-col items-center justify-center gap-1.5 border {{ $bgType === 'transparent' ? 'bg-yellow-400 border-yellow-500 text-black font-black' : 'bg-slate-950/60 border-slate-850 hover:border-yellow-500 text-yellow-500' }}">
+                        <button onclick="updateBackgroundType('transparent')" id="btn-bg-transparent" class="py-3 px-2 rounded-xl font-black uppercase text-[10px] tracking-wider transition-all active:scale-95 shadow-md flex flex-col items-center justify-center gap-1.5 border {{ $bgType === 'transparent' ? 'bg-yellow-400 border-yellow-500 text-black font-black' : 'bg-slate-950/60 border-slate-850 hover:border-yellow-500 text-yellow-500' }}">
                             <span>Transparent</span>
                             <span class="text-[8px] opacity-75 font-semibold">(OBS Layers)</span>
                         </button>
-                        <button onclick="updateBackgroundType('animated')" id="btn-bg-animated" 
-                            class="py-3 px-2 rounded-xl font-black uppercase text-[10px] tracking-wider transition-all active:scale-95 shadow-md flex flex-col items-center justify-center gap-1.5 border {{ $bgType === 'animated' ? 'bg-yellow-400 border-yellow-500 text-black font-black' : 'bg-slate-950/60 border-slate-850 hover:border-yellow-500 text-yellow-500' }}">
+                        <button onclick="updateBackgroundType('animated')" id="btn-bg-animated" class="py-3 px-2 rounded-xl font-black uppercase text-[10px] tracking-wider transition-all active:scale-95 shadow-md flex flex-col items-center justify-center gap-1.5 border {{ $bgType === 'animated' ? 'bg-yellow-400 border-yellow-500 text-black font-black' : 'bg-slate-950/60 border-slate-850 hover:border-yellow-500 text-yellow-500' }}">
                             <span>Cyber Theme</span>
                             <span class="text-[8px] opacity-75 font-semibold">(Built-in)</span>
                         </button>
-                        <button onclick="updateBackgroundType('custom')" id="btn-bg-custom" 
-                            @if(!$customVideo) disabled title="Please upload a custom video first" @endif
-                            class="py-3 px-2 rounded-xl font-black uppercase text-[10px] tracking-wider transition-all active:scale-95 shadow-md flex flex-col items-center justify-center gap-1.5 border {{ $bgType === 'custom' ? 'bg-yellow-400 border-yellow-500 text-black font-black' : ($customVideo ? 'bg-slate-950/60 border-slate-850 hover:border-yellow-500 text-yellow-500' : 'bg-slate-950/20 border-slate-900 text-slate-600 cursor-not-allowed') }}">
+                        <button onclick="updateBackgroundType('custom')" id="btn-bg-custom" @if(!$customVideo) disabled title="Please upload a custom video first" @endif class="py-3 px-2 rounded-xl font-black uppercase text-[10px] tracking-wider transition-all active:scale-95 shadow-md flex flex-col items-center justify-center gap-1.5 border {{ $bgType === 'custom' ? 'bg-yellow-400 border-yellow-500 text-black font-black' : ($customVideo ? 'bg-slate-950/60 border-slate-850 hover:border-yellow-500 text-yellow-500' : 'bg-slate-950/20 border-slate-900 text-slate-600 cursor-not-allowed') }}">
                             <span>Custom Video</span>
                             <span class="text-[8px] opacity-75 font-semibold">(Uploaded)</span>
                         </button>
@@ -305,61 +491,61 @@
                     </h3>
 
                     @if($customVideo)
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center bg-slate-950/40 p-4 rounded-xl border border-slate-800">
-                            <div class="flex items-center gap-4">
-                                <div class="w-32 h-20 bg-slate-900 rounded-lg overflow-hidden border border-slate-800 relative flex items-center justify-center shrink-0">
-                                    <video autoplay loop muted playsinline class="w-full h-full object-cover">
-                                        <source src="{{ asset('storage/' . $customVideo) }}" type="video/mp4">
-                                    </video>
-                                </div>
-                                <div class="flex flex-col overflow-hidden">
-                                    <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">Active Background Video</span>
-                                    <span class="text-sm font-semibold text-slate-200 truncate mt-1">{{ basename($customVideo) }}</span>
-                                    <span class="text-[10px] text-emerald-400 font-black uppercase mt-1 tracking-wider">Ready for Broadcast</span>
-                                </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center bg-slate-950/40 p-4 rounded-xl border border-slate-800">
+                        <div class="flex items-center gap-4">
+                            <div class="w-32 h-20 bg-slate-900 rounded-lg overflow-hidden border border-slate-800 relative flex items-center justify-center shrink-0">
+                                <video autoplay loop muted playsinline class="w-full h-full object-cover">
+                                    <source src="{{ asset('storage/' . $customVideo) }}" type="video/mp4">
+                                </video>
                             </div>
-                            <div class="flex flex-col sm:flex-row justify-end gap-3">
-                                {{-- Replace video triggers standard file upload --}}
-                                <form action="{{ route('screens.uploadvideo', ['user_id' => $user->id]) }}" method="POST" enctype="multipart/form-data" class="flex items-center gap-2">
-                                    @csrf
-                                    <label class="px-4 py-2.5 bg-slate-900 hover:bg-slate-850 text-slate-300 border border-slate-800 hover:border-slate-700 rounded-lg text-xs uppercase font-bold tracking-wider cursor-pointer transition-all active:scale-95 flex items-center gap-1.5 w-full sm:w-auto justify-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-                                        </svg>
-                                        Replace Video
-                                        <input type="file" name="video" accept="video/mp4,video/webm,video/quicktime" class="hidden" onchange="this.form.submit()">
-                                    </label>
-                                </form>
-
-                                <form action="{{ route('screens.deletevideo', ['user_id' => $user->id]) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="w-full sm:w-auto px-4 py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 hover:border-rose-400 rounded-lg text-xs uppercase font-bold tracking-wider transition-all active:scale-95 flex items-center justify-center gap-1.5">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                        </svg>
-                                        Delete Video
-                                    </button>
-                                </form>
+                            <div class="flex flex-col overflow-hidden">
+                                <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">Active Background Video</span>
+                                <span class="text-sm font-semibold text-slate-200 truncate mt-1">{{ basename($customVideo) }}</span>
+                                <span class="text-[10px] text-emerald-400 font-black uppercase mt-1 tracking-wider">Ready for Broadcast</span>
                             </div>
                         </div>
+                        <div class="flex flex-col sm:flex-row justify-end gap-3">
+                            {{-- Replace video triggers standard file upload --}}
+                            <form action="{{ route('screens.uploadvideo', ['user_id' => $user->id]) }}" method="POST" enctype="multipart/form-data" class="flex items-center gap-2">
+                                @csrf
+                                <label class="px-4 py-2.5 bg-slate-900 hover:bg-slate-850 text-slate-300 border border-slate-800 hover:border-slate-700 rounded-lg text-xs uppercase font-bold tracking-wider cursor-pointer transition-all active:scale-95 flex items-center gap-1.5 w-full sm:w-auto justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                    </svg>
+                                    Replace Video
+                                    <input type="file" name="video" accept="video/mp4,video/webm,video/quicktime" class="hidden" onchange="this.form.submit()">
+                                </label>
+                            </form>
+
+                            <form action="{{ route('screens.deletevideo', ['user_id' => $user->id]) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="w-full sm:w-auto px-4 py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 hover:border-rose-400 rounded-lg text-xs uppercase font-bold tracking-wider transition-all active:scale-95 flex items-center justify-center gap-1.5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                    </svg>
+                                    Delete Video
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                     @else
-                        <form action="{{ route('screens.uploadvideo', ['user_id' => $user->id]) }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            <div class="flex flex-col items-center justify-center border-2 border-dashed border-slate-800 hover:border-slate-700 bg-slate-950/20 rounded-xl p-8 transition-colors text-center relative group">
-                                <input type="file" name="video" accept="video/mp4,video/webm,video/quicktime" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="this.form.submit()">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-slate-500 group-hover:text-yellow-400 transition-colors mb-3">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
-                                </svg>
-                                <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Drag & drop or click to upload video</span>
-                                <span class="text-[10px] text-slate-500 mt-1 uppercase">Supports MP4, WebM, MOV (Max 50MB)</span>
-                            </div>
-                        </form>
+                    <form action="{{ route('screens.uploadvideo', ['user_id' => $user->id]) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="flex flex-col items-center justify-center border-2 border-dashed border-slate-800 hover:border-slate-700 bg-slate-950/20 rounded-xl p-8 transition-colors text-center relative group">
+                            <input type="file" name="video" accept="video/mp4,video/webm,video/quicktime" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="this.form.submit()">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-slate-500 group-hover:text-yellow-400 transition-colors mb-3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+                            </svg>
+                            <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Drag & drop or click to upload video</span>
+                            <span class="text-[10px] text-slate-500 mt-1 uppercase">Supports MP4, WebM, MOV (Max 50MB)</span>
+                        </div>
+                    </form>
                     @endif
 
                     @error('video')
-                        <div class="text-rose-500 text-xs font-bold mt-2 uppercase tracking-wide">
-                            {{ $message }}
-                        </div>
+                    <div class="text-rose-500 text-xs font-bold mt-2 uppercase tracking-wide">
+                        {{ $message }}
+                    </div>
                     @enderror
                 </div>
             </div>
@@ -379,10 +565,9 @@
         </div>
 
         {{-- LIVE STATS CONTROL LINK --}}
-        <a href="{{ route('screens.statscontrol', ['user_id' => $user->id]) }}" 
-           class="w-full py-5 flex items-center justify-center gap-3 bg-amber-950/20 hover:bg-amber-950/40 border border-amber-500/30 hover:border-amber-500 rounded-2xl text-amber-400 transition-all font-black uppercase tracking-widest active:scale-[0.99] text-base shadow-md">
+        <a href="{{ route('screens.statscontrol', ['user_id' => $user->id]) }}" class="w-full py-5 flex items-center justify-center gap-3 bg-amber-950/20 hover:bg-amber-950/40 border border-amber-500/30 hover:border-amber-500 rounded-2xl text-amber-400 transition-all font-black uppercase tracking-widest active:scale-[0.99] text-base shadow-md">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
             </svg>
             Open Live Stats Control Panel
         </a>
@@ -399,12 +584,13 @@
                     <div class="flex items-center gap-2">
                         <a href="{{ route('screens.upcomingmatches', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 hover:border-yellow-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-yellow-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
                         <button type="button" onclick="copyObsLink('{{ route('screens.upcomingmatches', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
                             <span>Copy OBS Link</span>
                         </button>
                     </div>
                 </li>
-                
+
                 <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-950 p-3 rounded-xl border border-slate-850">
                     <div>
                         <strong class="text-yellow-400 uppercase text-xs tracking-wider">2. Starting Soon Screen:</strong>
@@ -413,7 +599,8 @@
                     <div class="flex items-center gap-2">
                         <a href="{{ route('screens.startingsoon', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 hover:border-yellow-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-yellow-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
                         <button type="button" onclick="copyObsLink('{{ route('screens.startingsoon', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
                             <span>Copy OBS Link</span>
                         </button>
                     </div>
@@ -427,7 +614,8 @@
                     <div class="flex items-center gap-2">
                         <a href="{{ route('screens.ending', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:border-amber-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-amber-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
                         <button type="button" onclick="copyObsLink('{{ route('screens.ending', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
                             <span>Copy OBS Link</span>
                         </button>
                     </div>
@@ -441,7 +629,8 @@
                     <div class="flex items-center gap-2">
                         <a href="{{ route('screens.obsmaster', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-orange-500/10 text-orange-400 border border-orange-500/30 hover:border-orange-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-orange-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
                         <button type="button" onclick="copyObsLink('{{ route('screens.obsmaster', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
                             <span>Copy OBS Link</span>
                         </button>
                     </div>
@@ -455,7 +644,8 @@
                     <div class="flex items-center gap-2">
                         <a href="{{ route('screens.activematch', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:border-emerald-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-emerald-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
                         <button type="button" onclick="copyObsLink('{{ route('screens.activematch', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
                             <span>Copy OBS Link</span>
                         </button>
                     </div>
@@ -469,7 +659,8 @@
                     <div class="flex items-center gap-2">
                         <a href="{{ route('screens.mapscreen', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-blue-500/10 text-blue-400 border border-blue-500/30 hover:border-blue-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-blue-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
                         <button type="button" onclick="copyObsLink('{{ route('screens.mapscreen', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
                             <span>Copy OBS Link</span>
                         </button>
                     </div>
@@ -483,7 +674,8 @@
                     <div class="flex items-center gap-2">
                         <a href="{{ route('screens.castersscreen', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 hover:border-yellow-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-yellow-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
                         <button type="button" onclick="copyObsLink('{{ route('screens.castersscreen', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
                             <span>Copy OBS Link</span>
                         </button>
                     </div>
@@ -497,7 +689,8 @@
                     <div class="flex items-center gap-2">
                         <a href="{{ route('screens.headtohead', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-orange-500/10 text-orange-400 border border-orange-500/30 hover:border-orange-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-orange-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
                         <button type="button" onclick="copyObsLink('{{ route('screens.headtohead', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
                             <span>Copy OBS Link</span>
                         </button>
                     </div>
@@ -511,7 +704,8 @@
                     <div class="flex items-center gap-2">
                         <a href="{{ route('screens.topfraggers', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-purple-500/10 text-purple-400 border border-purple-500/30 hover:border-purple-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-purple-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
                         <button type="button" onclick="copyObsLink('{{ route('screens.topfraggers', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
                             <span>Copy OBS Link</span>
                         </button>
                     </div>
@@ -525,7 +719,8 @@
                     <div class="flex items-center gap-2">
                         <a href="{{ route('screens.postmatch', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:border-emerald-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-emerald-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
                         <button type="button" onclick="copyObsLink('{{ route('screens.postmatch', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
                             <span>Copy OBS Link</span>
                         </button>
                     </div>
@@ -539,7 +734,8 @@
                     <div class="flex items-center gap-2">
                         <a href="{{ route('screens.overallranking', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-blue-500/10 text-blue-400 border border-blue-500/30 hover:border-blue-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-blue-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
                         <button type="button" onclick="copyObsLink('{{ route('screens.overallranking', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
                             <span>Copy OBS Link</span>
                         </button>
                     </div>
@@ -553,7 +749,8 @@
                     <div class="flex items-center gap-2">
                         <a href="{{ route('screens.slotlist', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 hover:border-indigo-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-indigo-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
                         <button type="button" onclick="copyObsLink('{{ route('screens.slotlist', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
                             <span>Copy OBS Link</span>
                         </button>
                     </div>
@@ -567,7 +764,8 @@
                     <div class="flex items-center gap-2">
                         <a href="{{ route('screens.mappool', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:border-emerald-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-emerald-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
                         <button type="button" onclick="copyObsLink('{{ route('screens.mappool', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
                             <span>Copy OBS Link</span>
                         </button>
                     </div>
@@ -581,7 +779,8 @@
                     <div class="flex items-center gap-2">
                         <a href="{{ route('screens.pointsystem', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:border-emerald-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-emerald-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
                         <button type="button" onclick="copyObsLink('{{ route('screens.pointsystem', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
                             <span>Copy OBS Link</span>
                         </button>
                     </div>
@@ -621,21 +820,21 @@
             doCopy().then(() => {
                 const textSpan = button.querySelector('span');
                 const svgNode = button.querySelector('svg');
-                
+
                 const originalText = textSpan.innerText;
                 const originalSvg = svgNode.innerHTML;
-                
+
                 // Success feedback
                 textSpan.innerText = 'Copied!';
                 svgNode.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />';
-                
+
                 button.classList.remove('bg-slate-800', 'text-slate-300', 'border-slate-700/60');
                 button.classList.add('bg-emerald-600', 'text-white', 'border-transparent');
-                
+
                 setTimeout(() => {
                     textSpan.innerText = originalText;
                     svgNode.innerHTML = originalSvg;
-                    
+
                     button.classList.add('bg-slate-800', 'text-slate-300', 'border-slate-700/60');
                     button.classList.remove('bg-emerald-600', 'text-white', 'border-transparent');
                 }, 1500);
@@ -664,27 +863,27 @@
             tooltip.style.transition = 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
             tooltip.style.opacity = '0';
             tooltip.style.transform = 'translateY(8px)';
-            
+
             document.body.appendChild(tooltip);
-            
+
             // Calculate element position in viewport
             const rect = element.getBoundingClientRect();
             const tipRect = tooltip.getBoundingClientRect();
-            
+
             // Position centered above the element
             const x = rect.left + (rect.width / 2) - (tipRect.width / 2);
             const y = rect.top - tipRect.height - 8;
 
             tooltip.style.left = x + 'px';
             tooltip.style.top = y + 'px';
-            
+
             // Force reflow
             tooltip.offsetHeight;
-            
+
             // Animate in
             tooltip.style.opacity = '1';
             tooltip.style.transform = 'translateY(0)';
-            
+
             // Fade out and remove
             setTimeout(() => {
                 tooltip.style.opacity = '0';
@@ -696,6 +895,7 @@
                 }, 400);
             }, 1000);
         }
+
     </script>
 
     <script type="module">

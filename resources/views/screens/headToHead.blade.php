@@ -37,45 +37,89 @@
            ══════════════════════════════════════════════════════ */
 
         @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-50px); }
-            to   { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         .slide-down {
             animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
             will-change: transform, opacity;
         }
 
         @keyframes slideLeft {
-            from { opacity: 0; transform: translateX(-80px) scale(0.95); filter: blur(10px); }
-            to   { opacity: 1; transform: translateX(0) scale(1); filter: blur(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-80px) scale(0.95);
+                filter: blur(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+                filter: blur(0);
+            }
         }
+
         .slide-left {
             animation: slideLeft 1s cubic-bezier(0.16, 1, 0.3, 1) both;
             will-change: transform, opacity;
         }
 
         @keyframes slideRight {
-            from { opacity: 0; transform: translateX(80px) scale(0.95); filter: blur(10px); }
-            to   { opacity: 1; transform: translateX(0) scale(1); filter: blur(0); }
+            from {
+                opacity: 0;
+                transform: translateX(80px) scale(0.95);
+                filter: blur(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+                filter: blur(0);
+            }
         }
+
         .slide-right {
             animation: slideRight 1s cubic-bezier(0.16, 1, 0.3, 1) both;
             will-change: transform, opacity;
         }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(50px); }
-            to   { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         .slide-up {
             animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
             will-change: transform, opacity;
         }
 
         @keyframes slideUpFooter {
-            from { opacity: 0; transform: translateY(20px); }
-            to   { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         .slide-up-footer {
             animation: slideUpFooter 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
             animation-delay: 0.9s;
@@ -88,6 +132,7 @@
                 transform: scale(0.6) rotate(-15deg);
                 filter: brightness(2) blur(8px);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1) rotate(0deg);
@@ -113,8 +158,13 @@
         }
 
         @keyframes scanline {
-            from { transform: translateY(-100%); }
-            to { transform: translateY(200%); }
+            from {
+                transform: translateY(-100%);
+            }
+
+            to {
+                transform: translateY(200%);
+            }
         }
 
         .scan-sweep {
@@ -127,8 +177,13 @@
         }
 
         @keyframes gridScroll {
-            from { background-position: 0 0; }
-            to { background-position: 0 40px; }
+            from {
+                background-position: 0 0;
+            }
+
+            to {
+                background-position: 0 40px;
+            }
         }
 
         .grid-bg {
@@ -144,8 +199,17 @@
         }
 
         @keyframes orbFloat {
-            0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
-            50% { transform: translateY(-20px) scale(1.08); opacity: 0.5; }
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: translateY(-20px) scale(1.08);
+                opacity: 0.5;
+            }
         }
 
         .orb {
@@ -158,8 +222,17 @@
 
         /* Center VS neon indicator pulsing */
         @keyframes versusPulse {
-            0%, 100% { text-shadow: 0 0 10px rgba(16, 185, 129, 0.85), 0 0 20px rgba(16, 185, 129, 0.45); filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.2)); }
-            50% { text-shadow: 0 0 25px rgba(16, 185, 129, 1), 0 0 40px rgba(16, 185, 129, 0.6); filter: drop-shadow(0 0 12px rgba(16, 185, 129, 0.5)); }
+
+            0%,
+            100% {
+                text-shadow: 0 0 10px rgba(16, 185, 129, 0.85), 0 0 20px rgba(16, 185, 129, 0.45);
+                filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.2));
+            }
+
+            50% {
+                text-shadow: 0 0 25px rgba(16, 185, 129, 1), 0 0 40px rgba(16, 185, 129, 0.6);
+                filter: drop-shadow(0 0 12px rgba(16, 185, 129, 0.5));
+            }
         }
 
         .versus-glow {
@@ -168,9 +241,19 @@
         }
 
         @keyframes slideUpCapsule {
-            from { opacity: 0; transform: translateY(50px) scale(0.95); filter: blur(8px); }
-            to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.95);
+                filter: blur(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
         }
+
         .slide-up-capsule {
             animation: slideUpCapsule 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
             will-change: transform, opacity;
@@ -189,16 +272,22 @@
 
         .bg-grid-tiny {
             background-size: 8px 8px;
-            background-image: 
+            background-image:
                 linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
         }
 
         /* Ambient rotating tech graphics */
         @keyframes rotateClockwise {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
+
         .rotate-cw {
             animation: rotateClockwise 35s linear infinite;
         }
@@ -233,29 +322,31 @@
 
         .team-card-cyber.cyan-theme {
             border: 1px solid rgba(6, 182, 212, 0.25);
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.85), 
-                        0 0 40px rgba(6, 182, 212, 0.05),
-                        inset 0 1px 0 rgba(6, 182, 212, 0.1);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.85),
+                0 0 40px rgba(6, 182, 212, 0.05),
+                inset 0 1px 0 rgba(6, 182, 212, 0.1);
         }
+
         .team-card-cyber.cyan-theme:hover {
             border-color: rgba(6, 182, 212, 0.6);
-            box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.95), 
-                        0 0 50px rgba(6, 182, 212, 0.2),
-                        inset 0 1px 0 rgba(6, 182, 212, 0.2);
+            box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.95),
+                0 0 50px rgba(6, 182, 212, 0.2),
+                inset 0 1px 0 rgba(6, 182, 212, 0.2);
             transform: translateY(-5px) scale(1.01);
         }
 
         .team-card-cyber.amber-theme {
             border: 1px solid rgba(250, 204, 21, 0.2);
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.85), 
-                        0 0 40px rgba(250, 204, 21, 0.04),
-                        inset 0 1px 0 rgba(250, 204, 21, 0.08);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.85),
+                0 0 40px rgba(250, 204, 21, 0.04),
+                inset 0 1px 0 rgba(250, 204, 21, 0.08);
         }
+
         .team-card-cyber.amber-theme:hover {
             border-color: rgba(250, 204, 21, 0.5);
-            box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.95), 
-                        0 0 50px rgba(250, 204, 21, 0.15),
-                        inset 0 1px 0 rgba(250, 204, 21, 0.15);
+            box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.95),
+                0 0 50px rgba(250, 204, 21, 0.15),
+                inset 0 1px 0 rgba(250, 204, 21, 0.15);
             transform: translateY(-5px) scale(1.01);
         }
 
@@ -263,10 +354,22 @@
            LASER SCANNER EFFECT
            ══════════════════════════════════════════════════════ */
         @keyframes sweepVertical {
-            0% { transform: translateY(-100%); opacity: 0; }
-            10%, 90% { opacity: 0.6; }
-            100% { transform: translateY(220%); opacity: 0; }
+            0% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+
+            10%,
+            90% {
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: translateY(220%);
+                opacity: 0;
+            }
         }
+
         .laser-sweep {
             position: absolute;
             left: 0;
@@ -276,10 +379,12 @@
             z-index: 2;
             animation: sweepVertical 6.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
         }
+
         .laser-cyan {
             background: linear-gradient(to right, transparent, rgba(6, 182, 212, 0.8), transparent);
             box-shadow: 0 0 12px rgba(6, 182, 212, 0.8), 0 0 4px rgba(6, 182, 212, 0.5);
         }
+
         .laser-amber {
             background: linear-gradient(to right, transparent, rgba(250, 204, 21, 0.8), transparent);
             box-shadow: 0 0 12px rgba(250, 204, 21, 0.8), 0 0 4px rgba(250, 204, 21, 0.5);
@@ -290,17 +395,30 @@
            DYNAMIC GROWING PROGRESS BARS
            ══════════════════════════════════════════════════════ */
         @keyframes fillBarLeft {
-            from { width: 0%; }
-            to { width: var(--fill-width-left); }
+            from {
+                width: 0%;
+            }
+
+            to {
+                width: var(--fill-width-left);
+            }
         }
+
         @keyframes fillBarRight {
-            from { width: 0%; }
-            to { width: var(--fill-width-right); }
+            from {
+                width: 0%;
+            }
+
+            to {
+                width: var(--fill-width-right);
+            }
         }
+
         .fill-bar-left {
             width: 0%;
             animation: fillBarLeft 1.5s cubic-bezier(0.075, 0.82, 0.165, 1) both;
         }
+
         .fill-bar-right {
             width: 0%;
             animation: fillBarRight 1.5s cubic-bezier(0.075, 0.82, 0.165, 1) both;
@@ -308,23 +426,33 @@
 
         /* Glitch animations */
         @keyframes techBlink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
         }
+
         .tech-blink {
             animation: techBlink 1.5s ease-in-out infinite;
         }
 
         .stat-card-glow-cyan {
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.05),
-                        0 0 20px rgba(6, 182, 212, 0.06);
+                inset 0 1px 0 rgba(255, 255, 255, 0.05),
+                0 0 20px rgba(6, 182, 212, 0.06);
         }
+
         .stat-card-glow-amber {
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.05),
-                        0 0 20px rgba(250, 204, 21, 0.06);
+                inset 0 1px 0 rgba(255, 255, 255, 0.05),
+                0 0 20px rgba(250, 204, 21, 0.06);
         }
+
     </style>
 
     {{-- Main screen wrapper — id used for live bg switching --}}
@@ -333,7 +461,7 @@
         {{-- ─── TACTICAL SPLIT-SCREEN BACKGROUND PANELS ────────── --}}
         {{-- Left Blue/Cyan Arena --}}
         <div id="split-bg-left" class="absolute inset-0 w-full h-full split-bg-left z-0 transition-all duration-300 {{ $bgType === 'transparent' ? 'hidden' : '' }}"></div>
-        
+
         {{-- Right Gold/Amber Arena (Diagonally Clipped) --}}
         <div id="split-bg-right" class="absolute inset-0 left-[45%] w-[55%] h-full split-bg-right z-0 transition-all duration-300 {{ $bgType === 'transparent' ? 'hidden' : '' }}" style="clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%); border-left: 2.5px solid rgba(250, 204, 21, 0.25);"></div>
 
@@ -342,7 +470,7 @@
         <div class="orb z-1" style="width:550px;height:550px;background:rgba(250,204,21,0.05);bottom:15%;right:5%;"></div>
 
         {{-- Counter-rotating center HUD scopes --}}
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] opacity-10 pointer-events-none z-0">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 opacity-10 pointer-events-none z-0">
             <svg class="w-full h-full text-emerald-500/40 rotate-cw" viewBox="0 0 100 100" style="animation-duration: 45s;">
                 <circle cx="50" cy="50" r="48" stroke="currentColor" stroke-width="0.3" stroke-dasharray="1 3" fill="none" />
                 <circle cx="50" cy="50" r="40" stroke="currentColor" stroke-width="0.5" stroke-dasharray="8 4" fill="none" />
@@ -350,7 +478,7 @@
                 <path d="M 50 2 L 50 12 M 50 88 L 50 98 M 2 50 L 12 50 M 88 50 L 98 50" stroke="currentColor" stroke-width="0.8" />
             </svg>
         </div>
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] opacity-5 pointer-events-none z-0">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-130 h-130 opacity-5 pointer-events-none z-0">
             <svg class="w-full h-full text-cyan-500/30" viewBox="0 0 100 100" style="animation: rotateClockwise 28s linear infinite reverse;">
                 <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="0.4" stroke-dasharray="15 5" fill="none" />
                 <circle cx="50" cy="50" r="35" stroke="currentColor" stroke-width="0.3" stroke-dasharray="2 10" fill="none" />
@@ -402,7 +530,7 @@
             {{-- ── LEFT FOREGROUND COLUMN: TEAM A (slides from left) ── --}}
             <div class="slide-left team-card-cyber cyan-theme rounded-3xl p-8 flex flex-col items-center justify-center z-10 w-96 ml-[4%] relative" style="animation-delay:0.05s;">
                 <div class="laser-sweep laser-cyan"></div>
-                
+
                 {{-- Corner tech elements --}}
                 <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-cyan-400 rounded-tl-3xl opacity-70"></div>
                 <div class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-cyan-400 rounded-br-3xl opacity-70"></div>
@@ -422,12 +550,12 @@
                 <div class="relative w-40 h-40 flex items-center justify-center p-3 rounded-2xl bg-slate-900/60 border border-cyan-500/20 shadow-[0_0_30px_rgba(6,182,212,0.1)] z-10">
                     <img src="{{ $stat1 && $stat1->tournamentTeam->logo_image ? asset('storage/'.$stat1->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" onerror="this.src='{{ asset('img/defult_team_logo.png') }}';" class="w-32 h-32 object-contain logo-reveal filter drop-shadow-[0_8px_16px_rgba(6,182,212,0.35)]">
                 </div>
-                
+
                 {{-- Team nameplate --}}
                 <h2 class="text-4xl font-black uppercase text-center text-white leading-none tracking-wide text-glow-cyan font-esports max-w-full truncate mt-6 relative z-10">
                     {{ $stat1 ? $stat1->tournamentTeam->name : 'TEAM ALPHA' }}
                 </h2>
-                
+
                 <span class="text-cyan-400 font-black uppercase tracking-[0.25em] text-xs mt-3 bg-cyan-950/70 border border-cyan-500/30 rounded-full px-5 py-1.5 shadow-inner leading-none relative z-10">
                     {{ $stat1 ? $stat1->tournamentTeam->short_name : 'T_A' }}
                 </span>
@@ -453,8 +581,8 @@
             </div>
 
             {{-- ── CENTER COLUMN: FLOATING TACTICAL HUD TOWER ── --}}
-            <div class="w-144 flex flex-col gap-4.5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
-                
+            <div class="w-xl flex flex-col gap-4.5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+
                 {{-- Holographic green versus active badge --}}
                 <div class="bg-slate-950/95 border border-emerald-500/40 py-2 px-5 rounded-full flex items-center justify-center gap-2.5 mx-auto shadow-[0_0_20px_rgba(16,185,129,0.15)] shrink-0 mb-1 leading-none">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -462,60 +590,59 @@
                 </div>
 
                 @php
-                    $comparisons = [
-                        [
-                            'title' => 'MATCH ELIMINATIONS',
-                            'val1' => $stat1 ? $stat1->kills : 0,
-                            'val2' => $stat2 ? $stat2->kills : 0,
-                            'format' => '%d',
-                        ],
-                        [
-                            'title' => 'MATCH POINTS',
-                            'val1' => $stat1 ? $stat1->points : 0,
-                            'val2' => $stat2 ? $stat2->points : 0,
-                            'format' => '%d',
-                        ],
-                        [
-                            'title' => 'OVERALL POINTS',
-                            'val1' => $team1Overall['points'] ?? 0,
-                            'val2' => $team2Overall['points'] ?? 0,
-                            'format' => '%d',
-                        ],
-                        [
-                            'title' => 'OVERALL ELIMINATIONS',
-                            'val1' => $team1Overall['kills'] ?? 0,
-                            'val2' => $team2Overall['kills'] ?? 0,
-                            'format' => '%d',
-                        ],
-                        [
-                            'title' => 'WWCD (WINS)',
-                            'val1' => $team1Overall['wwcd'] ?? 0,
-                            'val2' => $team2Overall['wwcd'] ?? 0,
-                            'format' => '%d',
-                        ]
-                    ];
+                $comparisons = [
+                [
+                'title' => 'MATCH ELIMINATIONS',
+                'val1' => $stat1 ? $stat1->kills : 0,
+                'val2' => $stat2 ? $stat2->kills : 0,
+                'format' => '%d',
+                ],
+                [
+                'title' => 'MATCH POINTS',
+                'val1' => $stat1 ? $stat1->points : 0,
+                'val2' => $stat2 ? $stat2->points : 0,
+                'format' => '%d',
+                ],
+                [
+                'title' => 'OVERALL POINTS',
+                'val1' => $team1Overall['points'] ?? 0,
+                'val2' => $team2Overall['points'] ?? 0,
+                'format' => '%d',
+                ],
+                [
+                'title' => 'OVERALL ELIMINATIONS',
+                'val1' => $team1Overall['kills'] ?? 0,
+                'val2' => $team2Overall['kills'] ?? 0,
+                'format' => '%d',
+                ],
+                [
+                'title' => 'WWCD (WINS)',
+                'val1' => $team1Overall['wwcd'] ?? 0,
+                'val2' => $team2Overall['wwcd'] ?? 0,
+                'format' => '%d',
+                ]
+                ];
                 @endphp
 
                 @foreach($comparisons as $idx => $comp)
                 @php
-                    $isLead1 = $comp['val1'] > $comp['val2'];
-                    $isLead2 = $comp['val2'] > $comp['val1'];
-                    $totalComp = $comp['val1'] + $comp['val2'];
-                    $pct1 = $totalComp > 0 ? ($comp['val1'] / $totalComp) * 100 : 50;
-                    $pct2 = $totalComp > 0 ? ($comp['val2'] / $totalComp) * 100 : 50;
-                    $capsuleDelay = 0.12 * ($idx + 1);
-                    $diff = abs($comp['val1'] - $comp['val2']);
+                $isLead1 = $comp['val1'] > $comp['val2'];
+                $isLead2 = $comp['val2'] > $comp['val1'];
+                $totalComp = $comp['val1'] + $comp['val2'];
+                $pct1 = $totalComp > 0 ? ($comp['val1'] / $totalComp) * 100 : 50;
+                $pct2 = $totalComp > 0 ? ($comp['val2'] / $totalComp) * 100 : 50;
+                $capsuleDelay = 0.12 * ($idx + 1);
+                $diff = abs($comp['val1'] - $comp['val2']);
                 @endphp
-                
+
                 {{-- Floating Glass Stats Capsule with Staggered Entrance and Outward Segmented Progress Bars --}}
-                <div class="slide-up-capsule bg-slate-950/94 border {{ $isLead1 ? 'border-cyan-500/30 stat-card-glow-cyan' : ($isLead2 ? 'border-yellow-500/25 stat-card-glow-amber' : 'border-slate-800/80') }} rounded-2xl px-6 py-4 flex flex-col justify-center shadow-[0_15px_40px_rgba(0,0,0,0.8)] relative overflow-hidden backdrop-blur-md group transition-all duration-300 hover:scale-[1.03] hover:border-slate-700"
-                     style="animation-delay: {{ $capsuleDelay }}s;">
+                <div class="slide-up-capsule bg-slate-950/94 border {{ $isLead1 ? 'border-cyan-500/30 stat-card-glow-cyan' : ($isLead2 ? 'border-yellow-500/25 stat-card-glow-amber' : 'border-slate-800/80') }} rounded-2xl px-6 py-4 flex flex-col justify-center shadow-[0_15px_40px_rgba(0,0,0,0.8)] relative overflow-hidden backdrop-blur-md group transition-all duration-300 hover:scale-[1.03] hover:border-slate-700" style="animation-delay: {{ $capsuleDelay }}s;">
                     <div class="absolute inset-0 bg-grid-tiny opacity-[0.08] pointer-events-none"></div>
-                    <div class="absolute inset-0 bg-gradient-to-r {{ $isLead1 ? 'from-cyan-500/[0.04] via-transparent to-transparent' : ($isLead2 ? 'from-transparent via-transparent to-yellow-500/[0.03]' : 'from-transparent to-transparent') }} pointer-events-none"></div>
+                    <div class="absolute inset-0 bg-linear-to-r {{ $isLead1 ? 'from-cyan-500/4 via-transparent to-transparent' : ($isLead2 ? 'from-transparent via-transparent to-yellow-500/3' : 'from-transparent to-transparent') }} pointer-events-none"></div>
 
                     {{-- Visor layout for comparative score reading --}}
                     <div class="flex items-center justify-between w-full z-10 pb-1.5">
-                        
+
                         {{-- Left score (Cyan) --}}
                         <div class="flex items-center gap-2.5 w-36 justify-start">
                             <span class="font-hud text-3xl font-black leading-none text-slate-400 transition-all duration-300 group-hover:scale-105 {{ $isLead1 ? 'text-glow-cyan text-cyan-400' : '' }}">
@@ -550,18 +677,16 @@
                     </div>
 
                     {{-- Premium Outward Segmented Visual Progress Bar --}}
-                    <div class="absolute bottom-0 left-0 right-0 h-[6px] flex justify-between items-center z-10 opacity-90 overflow-hidden bg-slate-900">
+                    <div class="absolute bottom-0 left-0 right-0 h-1.5 flex justify-between items-center z-10 opacity-90 overflow-hidden bg-slate-900">
                         {{-- Left Bar Segment --}}
                         <div class="w-1/2 h-full flex justify-end">
-                            <div class="h-full bg-gradient-to-l from-cyan-400 to-cyan-600 shadow-[0_0_10px_#06b6d4] fill-bar-left rounded-l-full" 
-                                 style="--fill-width-left: {{ $pct1 }}%; animation-delay: {{ $capsuleDelay + 0.3 }}s;"></div>
+                            <div class="h-full bg-linear-to-l from-cyan-400 to-cyan-600 shadow-[0_0_10px_#06b6d4] fill-bar-left rounded-l-full" style="--fill-width-left: {{ $pct1 }}%; animation-delay: {{ $capsuleDelay + 0.3 }}s;"></div>
                         </div>
                         {{-- Neon Green Center Target Node --}}
                         <div class="w-1.5 h-full bg-emerald-500 z-20 shadow-[0_0_5px_#10b981]"></div>
                         {{-- Right Bar Segment --}}
                         <div class="w-1/2 h-full flex justify-start">
-                            <div class="h-full bg-gradient-to-r from-yellow-400 to-amber-600 shadow-[0_0_10px_#facc15] fill-bar-right rounded-r-full" 
-                                 style="--fill-width-right: {{ $pct2 }}%; animation-delay: {{ $capsuleDelay + 0.3 }}s;"></div>
+                            <div class="h-full bg-linear-to-r from-yellow-400 to-amber-600 shadow-[0_0_10px_#facc15] fill-bar-right rounded-r-full" style="--fill-width-right: {{ $pct2 }}%; animation-delay: {{ $capsuleDelay + 0.3 }}s;"></div>
                         </div>
                     </div>
                 </div>
@@ -571,7 +696,7 @@
             {{-- ── RIGHT FOREGROUND COLUMN: TEAM B (slides from right) ── --}}
             <div class="slide-right team-card-cyber amber-theme rounded-3xl p-8 flex flex-col items-center justify-center z-10 w-96 mr-[4%] relative" style="animation-delay:0.05s;">
                 <div class="laser-sweep laser-amber"></div>
-                
+
                 {{-- Corner tech elements --}}
                 <div class="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-yellow-400 rounded-tr-3xl opacity-70"></div>
                 <div class="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-yellow-400 rounded-bl-3xl opacity-70"></div>
@@ -591,12 +716,12 @@
                 <div class="relative w-40 h-40 flex items-center justify-center p-3 rounded-2xl bg-slate-900/60 border border-yellow-500/20 shadow-[0_0_30px_rgba(250,204,21,0.08)] z-10">
                     <img src="{{ $stat2 && $stat2->tournamentTeam->logo_image ? asset('storage/'.$stat2->tournamentTeam->logo_image) : asset('img/defult_team_logo.png') }}" onerror="this.src='{{ asset('img/defult_team_logo.png') }}';" class="w-32 h-32 object-contain logo-reveal filter drop-shadow-[0_8px_16px_rgba(250,204,21,0.35)]">
                 </div>
-                
+
                 {{-- Team nameplate --}}
                 <h2 class="text-4xl font-black uppercase text-center text-white leading-none tracking-wide text-glow-gold font-esports max-w-full truncate mt-6 relative z-10">
                     {{ $stat2 ? $stat2->tournamentTeam->name : 'TEAM BETA' }}
                 </h2>
-                
+
                 <span class="text-yellow-400 font-black uppercase tracking-[0.25em] text-xs mt-3 bg-yellow-950/70 border border-yellow-500/30 rounded-full px-5 py-1.5 shadow-inner leading-none relative z-10">
                     {{ $stat2 ? $stat2->tournamentTeam->short_name : 'T_B' }}
                 </span>
