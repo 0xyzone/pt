@@ -13,6 +13,8 @@ Route::prefix('{user_id}/screens')->group( function () {
     Route::get('/teamelimination', [ScreenController::class, 'teamElimination'])->name('screens.teamelimination');
     Route::get('/upcomingmatches', [ScreenController::class, 'upcomingMatches'])->name('screens.upcomingmatches');
     Route::get('/mapscreen', [ScreenController::class, 'mapScreen'])->name('screens.mapscreen');
+    Route::get('/mappool', [ScreenController::class, 'mapPool'])->name('screens.mappool');
+    Route::get('/pointsystem', [ScreenController::class, 'pointSystem'])->name('screens.pointsystem');
     Route::get('/castersscreen', [ScreenController::class, 'castersScreen'])->name('screens.castersscreen');
     Route::get('/headtohead', [ScreenController::class, 'headToHead'])->name('screens.headtohead');
     Route::get('/topfraggers', [ScreenController::class, 'topFraggers'])->name('screens.topfraggers');

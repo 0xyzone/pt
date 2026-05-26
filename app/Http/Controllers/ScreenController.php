@@ -762,6 +762,50 @@ class ScreenController extends Controller
         return view('screens.topFraggers', compact('user', 'activeMatch', 'topFraggers', 'bgType', 'customVideo'));
     }
 
+    public function pointSystem(Request $request)
+    {
+        $user = User::findOrFail($request->route('user_id'));
+        $activeMatch = $user->getActiveMatch();
+        $tournament = $activeMatch ? $activeMatch->tournament : null;
+        
+        // If there's no active match, pull the latest tournament
+        if (!$tournament) {
+            $tournament = \App\Models\Tournament::where('user_id', $user->id)->latest()->first();
+        }
+
+        $tournamentSetting = $tournament ? $tournament->tournamentSettings()->first() : null;
+        $placementPoints = $tournamentSetting 
+            ? $tournamentSetting->tournamentSettingPlacementPoints()->orderBy('placement')->get()
+            : collect();
+
+        $bgTypeKey = "bg_type_{$user->id}";
+        $bgType = Cache::get($bgTypeKey, 'transparent');
+        $customVideoKey = "custom_video_{$user->id}";
+        $customVideo = Cache::get($customVideoKey);
+
+        return view('screens.pointSystem', compact('activeMatch', 'user', 'tournament', 'tournamentSetting', 'placementPoints', 'bgType', 'customVideo'));
+    }
+
+    public function mapPool(Request $request)
+    {
+        $user = User::findOrFail($request->route('user_id'));
+        $activeMatch = $user->getActiveMatch();
+        $tournament = $activeMatch->tournament;
+        
+        $currentRound = $activeMatch->tournamentRound;
+        if ($currentRound) {
+            $matches = $currentRound->tournamentMatches()->with('matchStats.tournamentTeam')->orderBy('id')->get();
+        } else {
+            $matches = $tournament->tournamentMatches()->with('matchStats.tournamentTeam')->orderBy('id')->get();
+        }
+
+        $bgTypeKey = "bg_type_{$user->id}";
+        $bgType = Cache::get($bgTypeKey, 'transparent');
+        $customVideoKey = "custom_video_{$user->id}";
+        $customVideo = Cache::get($customVideoKey);
+
+        return view('screens.mapPool', compact('activeMatch', 'user', 'tournament', 'matches', 'currentRound', 'bgType', 'customVideo'));
+    }
 
     /**
      * Safely attempt to broadcast an event without throwing a 500 if

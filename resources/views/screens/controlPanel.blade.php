@@ -45,8 +45,8 @@
             </div>
         @endif
 
-        {{-- 5-Grid Quick Overlays Actions --}}
-        <div class="w-full grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+        {{-- 7-Grid Quick Overlays Actions --}}
+        <div class="w-full grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-4 mb-8">
             <!-- POST MATCH BTN -->
             <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
                 @csrf
@@ -70,7 +70,7 @@
                     <span class="text-sm font-black uppercase tracking-widest text-center">Overall Rank</span>
                 </button>
             </form>
-
+ 
             <!-- HEAD TO HEAD BTN -->
             <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
                 @csrf
@@ -82,12 +82,12 @@
                     <span class="text-sm font-black uppercase tracking-widest text-center">Head To Head</span>
                 </button>
             </form>
-
+ 
             <!-- TOP 5 FRAGGERS BTN -->
             <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
                 @csrf
                 <input type="hidden" name="view" value="topfraggers">
-                <button type="submit" class="w-full h-36 flex flex-col items-center justify-center gap-3 bg-slate-900/60 hover:bg-red-950/20 hover:border-red-500 border border-slate-850 rounded-2xl text-red-500 transition-all shadow-lg active:scale-[0.98] group">
+                <button type="submit" class="w-full h-36 flex flex-col items-center justify-center gap-3 bg-slate-900/60 hover:bg-purple-950/20 hover:border-purple-500 border border-slate-850 rounded-2xl text-purple-400 transition-all shadow-lg active:scale-[0.98] group">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10 group-hover:scale-110 transition-transform">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z" />
@@ -95,12 +95,36 @@
                     <span class="text-sm font-black uppercase tracking-widest text-center">Top Fraggers</span>
                 </button>
             </form>
+ 
+            <!-- MAP POOL BTN -->
+            <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
+                @csrf
+                <input type="hidden" name="view" value="mappool">
+                <button type="submit" class="w-full h-36 flex flex-col items-center justify-center gap-3 bg-slate-900/60 hover:bg-emerald-950/20 hover:border-emerald-500 border border-slate-850 rounded-2xl text-emerald-400 transition-all shadow-lg active:scale-[0.98] group">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10 group-hover:scale-110 transition-transform">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75L3 9v11.25l6-2.25m0-12l6 2.25m-6-2.25V20.25m6-11.25l6-2.25V18l-6 2.25m0-11.25V20.25" />
+                    </svg>
+                    <span class="text-sm font-black uppercase tracking-widest text-center">Map Pool</span>
+                </button>
+            </form>
 
+            <!-- POINTS SYSTEM BTN -->
+            <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
+                @csrf
+                <input type="hidden" name="view" value="pointsystem">
+                <button type="submit" class="w-full h-36 flex flex-col items-center justify-center gap-3 bg-slate-900/60 hover:bg-emerald-950/20 hover:border-emerald-500 border border-slate-850 rounded-2xl text-emerald-400 transition-all shadow-lg active:scale-[0.98] group">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10 group-hover:scale-110 transition-transform">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.03 0 1.9.693 2.166 1.638m-7.3 8.359a9 9 0 110-11.25" />
+                    </svg>
+                    <span class="text-sm font-black uppercase tracking-widest text-center">Point System</span>
+                </button>
+            </form>
+ 
             <!-- EMPTY SCREEN BTN -->
             <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
                 @csrf
                 <input type="hidden" name="view" value="empty">
-                <button type="submit" class="w-full h-36 flex flex-col items-center justify-center gap-3 bg-slate-900/60 hover:bg-rose-950/20 hover:border-rose-500 border border-slate-850 rounded-2xl text-slate-300 hover:text-rose-400 transition-all shadow-lg active:scale-[0.98] group">
+                <button type="submit" class="w-full h-36 flex flex-col items-center justify-center gap-3 bg-slate-900/60 hover:bg-slate-900 hover:border-slate-700 border border-slate-850 rounded-2xl text-slate-400 hover:text-slate-200 transition-all shadow-lg active:scale-[0.98] group">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10 group-hover:scale-110 transition-transform">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                     </svg>
@@ -126,7 +150,7 @@
             <form action="{{ route('screens.togglevisibility', ['user_id' => $user->id]) }}" method="POST">
                 @csrf
                 <input type="hidden" name="visible" value="0">
-                <button type="submit" class="w-full py-5 flex items-center justify-center gap-3 bg-rose-950/30 hover:bg-rose-950/50 border border-rose-500/30 hover:border-rose-500 rounded-2xl text-rose-400 transition-all font-black uppercase tracking-widest active:scale-95 text-sm shadow-md">
+                <button type="submit" class="w-full py-5 flex items-center justify-center gap-3 bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-slate-700 rounded-2xl text-slate-400 transition-all font-black uppercase tracking-widest active:scale-95 text-sm shadow-md">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
                     </svg>
@@ -397,11 +421,11 @@
 
                 <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-950 p-3 rounded-xl border border-slate-850">
                     <div>
-                        <strong class="text-rose-500 uppercase text-xs tracking-wider">3. Ending Screen:</strong>
+                        <strong class="text-amber-550 uppercase text-xs tracking-wider">3. Ending Screen:</strong>
                         <span class="text-slate-500 block text-xs mt-0.5">Intermission / Match Ended layout with massive countdown and sponsor scroll. Dimensions: 1920x1080.</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <a href="{{ route('screens.ending', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-rose-500/10 text-rose-400 border border-rose-500/30 hover:border-rose-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-rose-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
+                        <a href="{{ route('screens.ending', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:border-amber-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-amber-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
                         <button type="button" onclick="copyObsLink('{{ route('screens.ending', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
                             <span>Copy OBS Link</span>
@@ -481,11 +505,11 @@
 
                 <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-950 p-3 rounded-xl border border-slate-850">
                     <div>
-                        <strong class="text-danger uppercase text-xs tracking-wider">9. Top 5 Fraggers:</strong>
+                        <strong class="text-purple-400 uppercase text-xs tracking-wider">9. Top 5 Fraggers:</strong>
                         <span class="text-slate-500 block text-xs mt-0.5">Top 5 player statistics in active match. Dimensions: 1920x1080.</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <a href="{{ route('screens.topfraggers', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-red-500/10 text-red-400 border border-red-500/30 hover:border-red-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-red-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
+                        <a href="{{ route('screens.topfraggers', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-purple-500/10 text-purple-400 border border-purple-500/30 hover:border-purple-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-purple-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
                         <button type="button" onclick="copyObsLink('{{ route('screens.topfraggers', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
                             <span>Copy OBS Link</span>
@@ -529,6 +553,34 @@
                     <div class="flex items-center gap-2">
                         <a href="{{ route('screens.slotlist', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 hover:border-indigo-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-indigo-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
                         <button type="button" onclick="copyObsLink('{{ route('screens.slotlist', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
+                            <span>Copy OBS Link</span>
+                        </button>
+                    </div>
+                </li>
+
+                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-950 p-3 rounded-xl border border-slate-850">
+                    <div>
+                        <strong class="text-emerald-400 uppercase text-xs tracking-wider">13. Map Pool Screen:</strong>
+                        <span class="text-slate-500 block text-xs mt-0.5">Current round map schedule showing map details and match winners. Dimensions: 1920x1080.</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <a href="{{ route('screens.mappool', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:border-emerald-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-emerald-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
+                        <button type="button" onclick="copyObsLink('{{ route('screens.mappool', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
+                            <span>Copy OBS Link</span>
+                        </button>
+                    </div>
+                </li>
+
+                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-950 p-3 rounded-xl border border-slate-850">
+                    <div>
+                        <strong class="text-emerald-400 uppercase text-xs tracking-wider">14. Point System Screen:</strong>
+                        <span class="text-slate-500 block text-xs mt-0.5">Current tournament's point system breakdown (placement & elimination rules). Dimensions: 1920x1080.</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <a href="{{ route('screens.pointsystem', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:border-emerald-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-emerald-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
+                        <button type="button" onclick="copyObsLink('{{ route('screens.pointsystem', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
                             <span>Copy OBS Link</span>
                         </button>

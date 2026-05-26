@@ -128,6 +128,8 @@
                 overallranking: '{{ route("screens.overallranking", ["user_id" => $user->id]) }}',
                 headtohead:     '{{ route("screens.headtohead",     ["user_id" => $user->id]) }}',
                 topfraggers:    '{{ route("screens.topfraggers",    ["user_id" => $user->id]) }}',
+                mappool:        '{{ route("screens.mappool",        ["user_id" => $user->id]) }}',
+                pointsystem:    '{{ route("screens.pointsystem",    ["user_id" => $user->id]) }}',
             };
             return map[viewType] || null;
         }
