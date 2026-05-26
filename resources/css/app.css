@@ -12,3 +12,9 @@
     --font-display: "Oswald", sans-serif;
     --font-timer: "Orbitron", sans-serif;
 }
+
+/* Fix Chrome deprecation warning for range inputs */
+input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+}
