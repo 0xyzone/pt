@@ -346,6 +346,58 @@ class ScreenController extends Controller
         ]);
     }
 
+    public function completeActiveMatch(Request $request)
+    {
+        $user = User::findOrFail($request->route('user_id'));
+        $activeMatch = $user->getActiveMatch();
+
+        if (!$activeMatch) {
+            return response()->json(['error' => 'No active match found'], 404);
+        }
+
+        $stats = $activeMatch->matchStats;
+        $totalTeams = $stats->count();
+        $hasWinner = $stats->where('is_winner', true)->isNotEmpty();
+        $placements = $stats->pluck('placement')->filter(fn($p) => $p > 0);
+        $uniquePlacements = $placements->unique();
+
+        if (!$hasWinner || $placements->count() !== $totalTeams || $uniquePlacements->count() !== $totalTeams) {
+            return response()->json(['error' => 'Match completion requirements not met. All teams must have a unique placement assigned, and a winner must be selected.'], 422);
+        }
+
+        $activeMatch->update([
+            'is_completed' => true
+        ]);
+        
+        $this->safeBroadcast(new \App\Events\TournamentMatchUpdated($activeMatch->fresh()));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Match has been marked as completed successfully.'
+        ]);
+    }
+
+    public function makeActiveMatchIncomplete(Request $request)
+    {
+        $user = User::findOrFail($request->route('user_id'));
+        $activeMatch = $user->getActiveMatch();
+
+        if (!$activeMatch) {
+            return response()->json(['error' => 'No active match found'], 404);
+        }
+
+        $activeMatch->update([
+            'is_completed' => false
+        ]);
+        
+        $this->safeBroadcast(new \App\Events\TournamentMatchUpdated($activeMatch->fresh()));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Match has been marked as incomplete successfully.'
+        ]);
+    }
+
     public function switchObsView(Request $request)
     {
         $userId = $request->route('user_id');
@@ -812,6 +864,7 @@ class ScreenController extends Controller
 
         return view('screens.mapPool', compact('activeMatch', 'user', 'tournament', 'matches', 'currentRound', 'bgType', 'customVideo'));
     }
+
 
     /**
      * Safely attempt to broadcast an event without throwing a 500 if

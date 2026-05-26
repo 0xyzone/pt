@@ -28,6 +28,8 @@ Route::prefix('{user_id}/screens')->group( function () {
     Route::post('/refresh-screens', [ScreenController::class, 'refreshScreens'])->name('screens.refresh');
     Route::get('/stats-control', [ScreenController::class, 'statsControl'])->name('screens.statscontrol');
     Route::post('/update-stat', [ScreenController::class, 'updateMatchStat'])->name('screens.updatestat');
+    Route::post('/complete-match', [ScreenController::class, 'completeActiveMatch'])->name('screens.completematch');
+    Route::post('/incomplete-match', [ScreenController::class, 'makeActiveMatchIncomplete'])->name('screens.incompletematch');
     Route::get('/slot-list', [ScreenController::class, 'slotList'])->name('screens.slotlist');
     Route::get('/startingsoon', [ScreenController::class, 'startingSoon'])->name('screens.startingsoon');
     Route::get('/ending', [ScreenController::class, 'endingScreen'])->name('screens.ending');

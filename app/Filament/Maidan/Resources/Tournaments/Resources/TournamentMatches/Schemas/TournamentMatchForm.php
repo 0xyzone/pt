@@ -8,7 +8,6 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
-use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Schema;
 
@@ -23,6 +22,7 @@ class TournamentMatchForm
                     ->default(fn() => \Illuminate\Support\Facades\Request::route('tournament'))
                     ->required(),
                 Select::make('tournament_round_id')
+                    ->disabled()
                     ->label('Round')
                     ->options(function ($record) {
                         $tournamentId = \Illuminate\Support\Facades\Request::route('tournament');
@@ -38,7 +38,8 @@ class TournamentMatchForm
                     ->searchable(),
                 TextInput::make('name')
                     ->required()
-                    ->live()
+                    ->live(onBlur: true)
+                    ->columnSpan(3)
                     ->afterStateUpdated(function (TournamentMatch $record, $state) {
                         $record->update(['name' => $state]);
                         $record->save();
@@ -87,20 +88,21 @@ class TournamentMatchForm
                         'haven' => 'Haven',
                     ])
                     ->default('erangle')
-                    ->required(),
-                Toggle::make('is_active')
-                    ->label('Active Match')
-                    ->default(false)
-                    ->inline(false)
+                    ->required()
                     ->disabled(),
-                Toggle::make('is_completed')
-                    ->label('Is Completed')
-                    ->default(false)
-                    ->inline(false)
-                    ->live()
-                    ->disabled(fn($record) => $record && !$record->matchStats()->where('is_winner', true)->exists())
-                    ->hint(fn($record) => $record && !$record->matchStats()->where('is_winner', true)->exists() ? 'Please declare a winner in match stats first.' : null)
-                    ->hintColor('danger'),
+                // Toggle::make('is_active')
+                //     ->label('Active Match')
+                //     ->default(false)
+                //     ->inline(false)
+                //     ->disabled(),
+                // Toggle::make('is_completed')
+                //     ->label('Is Completed')
+                //     ->default(false)
+                //     ->inline(false)
+                //     ->live()
+                //     ->disabled(fn($record) => $record && !$record->matchStats()->where('is_winner', true)->exists())
+                //     ->hint(fn($record) => $record && !$record->matchStats()->where('is_winner', true)->exists() ? 'Please declare a winner in match stats first.' : null)
+                //     ->hintColor('danger'),
             ])->columns(4);
     }
 }

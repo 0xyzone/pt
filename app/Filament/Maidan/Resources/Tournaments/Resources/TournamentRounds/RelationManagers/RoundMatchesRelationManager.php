@@ -53,53 +53,6 @@ class RoundMatchesRelationManager extends RelationManager
                     }),
             ])
             ->actions([
-                Action::make('populate')
-                    ->label('Populate Teams')
-                    ->icon('heroicon-o-users')
-                    ->color('success')
-                    ->requiresConfirmation()
-                    ->modalHeading('Populate Teams & Roster')
-                    ->modalDescription('This will populate all tournament teams and their player rosters into this match. Any existing team records will be synced with their latest roster. Are you sure?')
-                    ->action(function ($record) {
-                        $tournament = $record->tournament;
-                        if (!$tournament) {
-                            Notification::make()
-                                ->title('Tournament not found')
-                                ->danger()
-                                ->send();
-                            return;
-                        }
-
-                        $teams = $tournament->tournamentTeams()->get();
-                        $populatedCount = 0;
-
-                        foreach ($teams as $team) {
-                            $playerIds = Player::where('tournament_team_id', $team->id)->pluck('id')->toArray();
-                            
-                            $matchStat = $record->matchStats()->firstOrCreate(
-                                ['tournament_team_id' => $team->id],
-                                [
-                                    'alive' => count($playerIds) > 0 ? count($playerIds) : 4,
-                                    'kills' => 0,
-                                    'placement' => 0,
-                                    'is_winner' => false,
-                                    'points' => 0,
-                                ]
-                            );
-                            
-                            if (!empty($playerIds)) {
-                                $matchStat->players()->sync($playerIds);
-                            }
-                            $matchStat->recalculateTotals();
-                            $populatedCount++;
-                        }
-
-                        Notification::make()
-                            ->title("Successfully populated teams")
-                            ->body("Successfully populated {$populatedCount} teams and their rosters into this match.")
-                            ->success()
-                            ->send();
-                    }),
                 EditAction::make(),
                 DeleteAction::make(),
             ]);

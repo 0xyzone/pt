@@ -224,6 +224,36 @@
             background: #475569;
         }
 
+        /* Complete Match Button Styles */
+        #btn-complete-match:disabled {
+            background: rgba(51, 65, 85, 0.15) !important;
+            color: #64748b !important;
+            border: 1px solid rgba(51, 65, 85, 0.25) !important;
+            box-shadow: none !important;
+            cursor: not-allowed !important;
+            pointer-events: none !important;
+            opacity: 0.6;
+        }
+
+        #btn-complete-match:not(:disabled) {
+            background: rgba(34, 197, 94, 0.15) !important;
+            color: #4ade80 !important;
+            border: 1px solid rgba(34, 197, 94, 0.4) !important;
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.15) !important;
+            cursor: pointer !important;
+        }
+
+        #btn-complete-match:not(:disabled):hover {
+            background: rgba(34, 197, 94, 0.25) !important;
+            border-color: rgba(34, 197, 94, 0.6) !important;
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.3) !important;
+            transform: translateY(-1px);
+        }
+
+        #btn-complete-match:not(:disabled):active {
+            transform: translateY(1px);
+        }
+
     </style>
 </head>
 <body class="text-slate-100 min-h-screen">
@@ -396,7 +426,7 @@
     </script>
     @endif
 
-    <div class="max-w-7xl mx-auto p-4 md:p-8">
+    <div class="max-w-375 mx-auto p-4 md:p-8">
         {{-- Header --}}
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
             <div>
@@ -411,7 +441,32 @@
                     <span class="text-slate-500 text-sm font-bold uppercase tracking-widest">{{ ucfirst($activeMatch->map) }}</span>
                 </div>
             </div>
-            <div id="connection-status" class="hidden px-4 py-2 rounded-xl text-center font-bold text-xs uppercase tracking-widest border border-slate-700 bg-slate-800/50"></div>
+            <div class="flex items-center gap-3">
+                <div id="connection-status" class="hidden px-4 py-2 rounded-xl text-center font-bold text-xs uppercase tracking-widest border border-slate-700 bg-slate-800/50"></div>
+
+                <div id="match-complete-container">
+                    @if(!$activeMatch->is_completed)
+                    <button id="btn-complete-match" class="px-6 py-2.5 rounded-xl font-black text-sm uppercase tracking-wider transition-all duration-300 shadow-md flex items-center gap-2 cursor-pointer disabled:cursor-not-allowed" onclick="markMatchComplete()" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Mark Match Complete</span>
+                    </button>
+                    @else
+                    <div class="flex items-center gap-3">
+                        <div class="px-6 py-2.5 rounded-xl font-black text-sm uppercase tracking-wider border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.74-5.24z" clip-rule="evenodd" />
+                            </svg>
+                            <span>Match Completed</span>
+                        </div>
+                        <button id="btn-incomplete-match" class="px-4 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider border border-slate-700 bg-slate-800/40 hover:bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-all duration-150 cursor-pointer" onclick="markMatchIncomplete()">
+                            Mark Incomplete
+                        </button>
+                    </div>
+                    @endif
+                </div>
+            </div>
         </div>
 
         {{-- Stats Grid --}}
@@ -518,11 +573,9 @@
                                     </svg>
                                 </div>
                                 <div class="custom-select-options">
-                                    <div class="custom-select-option {{ $stat->placement == 0 ? 'selected' : '' }}" onclick="selectPlacement({{ $stat->id }}, 0)">#0 (Unranked)</div>
+                                    <div class="custom-select-option {{ $stat->placement == 0 ? 'selected' : '' }}" data-placement-value="0" onclick="selectPlacement({{ $stat->id }}, 0)">#0 (Unranked)</div>
                                     @foreach($placementOptions as $p)
-                                    @if(!in_array($p, $takenPlacements) || $p == $stat->placement)
-                                    <div class="custom-select-option {{ $stat->placement == $p ? 'selected' : '' }}" onclick="selectPlacement({{ $stat->id }}, {{ $p }})">#{{ $p }}</div>
-                                    @endif
+                                    <div class="custom-select-option {{ $stat->placement == $p ? 'selected' : '' }}" data-placement-value="{{ $p }}" onclick="selectPlacement({{ $stat->id }}, {{ $p }})" style="display: {{ (in_array($p, $takenPlacements) && $p != $stat->placement) ? 'none' : 'block' }}">#{{ $p }}</div>
                                     @endforeach
                                 </div>
                             </div>
@@ -551,6 +604,32 @@
             @endforeach
         </div>
 
+    </div>
+
+    {{-- ============================================================ --}}
+    {{-- CUSTOM MODAL DIALOG                                          --}}
+    {{-- ============================================================ --}}
+    <div id="custom-modal" class="fixed inset-0 z-9999 hidden items-center justify-center bg-slate-950/80 backdrop-blur-xs">
+        <div class="relative w-full max-w-md mx-4 bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl transition-all duration-200 scale-95 opacity-0" id="custom-modal-card">
+            <div class="flex flex-col gap-4">
+                {{-- Icon & Title --}}
+                <div class="flex items-start gap-4">
+                    <div id="custom-modal-icon" class="w-12 h-12 rounded-xl flex items-center justify-center shrink-0">
+                        {{-- Icon SVG --}}
+                    </div>
+                    <div class="flex flex-col gap-1 grow">
+                        <h3 id="custom-modal-title" class="text-base font-black uppercase tracking-wider text-white">Confirmation</h3>
+                        <p id="custom-modal-message" class="text-xs text-slate-300 font-bold uppercase tracking-wider leading-relaxed"></p>
+                    </div>
+                </div>
+
+                {{-- Actions --}}
+                <div class="flex justify-end gap-3 mt-2" id="custom-modal-actions">
+                    <button id="custom-modal-cancel" class="px-5 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-wider border border-slate-700 bg-slate-800/40 text-slate-400 hover:bg-slate-800/80 hover:text-slate-200 transition-all cursor-pointer">Cancel</button>
+                    <button id="custom-modal-confirm" class="px-5 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-wider bg-yellow-400 text-black hover:bg-yellow-300 transition-all shadow-md shadow-yellow-400/10 cursor-pointer">Confirm</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script type="module">
@@ -717,6 +796,8 @@
                     }
                 });
             }
+            window.refreshPlacementDropdowns();
+            window.validateMatchCompletion();
         };
 
         // ─────────────────────────────────────────────────────────────────
@@ -776,6 +857,8 @@
                         card.classList.remove('eliminated');
                     }
                 }
+                window.refreshPlacementDropdowns();
+                window.validateMatchCompletion();
             }
 
             addPending(statId);
@@ -912,27 +995,346 @@
         };
 
         // ─────────────────────────────────────────────────────────────────
+        // Placement Dropdown and Match Completion Check Script
+        // ─────────────────────────────────────────────────────────────────
+        window.refreshPlacementDropdowns = function() {
+            const currentPlacements = {};
+            document.querySelectorAll('.team-card').forEach(card => {
+                const statId = card.getAttribute('data-stat-id');
+                const placementEl = card.querySelector('[data-field="placement"]');
+                if (placementEl) {
+                    const pText = placementEl.textContent.trim().replace('#', '');
+                    const placement = parseInt(pText) || 0;
+                    currentPlacements[statId] = placement;
+                }
+            });
+
+            document.querySelectorAll('.team-card').forEach(card => {
+                const statId = card.getAttribute('data-stat-id');
+
+                const options = card.querySelectorAll('.custom-select-option');
+                options.forEach(opt => {
+                    const valAttr = opt.getAttribute('data-placement-value');
+                    if (valAttr === null) return;
+                    const val = parseInt(valAttr);
+
+                    if (val === 0) {
+                        opt.style.display = 'block';
+                        return;
+                    }
+
+                    let takenByOther = false;
+                    for (const [otherStatId, p] of Object.entries(currentPlacements)) {
+                        if (otherStatId !== statId && p === val) {
+                            takenByOther = true;
+                            break;
+                        }
+                    }
+
+                    if (takenByOther) {
+                        opt.style.display = 'none';
+                    } else {
+                        opt.style.display = 'block';
+                    }
+                });
+            });
+        };
+
+        window.validateMatchCompletion = function() {
+            const hasWinner = document.querySelector('.winner-toggle.active') !== null;
+            const cards = document.querySelectorAll('.team-card');
+            const totalTeams = cards.length;
+            
+            const placements = [];
+            let allPlaced = true;
+
+            cards.forEach(card => {
+                const placementEl = card.querySelector('[data-field="placement"]');
+                if (placementEl) {
+                    const pText = placementEl.textContent.trim().replace('#', '');
+                    const p = parseInt(pText) || 0;
+                    if (p === 0) {
+                        allPlaced = false;
+                    }
+                    placements.push(p);
+                } else {
+                    allPlaced = false;
+                }
+            });
+
+            const uniquePlacements = new Set(placements);
+            const isUnique = uniquePlacements.size === totalTeams && !uniquePlacements.has(0);
+
+            const completeBtn = document.getElementById('btn-complete-match');
+            if (completeBtn) {
+                if (hasWinner && allPlaced && isUnique) {
+                    completeBtn.removeAttribute('disabled');
+                } else {
+                    completeBtn.setAttribute('disabled', 'true');
+                }
+            }
+        };
+
+        window.openCustomModal = function({ icon, iconBg, title, message, confirmLabel, confirmClass, onConfirm }) {
+            const modal = document.getElementById('custom-modal');
+            const card = document.getElementById('custom-modal-card');
+            const iconEl = document.getElementById('custom-modal-icon');
+            const titleEl = document.getElementById('custom-modal-title');
+            const msgEl = document.getElementById('custom-modal-message');
+            const cancelBtn = document.getElementById('custom-modal-cancel');
+            const confirmBtn = document.getElementById('custom-modal-confirm');
+
+            iconEl.innerHTML = icon || '';
+            iconEl.className = `w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${iconBg || 'bg-yellow-400/10'}`;
+            titleEl.textContent = title || 'Confirmation';
+            msgEl.textContent = message || '';
+
+            if (confirmLabel) confirmBtn.textContent = confirmLabel;
+            if (confirmClass) {
+                confirmBtn.className = `px-5 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-wider transition-all shadow-md cursor-pointer ${confirmClass}`;
+            } else {
+                confirmBtn.className = `px-5 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-wider bg-yellow-400 text-black hover:bg-yellow-300 transition-all shadow-md shadow-yellow-400/10 cursor-pointer`;
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                card.classList.remove('scale-95', 'opacity-0');
+                card.classList.add('scale-100', 'opacity-100');
+            }, 10);
+
+            const closeModal = () => {
+                card.classList.remove('scale-100', 'opacity-100');
+                card.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                }, 200);
+            };
+
+            cancelBtn.onclick = closeModal;
+            
+            // Background click to close
+            const bgClickClose = (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                    modal.removeEventListener('click', bgClickClose);
+                }
+            };
+            modal.addEventListener('click', bgClickClose);
+
+            confirmBtn.onclick = () => {
+                closeModal();
+                if (onConfirm) onConfirm();
+            };
+        };
+
+        window.openCustomAlert = function({ icon, iconBg, title, message, confirmLabel, confirmClass }) {
+            const modal = document.getElementById('custom-modal');
+            const card = document.getElementById('custom-modal-card');
+            const iconEl = document.getElementById('custom-modal-icon');
+            const titleEl = document.getElementById('custom-modal-title');
+            const msgEl = document.getElementById('custom-modal-message');
+            const cancelBtn = document.getElementById('custom-modal-cancel');
+            const confirmBtn = document.getElementById('custom-modal-confirm');
+
+            iconEl.innerHTML = icon || `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6 text-rose-400"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" /></svg>`;
+            iconEl.className = `w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${iconBg || 'bg-rose-500/10'}`;
+            titleEl.textContent = title || 'Alert';
+            msgEl.textContent = message || '';
+
+            confirmBtn.textContent = confirmLabel || 'OK';
+            if (confirmClass) {
+                confirmBtn.className = `px-5 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-wider transition-all shadow-md cursor-pointer ${confirmClass}`;
+            } else {
+                confirmBtn.className = `px-5 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-wider bg-rose-500 text-white hover:bg-rose-400 transition-all shadow-md shadow-rose-500/10 cursor-pointer`;
+            }
+
+            cancelBtn.classList.add('hidden');
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                card.classList.remove('scale-95', 'opacity-0');
+                card.classList.add('scale-100', 'opacity-100');
+            }, 10);
+
+            const closeModal = () => {
+                card.classList.remove('scale-100', 'opacity-100');
+                card.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                    cancelBtn.classList.remove('hidden'); // Restore for other modals
+                }, 200);
+            };
+
+            const bgClickClose = (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                    modal.removeEventListener('click', bgClickClose);
+                }
+            };
+            modal.addEventListener('click', bgClickClose);
+
+            confirmBtn.onclick = () => {
+                closeModal();
+            };
+        };
+
+        window.markMatchComplete = async function() {
+            window.openCustomModal({
+                iconBg: 'bg-emerald-500/10',
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6 text-emerald-400"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
+                title: 'Mark Match Complete',
+                message: 'This will finalize the scores for this match. Are you sure you want to mark it as completed?',
+                confirmLabel: 'Yes, Mark Complete',
+                confirmClass: 'bg-emerald-500 text-white hover:bg-emerald-400 shadow-emerald-500/20 shadow-md cursor-pointer',
+                onConfirm: async () => {
+                    const completeUrl = "{{ route('screens.completematch', ['user_id' => $user->id]) }}";
+                    try {
+                        const resp = await fetch(completeUrl, {
+                            method: 'POST',
+                            headers: buildHeaders(),
+                        });
+                        const data = await resp.json();
+                        if (data.success) {
+                            const container = document.getElementById('match-complete-container');
+                            if (container) {
+                                container.innerHTML = `
+                                    <div class="flex items-center gap-3">
+                                        <div class="px-6 py-2.5 rounded-xl font-black text-sm uppercase tracking-wider border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 flex items-center gap-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.74-5.24z" clip-rule="evenodd" />
+                                            </svg>
+                                            <span>Match Completed</span>
+                                        </div>
+                                        <button id="btn-incomplete-match" class="px-4 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider border border-slate-700 bg-slate-800/40 hover:bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-all duration-150 cursor-pointer" onclick="markMatchIncomplete()">
+                                            Mark Incomplete
+                                        </button>
+                                    </div>
+                                `;
+                            }
+                        } else {
+                            window.openCustomAlert({
+                                title: 'Error',
+                                message: 'Failed to complete match: ' + (data.error || data.message || 'Unknown error')
+                            });
+                        }
+                    } catch (err) {
+                        console.error('Error completing match:', err);
+                        window.openCustomAlert({
+                            title: 'Network Error',
+                            message: 'Network error completing match. Please try again.'
+                        });
+                    }
+                }
+            });
+        };
+
+        window.markMatchIncomplete = async function() {
+            window.openCustomModal({
+                iconBg: 'bg-rose-500/10',
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6 text-rose-400"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
+                title: 'Revert Match Completion',
+                message: 'Are you sure you want to mark this match as incomplete? This will allow editing stats and rankings.',
+                confirmLabel: 'Yes, Revert',
+                confirmClass: 'bg-rose-500 text-white hover:bg-rose-400 shadow-rose-500/20 shadow-md cursor-pointer',
+                onConfirm: async () => {
+                    const incompleteUrl = "{{ route('screens.incompletematch', ['user_id' => $user->id]) }}";
+                    try {
+                        const resp = await fetch(incompleteUrl, {
+                            method: 'POST',
+                            headers: buildHeaders(),
+                        });
+                        const data = await resp.json();
+                        if (data.success) {
+                            const container = document.getElementById('match-complete-container');
+                            if (container) {
+                                container.innerHTML = `
+                                    <button id="btn-complete-match" class="px-6 py-2.5 rounded-xl font-black text-sm uppercase tracking-wider transition-all duration-300 shadow-md flex items-center gap-2 cursor-pointer disabled:cursor-not-allowed" onclick="markMatchComplete()" disabled>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span>Mark Match Complete</span>
+                                    </button>
+                                `;
+                            }
+                            window.validateMatchCompletion();
+                        } else {
+                            window.openCustomAlert({
+                                title: 'Error',
+                                message: 'Failed to revert completion: ' + (data.error || data.message || 'Unknown error')
+                            });
+                        }
+                    } catch (err) {
+                        console.error('Error reverting match completion:', err);
+                        window.openCustomAlert({
+                            title: 'Network Error',
+                            message: 'Network error reverting completion. Please try again.'
+                        });
+                    }
+                }
+            });
+        };
+
+        // ─────────────────────────────────────────────────────────────────
         // Echo real-time sync — only updates DOM when no local request is
         // pending for that stat. With X-Socket-ID on every fetch, the server
         // already excludes the originating client from its own broadcasts,
         // so this guard mainly protects against overlapping rapid clicks.
         // ─────────────────────────────────────────────────────────────────
         document.addEventListener("DOMContentLoaded", function () {
+            // Initial call to set correct states on page load
+            window.refreshPlacementDropdowns();
+            window.validateMatchCompletion();
+
             Echo.channel('active-match.{{ $activeMatch->id }}')
                 .listen('.MatchStatsUpdated', (e) => {
                     if (e && e.matchStat) {
                         const statId = e.matchStat.id;
-                        // Skip if we are currently waiting for an AJAX response
-                        // for this stat — our response will apply the final state.
                         if (pendingUpdates.has(statId)) return;
 
                         window.updateCardDOM(statId, e.matchStat);
 
-                        // Flash card to signal an update from another client
                         const card = document.querySelector(`[data-stat-id="${statId}"]`);
                         if (card) {
                             card.classList.add('flash');
                             setTimeout(() => card.classList.remove('flash'), 600);
+                        }
+                    }
+                });
+
+            Echo.channel('user-screens.{{ $user->id }}')
+                .listen('.TournamentMatchUpdated', (e) => {
+                    if (e && e.match && e.match.id === {{ $activeMatch->id }}) {
+                        const container = document.getElementById('match-complete-container');
+                        if (container) {
+                            if (e.match.is_completed) {
+                                container.innerHTML = `
+                                    <div class="flex items-center gap-3">
+                                        <div class="px-6 py-2.5 rounded-xl font-black text-sm uppercase tracking-wider border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 flex items-center gap-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.74-5.24z" clip-rule="evenodd" />
+                                            </svg>
+                                            <span>Match Completed</span>
+                                        </div>
+                                        <button id="btn-incomplete-match" class="px-4 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider border border-slate-700 bg-slate-800/40 hover:bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-all duration-150 cursor-pointer" onclick="markMatchIncomplete()">
+                                            Mark Incomplete
+                                        </button>
+                                    </div>
+                                `;
+                            } else {
+                                container.innerHTML = `
+                                    <button id="btn-complete-match" class="px-6 py-2.5 rounded-xl font-black text-sm uppercase tracking-wider transition-all duration-300 shadow-md flex items-center gap-2 cursor-pointer disabled:cursor-not-allowed" onclick="markMatchComplete()" disabled>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span>Mark Match Complete</span>
+                                    </button>
+                                `;
+                                window.validateMatchCompletion();
+                            }
                         }
                     }
                 });

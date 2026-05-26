@@ -3,15 +3,10 @@
 namespace App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches\Resources\MatchStats\Tables;
 
 use App\Models\MatchStat;
-use App\Models\TournamentSetting;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\TextInputColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
@@ -92,61 +87,57 @@ class MatchStatsTable
             ->filters([
                 //
             ])
-            ->actions([
+            ->recordActions([
                 Action::make('manage_roster')
                     ->label('Manage Roster')
                     ->icon('heroicon-o-users')
                     ->color('warning')
                     ->form(function (MatchStat $record) {
                         return [
-                            \Filament\Forms\Components\Repeater::make('players_stats')
-                                ->label('Squad Players')
-                                ->schema([
-                                    \Filament\Forms\Components\Hidden::make('id'),
-                                    \Filament\Forms\Components\TextInput::make('ign')
-                                        ->label('Player IGN')
-                                        ->disabled(),
-                                    \Filament\Forms\Components\Toggle::make('is_alive')
-                                        ->label('Alive')
-                                        ->default(true),
-                                    \Filament\Forms\Components\TextInput::make('kills')
-                                        ->label('Kills')
-                                        ->numeric()
-                                        ->default(0)
-                                        ->minValue(0),
-                                ])
-                                ->addable(false)
-                                ->deletable(false)
-                                ->reorderable(false)
+                            \Filament\Forms\Components\Select::make('players')
+                                ->label('Select Squad Players')
+                                ->multiple()
+                                ->searchable()
+                                ->preload()
+                                ->options(function () use ($record) {
+                                    return \App\Models\Player::where('tournament_team_id', $record->tournament_team_id)
+                                        ->pluck('ign', 'id');
+                                })
+                                ->required(),
                         ];
                     })
                     ->fillForm(function (MatchStat $record): array {
-                        $record->load('players');
-                        $playersData = [];
-                        foreach ($record->players as $player) {
-                            $playersData[] = [
-                                'id' => $player->id,
-                                'ign' => $player->ign,
-                                'is_alive' => (bool) $player->pivot->is_alive,
-                                'kills' => (int) $player->pivot->kills,
-                            ];
-                        }
                         return [
-                            'players_stats' => $playersData,
+                            'players' => $record->players()->pluck('players.id')->toArray(),
                         ];
                     })
                     ->action(function (MatchStat $record, array $data): void {
-                        $playersStats = $data['players_stats'] ?? [];
-                        foreach ($playersStats as $item) {
-                            $playerId = $item['id'] ?? null;
-                            if ($playerId) {
-                                $record->players()->updateExistingPivot($playerId, [
-                                    'is_alive' => (bool)($item['is_alive'] ?? false),
-                                    'kills' => (int)($item['kills'] ?? 0),
-                                ]);
+                        $playerIds = $data['players'] ?? [];
+                        
+                        $syncData = [];
+                        foreach ($playerIds as $id) {
+                            $existing = $record->players()->where('players.id', $id)->first();
+                            if ($existing) {
+                                $syncData[$id] = [
+                                    'kills' => $existing->pivot->kills ?? 0,
+                                    'is_alive' => $existing->pivot->is_alive ?? true,
+                                ];
+                            } else {
+                                $syncData[$id] = [
+                                    'kills' => 0,
+                                    'is_alive' => true,
+                                ];
                             }
                         }
+
+                        $record->players()->sync($syncData);
                         $record->recalculateTotals();
+
+                        \Filament\Notifications\Notification::make()
+                            ->title('Roster Updated')
+                            ->body('Successfully updated squad players for ' . $record->tournamentTeam->name)
+                            ->success()
+                            ->send();
                     }),
                 Action::make('trigger_elimination')
                     ->label('Elim')
@@ -168,9 +159,6 @@ class MatchStatsTable
                         ));
                     }),
                 DeleteAction::make(),
-            ])
-            ->recordActions([
-                Action::make('manage_roster'),
             ])
             ->toolbarActions([
                 // BulkActionGroup::make([
