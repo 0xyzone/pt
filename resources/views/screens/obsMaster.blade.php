@@ -59,6 +59,22 @@
             animation: badgePopExit 0.34s cubic-bezier(0.4, 0, 1, 1) both !important;
             animation-delay: 0s !important;
         }
+        .exit-active .slide-up-capsule {
+            animation: slideUpExit 0.38s cubic-bezier(0.4, 0, 1, 1) both !important;
+            animation-delay: 0s !important;
+        }
+        .exit-active .card-left-reveal {
+            animation: slideLeftExit 0.42s cubic-bezier(0.4, 0, 1, 1) both !important;
+            animation-delay: 0s !important;
+        }
+        .exit-active .card-right-reveal {
+            animation: slideRightExit 0.42s cubic-bezier(0.4, 0, 1, 1) both !important;
+            animation-delay: 0s !important;
+        }
+        .exit-active .grid-item-animate {
+            animation: slideUpExit 0.38s cubic-bezier(0.4, 0, 1, 1) both !important;
+            animation-delay: 0s !important;
+        }
 
         /* ══════════════════════════════════════════════════════
            EXIT KEYFRAMES — fast, decisive
