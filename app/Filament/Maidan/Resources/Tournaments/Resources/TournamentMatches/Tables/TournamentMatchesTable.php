@@ -3,8 +3,6 @@
 namespace App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches\Tables;
 
 use Filament\Actions\Action;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
@@ -66,6 +64,7 @@ class TournamentMatchesTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultGroup('tournamentRound.name')
             ->recordActions([
                 // Action::make('complete')
                 //     ->label(fn($record) => $record->is_completed ? 'Completed' : 'Mark Complete')
@@ -151,9 +150,9 @@ class TournamentMatchesTable
                 //
             ])
             ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                // BulkActionGroup::make([
+                //     DeleteBulkAction::make(),
+                // ]),
             ]);
     }
 }
