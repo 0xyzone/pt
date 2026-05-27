@@ -263,7 +263,7 @@
                 @foreach($col['data'] as $item)
                     @php $rank = $loop->iteration + $col['startRank'] - 1; @endphp
 
-                    <div class="slide-up {{ $rank === 1 ? 'rank1-card rank1-pulse' : ($rank === 2 ? 'rank2-card' : ($rank === 3 ? 'rank3-card' : 'glass-row')) }} px-3 py-2.5 flex items-center gap-2 rounded-md transition-all duration-200 hover:scale-[1.006] hover:brightness-110"
+                    <div class="slide-up {{ $rank === 1 ? 'rank1-card rank1-pulse' : ($rank === 2 ? 'rank2-card' : ($rank === 3 ? 'rank3-card' : 'glass-row')) }} px-3 py-2.5 flex items-center gap-2 rounded-md transition-all duration-200"
                          style="animation-delay:{{ $col['delay'] + 0.1 + $loop->index * 0.07 }}s;">
 
                         {{-- Rank --}}

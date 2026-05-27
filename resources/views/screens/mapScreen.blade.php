@@ -13,21 +13,30 @@
         .pubg-skew { transform: none; }
         .pubg-unskew { transform: none; }
         
+        @keyframes teamCardPulse {
+            0%, 100% {
+                border-color: rgba(250, 204, 21, 0.2);
+                box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+            }
+            50% {
+                border-color: rgba(250, 204, 21, 0.45);
+                box-shadow: 0 10px 25px rgba(250, 204, 21, 0.08);
+            }
+        }
+
         .team-card {
             display: flex;
             flex-direction: column;
             width: 100%;
             height: 100%;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.7);
             background: rgba(8, 12, 24, 0.75);
             border-radius: 4px;
             border: 1px solid rgba(250, 204, 21, 0.2);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: teamCardPulse 5s infinite ease-in-out;
         }
-        .team-card:hover {
-            transform: translateY(-4px) scale(1.02);
-            border-color: rgba(250, 204, 21, 0.6);
-            box-shadow: 0 15px 35px rgba(250, 204, 21, 0.15);
+
+        .team-card:nth-child(even) {
+            animation-delay: 2.5s;
         }
         
         .team-card-top {

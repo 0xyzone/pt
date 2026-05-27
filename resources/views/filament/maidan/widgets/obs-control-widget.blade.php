@@ -98,78 +98,200 @@
                 }
              }">
 
-            @foreach($this->getLinks() as $link)
-                <a
-                    href="{{ $link['url'] }}"
-                    target="_blank"
-                    @class([
-                        'relative group flex flex-col gap-3 p-4 rounded-xl border transition-all duration-200 justify-between',
-                        'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 hover:border-primary-500 dark:hover:border-primary-500 hover:shadow-lg',
-                        'col-span-full md:col-span-1 lg:col-span-2 ring-2 ring-danger-500/20' => $link['is_main'] ?? false,
-                    ])
-                >
-                    <div class="flex flex-col gap-2">
-                        <div class="flex items-center justify-between">
-                            <div @class([
-                                'p-2 rounded-lg',
-                                match($link['color']) {
-                                    'danger'  => 'bg-danger-55/10 dark:bg-danger-900/20 text-danger-600 dark:text-danger-400',
-                                    'primary' => 'bg-primary-55/10 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400',
-                                    'warning' => 'bg-warning-55/10 dark:bg-warning-900/20 text-warning-600 dark:text-warning-400',
-                                    'success' => 'bg-success-55/10 dark:bg-success-900/20 text-success-600 dark:text-success-400',
-                                    'info'    => 'bg-info-55/10 dark:bg-info-900/20 text-info-600 dark:text-info-400',
-                                    default   => 'bg-gray-55/10 dark:bg-gray-900/20 text-gray-600 dark:text-gray-400',
-                                }
-                            ])>
-                                <x-filament::icon
-                                    icon="{{ $link['icon'] }}"
-                                    class="h-6 w-6"
-                                />
+            @php
+                $links = $this->getLinks();
+                $controls = array_filter($links, fn($l) => $l['category'] === 'control');
+                $preMatch = array_filter($links, fn($l) => $l['category'] === 'pre_match');
+                $postMatch = array_filter($links, fn($l) => $l['category'] === 'post_match');
+            @endphp
+
+            <div class="col-span-full grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Group 1: Consoles & Control -->
+                <div class="bg-red-50/40 dark:bg-red-950/10 p-4 rounded-xl border border-red-100 dark:border-red-900/30 flex flex-col gap-3.5 shadow-sm">
+                    <h3 class="text-xs font-black uppercase tracking-wider text-red-600 dark:text-red-400 flex items-center gap-2 pb-2 border-b border-red-100 dark:border-red-900/20">
+                        <x-filament::icon icon="heroicon-m-adjustments-horizontal" class="h-4.5 w-4.5 text-red-500" />
+                        Consoles & Master
+                    </h3>
+                    <div class="flex flex-col gap-2.5">
+                        @foreach($controls as $link)
+                            <div class="group flex items-center justify-between p-2.5 rounded-lg bg-white dark:bg-gray-900 border border-gray-150 dark:border-gray-800/60 hover:border-primary-500 dark:hover:border-primary-500 hover:shadow-xs transition-all duration-150 gap-3"
+                                 title="{{ $link['description'] }}">
+                                <div class="flex items-center gap-2.5 min-w-0">
+                                    <div @class([
+                                        'p-1.5 rounded-md shrink-0',
+                                        match($link['color']) {
+                                            'danger'  => 'bg-danger-500/10 text-danger-600 dark:text-danger-400',
+                                            'primary' => 'bg-primary-500/10 text-primary-600 dark:text-primary-400',
+                                            'warning' => 'bg-warning-500/10 text-warning-600 dark:text-warning-400',
+                                            'success' => 'bg-success-500/10 text-success-600 dark:text-success-400',
+                                            'info'    => 'bg-info-500/10 text-info-600 dark:text-info-400',
+                                            default   => 'bg-gray-500/10 text-gray-600 dark:text-gray-400',
+                                        }
+                                    ])>
+                                        <x-filament::icon icon="{{ $link['icon'] }}" class="h-4.5 w-4.5" />
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="text-xs font-bold text-gray-900 dark:text-white truncate block group-hover:text-primary-500 transition-colors">
+                                                {{ $link['name'] }}
+                                            </span>
+                                            @if($link['is_main'] ?? false)
+                                                <span class="flex h-1.5 w-1.5 relative shrink-0">
+                                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-danger-400 opacity-75"></span>
+                                                    <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-danger-500"></span>
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <span class="text-[9.5px] text-gray-500 dark:text-gray-400 block truncate mt-0.5 max-w-[180px]">
+                                            {{ $link['description'] }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-1.5 shrink-0">
+                                    @if(!($link['is_main'] ?? false))
+                                        <button
+                                            type="button"
+                                            x-on:click.stop.prevent="copyLink('{{ $link['url'] }}', $el)"
+                                            class="obs-copy-btn p-1.5 rounded bg-gray-50 dark:bg-gray-800 hover:bg-emerald-500 dark:hover:bg-emerald-600 text-gray-500 dark:text-gray-400 hover:text-white border border-gray-200 dark:border-gray-700/60 hover:border-transparent transition-all duration-150 flex items-center justify-center shrink-0"
+                                            title="Copy OBS Link"
+                                        >
+                                            <x-filament::icon icon="heroicon-o-clipboard" class="h-3.5 w-3.5 shrink-0" />
+                                        </button>
+                                    @endif
+                                    <a
+                                        href="{{ $link['url'] }}"
+                                        target="_blank"
+                                        class="p-1.5 rounded bg-gray-50 dark:bg-gray-800 hover:bg-primary-500 dark:hover:bg-primary-600 text-gray-500 dark:text-gray-400 hover:text-white border border-gray-200 dark:border-gray-700/60 hover:border-transparent transition-all duration-150"
+                                        title="Open Overlay"
+                                    >
+                                        <x-filament::icon icon="heroicon-m-arrow-top-right-on-square" class="h-3.5 w-3.5" />
+                                    </a>
+                                </div>
                             </div>
-
-                            <x-filament::icon
-                                icon="heroicon-m-arrow-top-right-on-square"
-                                class="h-4 w-4 text-gray-400 group-hover:text-primary-500 transition-colors"
-                            />
-                        </div>
-
-                        <div>
-                            <h4 class="font-bold text-gray-900 dark:text-white group-hover:text-primary-500 transition-colors">
-                                {{ $link['name'] }}
-                            </h4>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mt-1">
-                                {{ $link['description'] }}
-                            </p>
-                        </div>
+                        @endforeach
                     </div>
+                </div>
 
-                    @if(!($link['is_main'] ?? false))
-                        {{-- Copy OBS Link Button --}}
-                        <div class="mt-2 pt-3 border-t border-gray-150 dark:border-gray-800/80 flex items-center justify-between gap-2">
-                            <span class="text-[9px] font-black uppercase tracking-wider text-gray-400 dark:text-gray-500">OBS Overlay</span>
-                            <button
-                                type="button"
-                                x-on:click.stop.prevent="copyLink('{{ $link['url'] }}', $el)"
-                                class="obs-copy-btn flex items-center gap-1.5 px-2.5 py-1 rounded bg-gray-50 dark:bg-gray-800 hover:bg-emerald-500 dark:hover:bg-emerald-600 hover:text-white text-[11px] font-bold text-gray-650 dark:text-gray-300 border border-gray-200 dark:border-gray-700/60 hover:border-transparent transition-all duration-150"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="w-3.5 h-3.5 shrink-0">
-                                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" />
-                                </svg>
-                                <span class="obs-copy-label">Copy OBS Link</span>
-                            </button>
-                        </div>
-                    @endif
+                <!-- Group 2: Pre-Match Setup -->
+                <div class="bg-emerald-50/40 dark:bg-emerald-950/10 p-4 rounded-xl border border-emerald-100 dark:border-emerald-900/30 flex flex-col gap-3.5 shadow-sm">
+                    <h3 class="text-xs font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center gap-2 pb-2 border-b border-emerald-100 dark:border-emerald-900/20">
+                        <x-filament::icon icon="heroicon-m-calendar" class="h-4.5 w-4.5 text-emerald-500" />
+                        Pre-Match & Setup
+                    </h3>
+                    <div class="flex flex-col gap-2.5">
+                        @foreach($preMatch as $link)
+                            <div class="group flex items-center justify-between p-2.5 rounded-lg bg-white dark:bg-gray-900 border border-gray-150 dark:border-gray-800/60 hover:border-primary-500 dark:hover:border-primary-500 hover:shadow-xs transition-all duration-150 gap-3"
+                                 title="{{ $link['description'] }}">
+                                <div class="flex items-center gap-2.5 min-w-0">
+                                    <div @class([
+                                        'p-1.5 rounded-md shrink-0',
+                                        match($link['color']) {
+                                            'danger'  => 'bg-danger-500/10 text-danger-600 dark:text-danger-400',
+                                            'primary' => 'bg-primary-500/10 text-primary-600 dark:text-primary-400',
+                                            'warning' => 'bg-warning-500/10 text-warning-600 dark:text-warning-400',
+                                            'success' => 'bg-success-500/10 text-success-600 dark:text-success-400',
+                                            'info'    => 'bg-info-500/10 text-info-600 dark:text-info-400',
+                                            default   => 'bg-gray-500/10 text-gray-600 dark:text-gray-400',
+                                        }
+                                    ])>
+                                        <x-filament::icon icon="{{ $link['icon'] }}" class="h-4.5 w-4.5" />
+                                    </div>
+                                    <div class="min-w-0">
+                                        <span class="text-xs font-bold text-gray-900 dark:text-white truncate block group-hover:text-primary-500 transition-colors">
+                                            {{ $link['name'] }}
+                                        </span>
+                                        <span class="text-[9.5px] text-gray-500 dark:text-gray-400 block truncate mt-0.5 max-w-[180px]">
+                                            {{ $link['description'] }}
+                                        </span>
+                                    </div>
+                                </div>
 
-                    @if($link['is_main'] ?? false)
-                        <div class="absolute top-2 right-2">
-                            <span class="flex h-2 w-2">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-danger-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2 w-2 bg-danger-500"></span>
-                            </span>
-                        </div>
-                    @endif
-                </a>
-            @endforeach
+                                <div class="flex items-center gap-1.5 shrink-0">
+                                    @if(!($link['is_main'] ?? false))
+                                        <button
+                                            type="button"
+                                            x-on:click.stop.prevent="copyLink('{{ $link['url'] }}', $el)"
+                                            class="obs-copy-btn p-1.5 rounded bg-gray-50 dark:bg-gray-800 hover:bg-emerald-500 dark:hover:bg-emerald-600 text-gray-500 dark:text-gray-400 hover:text-white border border-gray-200 dark:border-gray-700/60 hover:border-transparent transition-all duration-150 flex items-center justify-center shrink-0"
+                                            title="Copy OBS Link"
+                                        >
+                                            <x-filament::icon icon="heroicon-o-clipboard" class="h-3.5 w-3.5 shrink-0" />
+                                        </button>
+                                    @endif
+                                    <a
+                                        href="{{ $link['url'] }}"
+                                        target="_blank"
+                                        class="p-1.5 rounded bg-gray-50 dark:bg-gray-800 hover:bg-primary-500 dark:hover:bg-primary-600 text-gray-500 dark:text-gray-400 hover:text-white border border-gray-200 dark:border-gray-700/60 hover:border-transparent transition-all duration-150"
+                                        title="Open Overlay"
+                                    >
+                                        <x-filament::icon icon="heroicon-m-arrow-top-right-on-square" class="h-3.5 w-3.5" />
+                                    </a>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                <!-- Group 3: Post-Match & Results -->
+                <div class="bg-amber-50/40 dark:bg-amber-950/10 p-4 rounded-xl border border-amber-100 dark:border-amber-900/30 flex flex-col gap-3.5 shadow-sm">
+                    <h3 class="text-xs font-black uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-2 pb-2 border-b border-amber-100 dark:border-amber-900/20">
+                        <x-filament::icon icon="heroicon-m-trophy" class="h-4.5 w-4.5 text-amber-500" />
+                        Post-Match & Results
+                    </h3>
+                    <div class="flex flex-col gap-2.5">
+                        @foreach($postMatch as $link)
+                            <div class="group flex items-center justify-between p-2.5 rounded-lg bg-white dark:bg-gray-900 border border-gray-150 dark:border-gray-800/60 hover:border-primary-500 dark:hover:border-primary-500 hover:shadow-xs transition-all duration-150 gap-3"
+                                 title="{{ $link['description'] }}">
+                                <div class="flex items-center gap-2.5 min-w-0">
+                                    <div @class([
+                                        'p-1.5 rounded-md shrink-0',
+                                        match($link['color']) {
+                                            'danger'  => 'bg-danger-500/10 text-danger-600 dark:text-danger-400',
+                                            'rose'    => 'bg-danger-500/10 text-danger-600 dark:text-danger-400',
+                                            'primary' => 'bg-primary-500/10 text-primary-600 dark:text-primary-400',
+                                            'warning' => 'bg-warning-500/10 text-warning-600 dark:text-warning-400',
+                                            'success' => 'bg-success-500/10 text-success-600 dark:text-success-400',
+                                            'info'    => 'bg-info-500/10 text-info-600 dark:text-info-400',
+                                            default   => 'bg-gray-500/10 text-gray-600 dark:text-gray-400',
+                                        }
+                                    ])>
+                                        <x-filament::icon icon="{{ $link['icon'] }}" class="h-4.5 w-4.5" />
+                                    </div>
+                                    <div class="min-w-0">
+                                        <span class="text-xs font-bold text-gray-900 dark:text-white truncate block group-hover:text-primary-500 transition-colors">
+                                            {{ $link['name'] }}
+                                        </span>
+                                        <span class="text-[9.5px] text-gray-500 dark:text-gray-400 block truncate mt-0.5 max-w-[180px]">
+                                            {{ $link['description'] }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-1.5 shrink-0">
+                                    @if(!($link['is_main'] ?? false))
+                                        <button
+                                            type="button"
+                                            x-on:click.stop.prevent="copyLink('{{ $link['url'] }}', $el)"
+                                            class="obs-copy-btn p-1.5 rounded bg-gray-50 dark:bg-gray-800 hover:bg-emerald-500 dark:hover:bg-emerald-600 text-gray-500 dark:text-gray-400 hover:text-white border border-gray-200 dark:border-gray-700/60 hover:border-transparent transition-all duration-150 flex items-center justify-center shrink-0"
+                                            title="Copy OBS Link"
+                                        >
+                                            <x-filament::icon icon="heroicon-o-clipboard" class="h-3.5 w-3.5 shrink-0" />
+                                        </button>
+                                    @endif
+                                    <a
+                                        href="{{ $link['url'] }}"
+                                        target="_blank"
+                                        class="p-1.5 rounded bg-gray-50 dark:bg-gray-800 hover:bg-primary-500 dark:hover:bg-primary-600 text-gray-500 dark:text-gray-400 hover:text-white border border-gray-200 dark:border-gray-700/60 hover:border-transparent transition-all duration-150"
+                                        title="Open Overlay"
+                                    >
+                                        <x-filament::icon icon="heroicon-m-arrow-top-right-on-square" class="h-3.5 w-3.5" />
+                                    </a>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
         </div>
 
         <x-slot name="footer">

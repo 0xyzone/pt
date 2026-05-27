@@ -156,6 +156,17 @@
             backdrop-filter: blur(16px);
         }
 
+        @keyframes hudCardPulse {
+            0%, 100% {
+                border-color: rgba(16, 185, 129, 0.25);
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+            }
+            50% {
+                border-color: rgba(16, 185, 129, 0.55);
+                box-shadow: 0 20px 50px rgba(16, 185, 129, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.08);
+            }
+        }
+
         /* Premium Glass HUD Panel */
         .hud-card {
             background: linear-gradient(135deg, rgba(8, 14, 28, 0.92) 0%, rgba(4, 7, 16, 0.98) 100%);
@@ -163,12 +174,6 @@
             border-left: 6px solid rgba(16, 185, 129, 0.7) !important;
             backdrop-filter: blur(20px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.05);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .hud-card:hover {
-            border-color: rgba(16, 185, 129, 0.5);
-            box-shadow: 0 25px 60px rgba(16, 185, 129, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.1);
         }
 
         /* Scanline sweeps inside HUD */
@@ -387,23 +392,23 @@
                             @foreach($placementPoints as $pt)
                             @php
                             // Aesthetic styles for different tiers of placements
-                            $bgClass = 'bg-slate-950/60 border-slate-800/80 hover:border-slate-700/60';
+                            $bgClass = 'bg-slate-950/60 border-slate-800/80';
                             $glowClass = 'text-white';
                             $crown = '';
 
                             if ($pt->placement == 1) {
-                            $bgClass = 'bg-gradient-to-br from-yellow-500/10 to-amber-500/5 border-yellow-500/40 hover:border-yellow-400';
+                            $bgClass = 'bg-gradient-to-br from-yellow-500/10 to-amber-500/5 border-yellow-500/40';
                             $glowClass = 'text-yellow-400 text-glow-yellow';
                             $crown = '👑 ';
                             } elseif ($pt->placement == 2) {
-                            $bgClass = 'bg-gradient-to-br from-slate-200/10 to-slate-300/5 border-slate-300/45 hover:border-slate-200';
+                            $bgClass = 'bg-gradient-to-br from-slate-200/10 to-slate-300/5 border-slate-300/45';
                             $glowClass = 'text-slate-200';
                             } elseif ($pt->placement == 3) {
-                            $bgClass = 'bg-gradient-to-br from-amber-600/15 to-amber-700/5 border-amber-600/40 hover:border-amber-500';
+                            $bgClass = 'bg-gradient-to-br from-amber-600/15 to-amber-700/5 border-amber-600/40';
                             $glowClass = 'text-amber-500';
-                            } elseif ($pt->placement <= 8) { $bgClass='bg-slate-950/80 border-cyan-500/20 hover:border-cyan-500/40' ; $glowClass='text-cyan-400 text-glow-cyan' ; } $itemDelay=0.08 * $loop->iteration;
+                            } elseif ($pt->placement <= 8) { $bgClass='bg-slate-950/80 border-cyan-500/20' ; $glowClass='text-cyan-400 text-glow-cyan' ; } $itemDelay=0.08 * $loop->iteration;
                                 @endphp
-                                <div class="grid-item-animate {{ $bgClass }} border rounded-xl p-3 flex flex-col justify-between items-center transition-all duration-300 transform hover:-translate-y-1 shadow-md relative" style="animation-delay: {{ $itemDelay }}s; height: 95px;">
+                                <div class="grid-item-animate {{ $bgClass }} border rounded-xl p-3 flex flex-col justify-between items-center transition-all duration-300 shadow-md relative" style="animation-delay: {{ $itemDelay }}s; height: 95px;">
 
                                     <div class="absolute inset-0 bg-grid-tiny opacity-5 pointer-events-none rounded-xl"></div>
                                     <span class="text-[9px] font-black text-slate-400/60 font-hud tracking-[0.2em] uppercase leading-none mt-1">

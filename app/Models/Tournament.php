@@ -78,4 +78,15 @@ class Tournament extends Model
     {
         return $this->belongsToMany(Caster::class);
     }
+
+    /**
+     * Get the roadmap associated with the Tournament.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function tournamentRoadmap(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(TournamentRoadmap::class);
+    }
 }
+

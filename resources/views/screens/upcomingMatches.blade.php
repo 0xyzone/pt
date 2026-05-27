@@ -48,14 +48,29 @@
             animation: pulse-yellow 2s infinite ease-in-out;
         }
 
-        .match-card {
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        @keyframes cardFloatMatches {
+            0%, 100% {
+                transform: translateY(0);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+                border-color: rgba(245, 158, 11, 0.15);
+            }
+            50% {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 25px rgba(245, 158, 11, 0.08);
+                border-color: rgba(245, 158, 11, 0.35);
+            }
         }
 
-        .match-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 15px 30px rgba(245, 158, 11, 0.25);
-            border-color: #f59e0b;
+        .match-card {
+            animation: cardFloatMatches 5s infinite ease-in-out;
+        }
+
+        .match-card:nth-child(even) {
+            animation-delay: 1.5s;
+        }
+
+        .match-card:nth-child(3n) {
+            animation-delay: 3s;
         }
 
         .sponsor-slide {
@@ -128,7 +143,7 @@
                 </div>
                 <div class="flex flex-col text-left">
                     <span class="text-xs font-bold text-slate-500 tracking-[0.3em] uppercase leading-none">SYS // TOURNAMENT_HUB</span>
-                    <span class="text-3xl font-black uppercase text-yellow-455 tracking-wider mt-1.5 leading-tight text-glow-gold italic">{{ $tournament->name }}</span>
+                    <span class="text-3xl font-black uppercase text-yellow-400 tracking-wider mt-1.5 leading-tight text-glow-gold italic">{{ $tournament->name }}</span>
                 </div>
             </div>
 
@@ -197,9 +212,9 @@
                         @endphp
 
                         @foreach($displayMatches as $index => $match)
-                        <div class="match-card h-52.5 w-85 shrink-0 relative overflow-hidden group rounded-xl border border-yellow-400/20 hover:border-yellow-400 shadow-2xl">
+                        <div class="match-card h-52.5 w-85 shrink-0 relative overflow-hidden group rounded-xl border border-yellow-400/20 shadow-2xl">
                             {{-- Map Background Gradient Overlay --}}
-                            <div class="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/70 to-slate-950/20 z-10 group-hover:from-slate-950 group-hover:via-slate-950/50 transition-all duration-300"></div>
+                            <div class="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/70 to-slate-950/20 z-10 transition-all duration-300"></div>
                             @php
                             $mapImage = match (strtolower($match->map)) {
                             'erangle', 'erangel' => asset('/img/erangel_thumb.jpg'),
@@ -223,15 +238,15 @@
                             }
                             }
                             @endphp
-                            <img src="{{ $mapImage }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <img src="{{ $mapImage }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700">
 
                             {{-- Winner Overlay (if completed) --}}
                             @if($match->is_completed && $winner)
                             <div class="absolute inset-0 z-30 flex flex-col items-center justify-center bg-slate-950/75 backdrop-blur-[2px]">
                                 <div class="relative mb-2">
                                     <img src="{{ $winner->logo_image ? asset('storage/' . $winner->logo_image) : asset('img/defult_team_logo.png') }}" class="w-24 aspect-square object-contain border border-yellow-400 bg-slate-950 rounded-lg shadow-2xl">
-                                    <div class="absolute -top-2.5 -right-7 bg-yellow-455 px-2 py-0.5 pubg-skew shadow-lg border border-white/20">
-                                        <span class="pubg-unskew block text-[16px] font-black text-yellow-500 uppercase leading-none">WWCD</span>
+                                    <div class="absolute -top-2.5 -right-7 bg-yellow-500 px-2 py-0.5 pubg-skew shadow-lg border border-white/20">
+                                        <span class="pubg-unskew block text-[16px] font-black text-black uppercase leading-none">WWCD</span>
                                     </div>
                                 </div>
                                 <span class="text-lg font-black uppercase italic text-yellow-400 tracking-wider drop-shadow-md leading-none">{{ $winner->short_name }}</span>

@@ -365,7 +365,7 @@
                     {{-- Rows — each slides up with stagger --}}
                     @foreach($col['data'] as $match)
                         @php $rank = $loop->iteration + $col['startRank'] - 1; @endphp
-                        <div class="slide-up {{ $rank === 2 ? 'glass-card-rank2' : ($rank === 3 ? 'glass-card-rank3' : 'glass-card') }} px-3 py-2.5 flex items-center gap-2 rounded-md transition-all duration-200 hover:scale-[1.01] hover:brightness-110"
+                        <div class="slide-up {{ $rank === 2 ? 'glass-card-rank2' : ($rank === 3 ? 'glass-card-rank3' : 'glass-card') }} px-3 py-2.5 flex items-center gap-2 rounded-md transition-all duration-200"
                              style="animation-delay:{{ ($col['delay'] + 0.1 + $loop->index * 0.07) }}s;">
 
                             {{-- Rank --}}

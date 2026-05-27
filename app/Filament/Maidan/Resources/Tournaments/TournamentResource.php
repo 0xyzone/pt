@@ -5,6 +5,7 @@ namespace App\Filament\Maidan\Resources\Tournaments;
 use App\Filament\Maidan\Resources\Tournaments\Pages\CreateTournament;
 use App\Filament\Maidan\Resources\Tournaments\Pages\EditTournament;
 use App\Filament\Maidan\Resources\Tournaments\Pages\EditTournamentSetting;
+use App\Filament\Maidan\Resources\Tournaments\Pages\EditTournamentRoadmap;
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentMatches\Pages\ListTournamentMatches;
 use App\Filament\Maidan\Resources\Tournaments\Pages\ListTournaments;
 use App\Filament\Maidan\Resources\Tournaments\Resources\TournamentTeams\Pages\ListTournamentTeams;
@@ -68,6 +69,7 @@ class TournamentResource extends Resource
             'edit' => EditTournament::route('/{record}/edit'),
             'rounds' => ListTournamentRounds::route('/{record}/rounds'),
             'settings' => EditTournamentSetting::route('/{record}/settings'),
+            'roadmap' => EditTournamentRoadmap::route('/{record}/roadmap'),
         ];
     }
     public static function getRecordSubNavigation(Page $page): array
@@ -76,6 +78,7 @@ class TournamentResource extends Resource
             // ViewTournament::class,
             EditTournament::class,
             EditTournamentSetting::class,
+            EditTournamentRoadmap::class,
             ListTournamentTeams::class,
             ListTournamentRounds::class,
             ListTournamentMatches::class,

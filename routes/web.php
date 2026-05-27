@@ -18,6 +18,7 @@ Route::prefix('{user_id}/screens')->group( function () {
     Route::get('/castersscreen', [ScreenController::class, 'castersScreen'])->name('screens.castersscreen');
     Route::get('/headtohead', [ScreenController::class, 'headToHead'])->name('screens.headtohead');
     Route::get('/topfraggers', [ScreenController::class, 'topFraggers'])->name('screens.topfraggers');
+    Route::get('/roadmap', [ScreenController::class, 'roadmap'])->name('screens.roadmap');
     Route::post('/update-h2h', [ScreenController::class, 'updateH2H'])->name('screens.updateh2h');
     
     // OBS Overlays and Control Panel

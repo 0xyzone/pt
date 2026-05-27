@@ -39,7 +39,8 @@
             animation: slideUpFooterExit 0.34s cubic-bezier(0.4, 0, 1, 1) both !important;
             animation-delay: 0s !important;
         }
-        .exit-active .card-reveal {
+        .exit-active .card-reveal,
+        .exit-active .card-reveal-staggered {
             animation: cardRevealExit 0.42s cubic-bezier(0.4, 0, 1, 1) both !important;
             animation-delay: 0s !important;
         }
@@ -146,6 +147,7 @@
                 topfraggers:    '{{ route("screens.topfraggers",    ["user_id" => $user->id]) }}',
                 mappool:        '{{ route("screens.mappool",        ["user_id" => $user->id]) }}',
                 pointsystem:    '{{ route("screens.pointsystem",    ["user_id" => $user->id]) }}',
+                roadmap:        '{{ route("screens.roadmap",        ["user_id" => $user->id]) }}',
             };
             return map[viewType] || null;
         }
@@ -259,6 +261,10 @@
                 })
                 .listen('.TournamentMatchUpdated', (e) => {
                     console.log('TournamentMatchUpdated received:', e);
+                    fetchAndRender(currentViewName);
+                })
+                .listen('.TournamentRoadmapUpdated', (e) => {
+                    console.log('TournamentRoadmapUpdated received:', e);
                     fetchAndRender(currentViewName);
                 })
                 .listen('.RefreshScreens', () => {

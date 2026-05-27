@@ -238,116 +238,153 @@
         </div>
         @endif
 
-        {{-- 7-Grid Quick Overlays Actions --}}
-        <div class="w-full grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-4 mb-8">
-            <!-- POST MATCH BTN -->
-            <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
-                @csrf
-                <input type="hidden" name="view" value="postmatch">
-                <button type="submit" class="w-full h-36 flex flex-col items-center justify-center gap-3 bg-slate-900/60 hover:bg-yellow-950/20 hover:border-yellow-500 border border-slate-850 rounded-2xl text-yellow-500 transition-all shadow-lg active:scale-[0.98] group">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10 group-hover:scale-110 transition-transform">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
-                    </svg>
-                    <span class="text-sm font-black uppercase tracking-widest text-center">Post Match</span>
-                </button>
-            </form>
+        {{-- Segregated Quick Overlays Actions --}}
+        <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            
+            {{-- PRE-MATCH SETUP & INFO CONTROLS --}}
+            <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800 shadow-xl flex flex-col justify-between">
+                <div>
+                    <h3 class="text-emerald-400 text-xs font-black uppercase tracking-[0.2em] mb-4 flex items-center gap-2 font-esports">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Pre-Match Setup & Info Overlays
+                    </h3>
+                    <div class="grid grid-cols-3 gap-3">
+                        <!-- ROADMAP BTN -->
+                        <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
+                            @csrf
+                            <input type="hidden" name="view" value="roadmap">
+                            <button type="submit" class="w-full h-28 flex flex-col items-center justify-center gap-2 bg-slate-950/80 hover:bg-emerald-950/20 hover:border-emerald-500 border border-slate-850 rounded-xl text-emerald-400 transition-all shadow-md active:scale-[0.96] group">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="w-7 h-7 group-hover:scale-108 transition-transform">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75L12 3m0 0l3 3m-3-3v12m-9-2.25h18" />
+                                </svg>
+                                <span class="text-[10px] font-black uppercase tracking-wider text-center leading-tight">Roadmap</span>
+                            </button>
+                        </form>
 
-            <!-- OVERALL RANKING BTN -->
-            <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
-                @csrf
-                <input type="hidden" name="view" value="overallranking">
-                <button type="submit" class="w-full h-36 flex flex-col items-center justify-center gap-3 bg-slate-900/60 hover:bg-orange-950/20 hover:border-orange-500 border border-slate-850 rounded-2xl text-orange-400 transition-all shadow-lg active:scale-[0.98] group">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10 group-hover:scale-110 transition-transform">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
-                    </svg>
-                    <span class="text-sm font-black uppercase tracking-widest text-center">Overall Rank</span>
-                </button>
-            </form>
+                        <!-- MAP POOL BTN -->
+                        <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
+                            @csrf
+                            <input type="hidden" name="view" value="mappool">
+                            <button type="submit" class="w-full h-28 flex flex-col items-center justify-center gap-2 bg-slate-950/80 hover:bg-emerald-950/20 hover:border-emerald-500 border border-slate-850 rounded-xl text-emerald-400 transition-all shadow-md active:scale-[0.96] group">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="w-7 h-7 group-hover:scale-108 transition-transform">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75L3 9v11.25l6-2.25m0-12l6 2.25m-6-2.25V20.25m6-11.25l6-2.25V18l-6 2.25m0-11.25V20.25" />
+                                </svg>
+                                <span class="text-[10px] font-black uppercase tracking-wider text-center leading-tight">Map Pool</span>
+                            </button>
+                        </form>
 
-            <!-- HEAD TO HEAD BTN -->
-            <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
-                @csrf
-                <input type="hidden" name="view" value="headtohead">
-                <button type="submit" class="w-full h-36 flex flex-col items-center justify-center gap-3 bg-slate-900/60 hover:bg-cyan-950/20 hover:border-cyan-500 border border-slate-850 rounded-2xl text-cyan-400 transition-all shadow-lg active:scale-[0.98] group">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10 group-hover:scale-110 transition-transform">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
-                    </svg>
-                    <span class="text-sm font-black uppercase tracking-widest text-center">Head To Head</span>
-                </button>
-            </form>
+                        <!-- POINTS SYSTEM BTN -->
+                        <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
+                            @csrf
+                            <input type="hidden" name="view" value="pointsystem">
+                            <button type="submit" class="w-full h-28 flex flex-col items-center justify-center gap-2 bg-slate-950/80 hover:bg-emerald-950/20 hover:border-emerald-500 border border-slate-850 rounded-xl text-emerald-400 transition-all shadow-md active:scale-[0.96] group">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="w-7 h-7 group-hover:scale-108 transition-transform">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.03 0 1.9.693 2.166 1.638m-7.3 8.359a9 9 0 110-11.25" />
+                                </svg>
+                                <span class="text-[10px] font-black uppercase tracking-wider text-center leading-tight">Point System</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
-            <!-- TOP 5 FRAGGERS BTN -->
-            <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
-                @csrf
-                <input type="hidden" name="view" value="topfraggers">
-                <button type="submit" class="w-full h-36 flex flex-col items-center justify-center gap-3 bg-slate-900/60 hover:bg-purple-950/20 hover:border-purple-500 border border-slate-850 rounded-2xl text-purple-400 transition-all shadow-lg active:scale-[0.98] group">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10 group-hover:scale-110 transition-transform">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z" />
-                    </svg>
-                    <span class="text-sm font-black uppercase tracking-widest text-center">Top Fraggers</span>
-                </button>
-            </form>
+            {{-- POST-MATCH RESULTS & OUTROS CONTROLS --}}
+            <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800 shadow-xl flex flex-col justify-between">
+                <div>
+                    <h3 class="text-amber-500 text-xs font-black uppercase tracking-[0.2em] mb-4 flex items-center gap-2 font-esports">
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
+                        Post-Match Results & Leaderboard Overlays
+                    </h3>
+                    <div class="grid grid-cols-4 gap-2.5">
+                        <!-- POST MATCH BTN -->
+                        <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
+                            @csrf
+                            <input type="hidden" name="view" value="postmatch">
+                            <button type="submit" class="w-full h-28 flex flex-col items-center justify-center gap-2 bg-slate-950/80 hover:bg-yellow-950/20 hover:border-yellow-500 border border-slate-850 rounded-xl text-yellow-500 transition-all shadow-md active:scale-[0.96] group">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="w-7 h-7 group-hover:scale-108 transition-transform">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                                </svg>
+                                <span class="text-[9.5px] font-black uppercase tracking-wider text-center leading-tight">Post Match</span>
+                            </button>
+                        </form>
 
-            <!-- MAP POOL BTN -->
-            <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
-                @csrf
-                <input type="hidden" name="view" value="mappool">
-                <button type="submit" class="w-full h-36 flex flex-col items-center justify-center gap-3 bg-slate-900/60 hover:bg-emerald-950/20 hover:border-emerald-500 border border-slate-850 rounded-2xl text-emerald-400 transition-all shadow-lg active:scale-[0.98] group">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10 group-hover:scale-110 transition-transform">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75L3 9v11.25l6-2.25m0-12l6 2.25m-6-2.25V20.25m6-11.25l6-2.25V18l-6 2.25m0-11.25V20.25" />
-                    </svg>
-                    <span class="text-sm font-black uppercase tracking-widest text-center">Map Pool</span>
-                </button>
-            </form>
+                        <!-- OVERALL RANKING BTN -->
+                        <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
+                            @csrf
+                            <input type="hidden" name="view" value="overallranking">
+                            <button type="submit" class="w-full h-28 flex flex-col items-center justify-center gap-2 bg-slate-950/80 hover:bg-orange-950/20 hover:border-orange-500 border border-slate-850 rounded-xl text-orange-400 transition-all shadow-md active:scale-[0.96] group">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="w-7 h-7 group-hover:scale-108 transition-transform">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                                </svg>
+                                <span class="text-[9.5px] font-black uppercase tracking-wider text-center leading-tight">Overall Rank</span>
+                            </button>
+                        </form>
 
-            <!-- POINTS SYSTEM BTN -->
-            <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
-                @csrf
-                <input type="hidden" name="view" value="pointsystem">
-                <button type="submit" class="w-full h-36 flex flex-col items-center justify-center gap-3 bg-slate-900/60 hover:bg-emerald-950/20 hover:border-emerald-500 border border-slate-850 rounded-2xl text-emerald-400 transition-all shadow-lg active:scale-[0.98] group">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10 group-hover:scale-110 transition-transform">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.03 0 1.9.693 2.166 1.638m-7.3 8.359a9 9 0 110-11.25" />
-                    </svg>
-                    <span class="text-sm font-black uppercase tracking-widest text-center">Point System</span>
-                </button>
-            </form>
+                        <!-- HEAD TO HEAD BTN -->
+                        <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
+                            @csrf
+                            <input type="hidden" name="view" value="headtohead">
+                            <button type="submit" class="w-full h-28 flex flex-col items-center justify-center gap-2 bg-slate-950/80 hover:bg-cyan-950/20 hover:border-cyan-500 border border-slate-850 rounded-xl text-cyan-400 transition-all shadow-md active:scale-[0.96] group">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="w-7 h-7 group-hover:scale-108 transition-transform">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+                                </svg>
+                                <span class="text-[9.5px] font-black uppercase tracking-wider text-center leading-tight">Head to Head</span>
+                            </button>
+                        </form>
 
-            <!-- EMPTY SCREEN BTN -->
-            <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
-                @csrf
-                <input type="hidden" name="view" value="empty">
-                <button type="submit" class="w-full h-36 flex flex-col items-center justify-center gap-3 bg-slate-900/60 hover:bg-slate-900 hover:border-slate-700 border border-slate-850 rounded-2xl text-slate-400 hover:text-slate-200 transition-all shadow-lg active:scale-[0.98] group">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10 group-hover:scale-110 transition-transform">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                    </svg>
-                    <span class="text-sm font-black uppercase tracking-widest text-center">Empty Screen</span>
-                </button>
-            </form>
+                        <!-- TOP 5 FRAGGERS BTN -->
+                        <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="h-full">
+                            @csrf
+                            <input type="hidden" name="view" value="topfraggers">
+                            <button type="submit" class="w-full h-28 flex flex-col items-center justify-center gap-2 bg-slate-950/80 hover:bg-purple-950/20 hover:border-purple-500 border border-slate-850 rounded-xl text-purple-400 transition-all shadow-md active:scale-[0.96] group">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="w-7 h-7 group-hover:scale-108 transition-transform">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z" />
+                                </svg>
+                                <span class="text-[9.5px] font-black uppercase tracking-wider text-center leading-tight">Top Fraggers</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-        {{-- VISIBILITY TOGGLES --}}
-        <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <form action="{{ route('screens.togglevisibility', ['user_id' => $user->id]) }}" method="POST">
+        {{-- MAIN SYSTEM ACTIONS CONTROLS --}}
+        <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- CLEAR / EMPTY SCREEN BTN -->
+            <form action="{{ route('screens.switchview', ['user_id' => $user->id]) }}" method="POST" class="w-full">
                 @csrf
-                <input type="hidden" name="visible" value="1">
-                <button type="submit" class="w-full py-5 flex items-center justify-center gap-3 bg-emerald-950/30 hover:bg-emerald-950/50 border border-emerald-500/30 hover:border-emerald-500 rounded-2xl text-emerald-400 transition-all font-black uppercase tracking-widest active:scale-95 text-sm shadow-md">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <input type="hidden" name="view" value="empty">
+                <button type="submit" class="w-full py-4.5 flex items-center justify-center gap-3 bg-slate-900/60 hover:bg-slate-900 hover:border-slate-600 border border-slate-800 rounded-2xl text-slate-400 hover:text-slate-200 transition-all font-black uppercase tracking-widest active:scale-95 text-xs shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                    </svg>
+                    Clear Master Screen (Empty)
+                </button>
+            </form>
+
+            <!-- LEADERBOARD HUD VISIBILITY TOGGLE -->
+            <form action="{{ route('screens.togglevisibility', ['user_id' => $user->id]) }}" method="POST" class="w-full">
+                @csrf
+                <input type="hidden" name="visible" value="{{ $activeMatch && $activeMatch->is_leaderboard_visible ? '0' : '1' }}">
+                <button type="submit" class="w-full py-4.5 flex items-center justify-center gap-3 {{ $activeMatch && $activeMatch->is_leaderboard_visible ? 'bg-rose-950/20 hover:bg-rose-950/40 border-rose-500/30 hover:border-rose-500 text-rose-400' : 'bg-emerald-950/20 hover:bg-emerald-950/40 border-emerald-500/30 hover:border-emerald-500 text-emerald-400' }} border rounded-2xl transition-all font-black uppercase tracking-widest active:scale-95 text-xs shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
-                    Show Active Match Leaderboard
+                    {{ $activeMatch && $activeMatch->is_leaderboard_visible ? 'Hide Leaderboard HUD' : 'Show Leaderboard HUD' }}
                 </button>
             </form>
 
-            <form action="{{ route('screens.togglevisibility', ['user_id' => $user->id]) }}" method="POST">
+            <!-- FORCE REFRESH ALL CLIENTS -->
+            <form action="{{ route('screens.refresh', ['user_id' => $user->id]) }}" method="POST" class="w-full">
                 @csrf
-                <input type="hidden" name="visible" value="0">
-                <button type="submit" class="w-full py-5 flex items-center justify-center gap-3 bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-slate-700 rounded-2xl text-slate-400 transition-all font-black uppercase tracking-widest active:scale-95 text-sm shadow-md">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                <button type="submit" class="w-full py-4.5 flex items-center justify-center gap-3 bg-indigo-950/20 hover:bg-indigo-950/40 border border-indigo-500/30 hover:border-indigo-500 rounded-2xl text-indigo-400 transition-all font-black uppercase tracking-widest active:scale-95 text-xs shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5 animate-spin-slow">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                     </svg>
-                    Hide Active Match Leaderboard
+                    Force Refresh Screens
                 </button>
             </form>
         </div>
@@ -572,220 +609,201 @@
             Open Live Stats Control Panel
         </a>
 
-        {{-- Overlays Links and Instructions --}}
-        <div class="mt-12 bg-slate-900/30 p-8 rounded-2xl border border-slate-800 w-full shadow-lg">
-            <h3 class="text-slate-400 text-xs font-black uppercase tracking-widest mb-4 border-b border-slate-800 pb-2">Active OBS Overlay Screens</h3>
-            <ul class="text-slate-400 text-sm space-y-3.5">
-                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-950 p-3 rounded-xl border border-slate-850">
-                    <div>
-                        <strong class="text-yellow-400 uppercase text-xs tracking-wider">1. Upcoming Matches Screen:</strong>
-                        <span class="text-slate-500 block text-xs mt-0.5">L-shaped advertisement frame with upcoming schedule. Dimensions: 1920x1080.</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <a href="{{ route('screens.upcomingmatches', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 hover:border-yellow-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-yellow-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
-                        <button type="button" onclick="copyObsLink('{{ route('screens.upcomingmatches', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
-                            <span>Copy OBS Link</span>
-                        </button>
-                    </div>
-                </li>
+        {{-- Overlays Links Grid --}}
+        <div class="mt-12 w-full">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-slate-800 pb-3">
+                <div>
+                    <h3 class="text-yellow-400 text-xl font-black uppercase tracking-wider font-esports">Active OBS Broadcast Overlays</h3>
+                    <p class="text-slate-500 text-xs mt-1 uppercase font-bold tracking-wider">Categorized production screens for live streams</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-400">Total: 16 Screens</span>
+                </div>
+            </div>
 
-                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-950 p-3 rounded-xl border border-slate-850">
-                    <div>
-                        <strong class="text-yellow-400 uppercase text-xs tracking-wider">2. Starting Soon Screen:</strong>
-                        <span class="text-slate-500 block text-xs mt-0.5">Beautiful landing with large central countdown clock and sponsor slideshow. Dimensions: 1920x1080.</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <a href="{{ route('screens.startingsoon', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 hover:border-yellow-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-yellow-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
-                        <button type="button" onclick="copyObsLink('{{ route('screens.startingsoon', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
-                            <span>Copy OBS Link</span>
-                        </button>
-                    </div>
-                </li>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @php
+                    $overlays = [
+                        [
+                            'name' => 'Main Master OBS',
+                            'route' => route('screens.obsmaster', ['user_id' => $user->id]),
+                            'category' => 'Console',
+                            'badge_color' => 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30',
+                            'desc' => 'Dynamic screen switcher supporting entry and exit transitions. Central broadcast feed.',
+                            'dimensions' => '1920 x 1080',
+                            'icon' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0V12a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 12V5.25" /></svg>'
+                        ],
+                        [
+                            'name' => 'Upcoming Matches',
+                            'route' => route('screens.upcomingmatches', ['user_id' => $user->id]),
+                            'category' => 'Pre-Match / Setup',
+                            'badge_color' => 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+                            'desc' => 'L-shaped advertisement frame with upcoming schedule and scrolling sponsors.',
+                            'dimensions' => '1920 x 1080',
+                            'icon' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" /></svg>'
+                        ],
+                        [
+                            'name' => 'Starting Soon',
+                            'route' => route('screens.startingsoon', ['user_id' => $user->id]),
+                            'category' => 'Pre-Match / Setup',
+                            'badge_color' => 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+                            'desc' => 'Beautiful pre-stream landing with large countdown clock and partner showcase slides.',
+                            'dimensions' => '1920 x 1080',
+                            'icon' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" /></svg>'
+                        ],
+                        [
+                            'name' => 'Ending Screen',
+                            'route' => route('screens.ending', ['user_id' => $user->id]),
+                            'category' => 'Post-Match / Outro',
+                            'badge_color' => 'bg-amber-500/10 text-amber-400 border-amber-500/30',
+                            'desc' => 'Ending closure screen with dynamic social handles, countdown, and active timer.',
+                            'dimensions' => '1920 x 1080',
+                            'icon' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1 0 12.728 0M12 3v9" /></svg>'
+                        ],
+                        [
+                            'name' => 'Live Ranking HUD',
+                            'route' => route('screens.activematch', ['user_id' => $user->id]),
+                            'category' => 'Post-Match / Results',
+                            'badge_color' => 'bg-amber-500/10 text-amber-400 border-amber-500/30',
+                            'desc' => 'Left-side scrolling leaderboard display HUD for active tournament matches.',
+                            'dimensions' => '1920 x 1080',
+                            'icon' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" /></svg>'
+                        ],
+                        [
+                            'name' => 'Map Screen HUD',
+                            'route' => route('screens.mapscreen', ['user_id' => $user->id]),
+                            'category' => 'Post-Match / Results',
+                            'badge_color' => 'bg-amber-500/10 text-amber-400 border-amber-500/30',
+                            'desc' => '1080x1080 map framing with active rosters, players alive, and scoreboard HUD.',
+                            'dimensions' => '1920 x 1080',
+                            'icon' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8m-9-3h12" /></svg>'
+                        ],
+                        [
+                            'name' => 'Casters Overlay',
+                            'route' => route('screens.castersscreen', ['user_id' => $user->id]),
+                            'category' => 'Pre-Match / Setup',
+                            'badge_color' => 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+                            'desc' => 'Sleek 2-caster dual camera layout with custom transparent feeds overlay.',
+                            'dimensions' => '1920 x 1080',
+                            'icon' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 0 0 6-6v-1.5m-6 7.5a6 6 0 0 1-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 0 1-3-3V4.5a3 3 0 1 1 6 0v8.25a3 3 0 0 1-3 3z" /></svg>'
+                        ],
+                        [
+                            'name' => 'Head-to-Head Duel',
+                            'route' => route('screens.headtohead', ['user_id' => $user->id]),
+                            'category' => 'Post-Match / Results',
+                            'badge_color' => 'bg-amber-500/10 text-amber-400 border-amber-500/30',
+                            'desc' => 'Cinematic diagonal split comparative dashboard between the top 2 teams in real time.',
+                            'dimensions' => '1920 x 1080',
+                            'icon' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.656 48.656 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3M4.5 12a48.654 48.654 0 0 1 .138-3.662 4.006 4.006 0 0 1 3.7-3.7 48.656 48.656 0 0 1 7.324 0 4.006 4.006 0 0 1 3.7 3.7c.017.22.032.441.046.662M4.5 12l-3 3m3-3l3-3" /></svg>'
+                        ],
+                        [
+                            'name' => 'Top 5 Fraggers',
+                            'route' => route('screens.topfraggers', ['user_id' => $user->id]),
+                            'category' => 'Post-Match / Results',
+                            'badge_color' => 'bg-amber-500/10 text-amber-400 border-amber-500/30',
+                            'desc' => 'Interactive statistics dashboard highlighting top 5 killers of the match.',
+                            'dimensions' => '1920 x 1080',
+                            'icon' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.048 8.287 8.287 0 0 0 9 9.6a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 0 0 .495-7.467 5.99 5.99 0 0 0-1.925 3.546 5.974 5.974 0 0 1-2.133-1A3.75 3.75 0 0 0 12 18z" /></svg>'
+                        ],
+                        [
+                            'name' => 'Post-Match Stats',
+                            'route' => route('screens.postmatch', ['user_id' => $user->id]),
+                            'category' => 'Post-Match / Results',
+                            'badge_color' => 'bg-amber-500/10 text-amber-400 border-amber-500/30',
+                            'desc' => 'High-tech post-match summary displaying final team standings and elims.',
+                            'dimensions' => '1920 x 1080',
+                            'icon' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 0 1 3-3h-15a3 3 0 0 1 3 3m9 0v3.75m-9 0v-3.75m9 0h3.75m-12.75 0H3.75m9.75-13.5A3.75 3.75 0 0 0 9.75 9.75v1.5a3.75 3.75 0 0 0 3.75 3.75M12 5.25a3.75 3.75 0 0 1 3.75 3.75v1.5a3.75 3.75 0 0 1-3.75 3.75" /></svg>'
+                        ],
+                        [
+                            'name' => 'Overall Standings',
+                            'route' => route('screens.overallranking', ['user_id' => $user->id]),
+                            'category' => 'Post-Match / Results',
+                            'badge_color' => 'bg-amber-500/10 text-amber-400 border-amber-500/30',
+                            'desc' => 'Official overall standings showing total matches, kills, place points, and WWCDs.',
+                            'dimensions' => '1920 x 1080',
+                            'icon' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25z" /></svg>'
+                        ],
+                        [
+                            'name' => 'Lobby Slot List',
+                            'route' => route('screens.slotlist', ['user_id' => $user->id]),
+                            'category' => 'Pre-Match / Setup',
+                            'badge_color' => 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+                            'desc' => 'Visual slot list displaying lobby allocations starting from slot 2.',
+                            'dimensions' => '1920 x 1080',
+                            'icon' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0z" /></svg>'
+                        ],
+                        [
+                            'name' => 'Map Pool Schedule',
+                            'route' => route('screens.mappool', ['user_id' => $user->id]),
+                            'category' => 'Pre-Match / Setup',
+                            'badge_color' => 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+                            'desc' => 'Broadcast board highlighting maps layout, modes, and winners of current rounds.',
+                            'dimensions' => '1920 x 1080',
+                            'icon' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75L3 9v11.25l6-2.25m0-12l6 2.25m-6-2.25V20.25m6-11.25l6-2.25V18l-6 2.25m0-11.25V20.25" /></svg>'
+                        ],
+                        [
+                            'name' => 'Point System Rules',
+                            'route' => route('screens.pointsystem', ['user_id' => $user->id]),
+                            'category' => 'Pre-Match / Setup',
+                            'badge_color' => 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+                            'desc' => 'Broadcast point system breakdown explaining placement and elim rules.',
+                            'dimensions' => '1920 x 1080',
+                            'icon' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.03 0 1.9.693 2.166 1.638m-7.3 8.359a9 9 0 110-11.25" /></svg>'
+                        ],
+                        [
+                            'name' => 'Tournament Roadmap',
+                            'route' => route('screens.roadmap', ['user_id' => $user->id]),
+                            'category' => 'Pre-Match / Setup',
+                            'badge_color' => 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+                            'desc' => 'High-fidelity timeline roadmap displaying stages, deadlines, and tournament roadmap.',
+                            'dimensions' => '1920 x 1080',
+                            'icon' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75L12 3m0 0l3 3m-3-3v12m-9-2.25h18" /></svg>'
+                        ],
+                        [
+                            'name' => 'Team Elimination HUD',
+                            'route' => route('screens.teamelimination', ['user_id' => $user->id]),
+                            'category' => 'Post-Match / Results',
+                            'badge_color' => 'bg-amber-500/10 text-amber-400 border-amber-500/30',
+                            'desc' => 'Real-time broadcast HUD showing team-by-team status and eliminations dynamically.',
+                            'dimensions' => '1920 x 1080',
+                            'icon' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" /></svg>'
+                        ]
+                    ];
+                @endphp
 
-                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-950 p-3 rounded-xl border border-slate-850">
-                    <div>
-                        <strong class="text-amber-550 uppercase text-xs tracking-wider">3. Ending Screen:</strong>
-                        <span class="text-slate-500 block text-xs mt-0.5">Intermission / Match Ended layout with massive countdown and sponsor scroll. Dimensions: 1920x1080.</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <a href="{{ route('screens.ending', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:border-amber-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-amber-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
-                        <button type="button" onclick="copyObsLink('{{ route('screens.ending', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
-                            <span>Copy OBS Link</span>
-                        </button>
-                    </div>
-                </li>
+                @foreach($overlays as $idx => $overlay)
+                    <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 flex flex-col justify-between shadow-md hover:border-slate-700 transition-all">
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-3.5">
+                                <span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider border {{ $overlay['badge_color'] }}">
+                                    {{ $overlay['category'] }}
+                                </span>
+                                <span class="text-slate-500 text-[10px] font-bold font-mono tracking-wider">{{ $overlay['dimensions'] }}</span>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="p-2.5 rounded-xl bg-slate-950/80 text-yellow-400 border border-slate-850 self-start">
+                                    {!! $overlay['icon'] !!}
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="text-white text-base font-black uppercase tracking-wide leading-tight">{{ $overlay['name'] }}</h4>
+                                    <p class="text-slate-400 text-xs mt-1.5 leading-relaxed line-clamp-2">{{ $overlay['desc'] }}</p>
+                                </div>
+                            </div>
+                        </div>
 
-                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-950 p-3 rounded-xl border border-slate-850">
-                    <div>
-                        <strong class="text-orange-400 uppercase text-xs tracking-wider">4. Main Master OBS:</strong>
-                        <span class="text-slate-500 block text-xs mt-0.5">Dynamic screen switcher supporting entry and exit transitions. Dimensions: 1920x1080.</span>
+                        <div class="grid grid-cols-2 gap-2 mt-5 border-t border-slate-850 pt-4">
+                            <a href="{{ $overlay['route'] }}" target="_blank" class="px-3 py-2 bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-400 border border-yellow-500/20 hover:border-yellow-500/50 rounded-xl text-[10px] uppercase font-black tracking-wider text-center transition-all whitespace-nowrap flex items-center justify-center gap-1.5 shadow-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+                                <span>Open Overlay</span>
+                            </a>
+                            <button type="button" onclick="copyObsLink('{{ $overlay['route'] }}', this, event)" class="px-3 py-2 bg-slate-950 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-850 hover:border-transparent rounded-xl text-[10px] uppercase font-black tracking-wider text-center transition-all flex items-center justify-center gap-1.5 shadow-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
+                                <span>Copy Link</span>
+                            </button>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <a href="{{ route('screens.obsmaster', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-orange-500/10 text-orange-400 border border-orange-500/30 hover:border-orange-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-orange-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
-                        <button type="button" onclick="copyObsLink('{{ route('screens.obsmaster', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
-                            <span>Copy OBS Link</span>
-                        </button>
-                    </div>
-                </li>
-
-                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-950 p-3 rounded-xl border border-slate-850">
-                    <div>
-                        <strong class="text-emerald-400 uppercase text-xs tracking-wider">5. Live Leaderboard HUD:</strong>
-                        <span class="text-slate-500 block text-xs mt-0.5">Left-side leaderboard display HUD for active tournament matches. Dimensions: 1920x1080.</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <a href="{{ route('screens.activematch', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:border-emerald-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-emerald-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
-                        <button type="button" onclick="copyObsLink('{{ route('screens.activematch', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
-                            <span>Copy OBS Link</span>
-                        </button>
-                    </div>
-                </li>
-
-                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-950 p-3 rounded-xl border border-slate-850">
-                    <div>
-                        <strong class="text-blue-400 uppercase text-xs tracking-wider">6. Map Screen HUD:</strong>
-                        <span class="text-slate-500 block text-xs mt-0.5">1080x1080 map framing with active rosters for OBS overlays. Dimensions: 1920x1080.</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <a href="{{ route('screens.mapscreen', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-blue-500/10 text-blue-400 border border-blue-500/30 hover:border-blue-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-blue-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
-                        <button type="button" onclick="copyObsLink('{{ route('screens.mapscreen', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
-                            <span>Copy OBS Link</span>
-                        </button>
-                    </div>
-                </li>
-
-                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-950 p-3 rounded-xl border border-slate-850">
-                    <div>
-                        <strong class="text-yellow-400 uppercase text-xs tracking-wider">7. Caster Screen Desk:</strong>
-                        <span class="text-slate-500 block text-xs mt-0.5">Beautiful 2-caster layout overlaying transparent VDO.Ninja feeds. Dimensions: 1920x1080.</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <a href="{{ route('screens.castersscreen', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 hover:border-yellow-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-yellow-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
-                        <button type="button" onclick="copyObsLink('{{ route('screens.castersscreen', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
-                            <span>Copy OBS Link</span>
-                        </button>
-                    </div>
-                </li>
-
-                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-950 p-3 rounded-xl border border-slate-850">
-                    <div>
-                        <strong class="text-orange-400 uppercase text-xs tracking-wider">8. Head-to-Head Comparison:</strong>
-                        <span class="text-slate-500 block text-xs mt-0.5">Cinematic diagonal split comparison between the top 2 teams in real time. Dimensions: 1920x1080.</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <a href="{{ route('screens.headtohead', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-orange-500/10 text-orange-400 border border-orange-500/30 hover:border-orange-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-orange-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
-                        <button type="button" onclick="copyObsLink('{{ route('screens.headtohead', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
-                            <span>Copy OBS Link</span>
-                        </button>
-                    </div>
-                </li>
-
-                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-950 p-3 rounded-xl border border-slate-850">
-                    <div>
-                        <strong class="text-purple-400 uppercase text-xs tracking-wider">9. Top 5 Fraggers:</strong>
-                        <span class="text-slate-500 block text-xs mt-0.5">Top 5 player statistics in active match. Dimensions: 1920x1080.</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <a href="{{ route('screens.topfraggers', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-purple-500/10 text-purple-400 border border-purple-500/30 hover:border-purple-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-purple-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
-                        <button type="button" onclick="copyObsLink('{{ route('screens.topfraggers', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
-                            <span>Copy OBS Link</span>
-                        </button>
-                    </div>
-                </li>
-
-                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-950 p-3 rounded-xl border border-slate-850">
-                    <div>
-                        <strong class="text-success uppercase text-xs tracking-wider">10. Post-Match Stats:</strong>
-                        <span class="text-slate-500 block text-xs mt-0.5">Summary and placements of last completed match. Dimensions: 1920x1080.</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <a href="{{ route('screens.postmatch', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:border-emerald-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-emerald-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
-                        <button type="button" onclick="copyObsLink('{{ route('screens.postmatch', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
-                            <span>Copy OBS Link</span>
-                        </button>
-                    </div>
-                </li>
-
-                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-950 p-3 rounded-xl border border-slate-850">
-                    <div>
-                        <strong class="text-primary uppercase text-xs tracking-wider">11. Overall Standings:</strong>
-                        <span class="text-slate-500 block text-xs mt-0.5">Tournament-wide standings and points accumulated. Dimensions: 1920x1080.</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <a href="{{ route('screens.overallranking', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-blue-500/10 text-blue-400 border border-blue-500/30 hover:border-blue-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-blue-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
-                        <button type="button" onclick="copyObsLink('{{ route('screens.overallranking', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
-                            <span>Copy OBS Link</span>
-                        </button>
-                    </div>
-                </li>
-
-                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-950 p-3 rounded-xl border border-slate-850">
-                    <div>
-                        <strong class="text-indigo-400 uppercase text-xs tracking-wider">12. Slot List:</strong>
-                        <span class="text-slate-500 block text-xs mt-0.5">Lobby slot number allocations for teams starting from 2. Dimensions: 1920x1080.</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <a href="{{ route('screens.slotlist', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 hover:border-indigo-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-indigo-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
-                        <button type="button" onclick="copyObsLink('{{ route('screens.slotlist', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
-                            <span>Copy OBS Link</span>
-                        </button>
-                    </div>
-                </li>
-
-                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-950 p-3 rounded-xl border border-slate-850">
-                    <div>
-                        <strong class="text-emerald-400 uppercase text-xs tracking-wider">13. Map Pool Screen:</strong>
-                        <span class="text-slate-500 block text-xs mt-0.5">Current round map schedule showing map details and match winners. Dimensions: 1920x1080.</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <a href="{{ route('screens.mappool', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:border-emerald-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-emerald-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
-                        <button type="button" onclick="copyObsLink('{{ route('screens.mappool', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
-                            <span>Copy OBS Link</span>
-                        </button>
-                    </div>
-                </li>
-
-                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-950 p-3 rounded-xl border border-slate-850">
-                    <div>
-                        <strong class="text-emerald-400 uppercase text-xs tracking-wider">14. Point System Screen:</strong>
-                        <span class="text-slate-500 block text-xs mt-0.5">Current tournament's point system breakdown (placement & elimination rules). Dimensions: 1920x1080.</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <a href="{{ route('screens.pointsystem', ['user_id' => $user->id]) }}" target="_blank" class="px-4 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:border-emerald-400 rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-emerald-500/20 text-center transition-all whitespace-nowrap">Open Overlay</a>
-                        <button type="button" onclick="copyObsLink('{{ route('screens.pointsystem', ['user_id' => $user->id]) }}', this, event)" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-700/60 hover:border-transparent rounded-lg text-xs uppercase font-bold tracking-wider text-center transition-all flex items-center gap-1 whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.318.806.622.196.353.312.76.312 1.193v12.25a2.25 2.25 0 0 1-2.25 2.25H9a2.25 2.25 0 0 1-2.25-2.25V5.5c0-.433.116-.84.312-1.193.17-.304.46-.52.806-.622" /></svg>
-                            <span>Copy OBS Link</span>
-                        </button>
-                    </div>
-                </li>
-            </ul>
+                @endforeach
+            </div>
         </div>
     </div>
 

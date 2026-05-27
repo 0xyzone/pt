@@ -323,35 +323,55 @@
         }
 
         /* Widescreen 5 Columns Deck Cards */
+        @keyframes cardFloatFraggers {
+            0%, 100% {
+                transform: translateY(0);
+                box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7);
+            }
+            50% {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 45px rgba(6, 182, 212, 0.08), 0 30px 80px rgba(0, 0, 0, 0.8);
+            }
+        }
+
+        @keyframes cardFloatLeader {
+            0%, 100% {
+                transform: translateY(0);
+                border-color: rgba(250, 204, 21, 0.3);
+                box-shadow: 0 15px 45px rgba(250, 204, 21, 0.08), 0 25px 70px rgba(0, 0, 0, 0.8);
+            }
+            50% {
+                transform: translateY(-8px);
+                border-color: rgba(250, 204, 21, 0.65) !important;
+                box-shadow: 0 25px 50px rgba(250, 204, 21, 0.18), 0 35px 90px rgba(0, 0, 0, 0.95);
+            }
+        }
+
         .fragger-card {
             background: linear-gradient(180deg, rgba(6, 10, 22, 0.94) 0%, rgba(3, 4, 8, 0.98) 100%);
             border: 1px solid rgba(6, 182, 212, 0.18);
             border-bottom: 3.5px solid rgba(6, 182, 212, 0.4) !important;
             box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.02);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             backdrop-filter: blur(16px);
             /* Dynamic Height Calculation prevents any clipping */
             height: auto;
             min-height: 670px;
+            animation: cardFloatFraggers 5.5s infinite ease-in-out;
         }
 
-        .fragger-card:hover {
-            transform: translateY(-6px) scale(1.015);
-            border-color: rgba(6, 182, 212, 0.55);
-            box-shadow: 0 20px 45px rgba(6, 182, 212, 0.16), 0 30px 80px rgba(0, 0, 0, 0.8);
+        .fragger-card:nth-child(even) {
+            animation-delay: 1.5s;
+        }
+
+        .fragger-card:nth-child(3n) {
+            animation-delay: 3s;
         }
 
         .leader-card-active {
             background: linear-gradient(180deg, rgba(30, 22, 6, 0.96) 0%, rgba(5, 6, 12, 0.99) 100%);
             border: 1px solid rgba(250, 204, 21, 0.3);
             border-bottom: 4.5px solid #facc15 !important;
-            box-shadow: 0 15px 45px rgba(250, 204, 21, 0.08), 0 25px 70px rgba(0, 0, 0, 0.85);
-        }
-
-        .leader-card-active:hover {
-            transform: translateY(-6px) scale(1.02);
-            border-color: rgba(250, 204, 21, 0.75) !important;
-            box-shadow: 0 25px 50px rgba(250, 204, 21, 0.22), 0 35px 90px rgba(0, 0, 0, 0.9);
+            animation: cardFloatLeader 5s infinite ease-in-out !important;
         }
 
         /* Futuristic Angled Corner Cuts */

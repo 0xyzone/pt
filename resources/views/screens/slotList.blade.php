@@ -30,14 +30,24 @@
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
         }
 
-        .slot-row {
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            border-left: 4px solid transparent;
+        @keyframes slotPulse {
+            0%, 100% {
+                background: transparent;
+                border-left-color: rgba(250, 204, 21, 0.15);
+            }
+            50% {
+                background: rgba(250, 204, 21, 0.03);
+                border-left-color: rgba(250, 204, 21, 0.45);
+            }
         }
-        .slot-row:hover {
-            transform: translateX(6px);
-            background: rgba(250, 204, 21, 0.05);
-            border-left-color: #f59e0b;
+
+        .slot-row {
+            border-left: 4px solid rgba(250, 204, 21, 0.15);
+            animation: slotPulse 4s infinite ease-in-out;
+        }
+
+        .slot-row:nth-child(even) {
+            animation-delay: 2s;
         }
 
         /* Tech corner brackets */

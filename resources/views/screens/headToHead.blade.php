@@ -320,34 +320,43 @@
             pointer-events: none;
         }
 
-        .team-card-cyber.cyan-theme {
-            border: 1px solid rgba(6, 182, 212, 0.25);
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.85),
-                0 0 40px rgba(6, 182, 212, 0.05),
-                inset 0 1px 0 rgba(6, 182, 212, 0.1);
+        @keyframes cyanCardPulse {
+            0%, 100% {
+                border-color: rgba(6, 182, 212, 0.25);
+                box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.85),
+                    0 0 30px rgba(6, 182, 212, 0.04),
+                    inset 0 1px 0 rgba(6, 182, 212, 0.1);
+            }
+            50% {
+                border-color: rgba(6, 182, 212, 0.5);
+                box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.85),
+                    0 0 45px rgba(6, 182, 212, 0.15),
+                    inset 0 1px 0 rgba(6, 182, 212, 0.2);
+            }
         }
 
-        .team-card-cyber.cyan-theme:hover {
-            border-color: rgba(6, 182, 212, 0.6);
-            box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.95),
-                0 0 50px rgba(6, 182, 212, 0.2),
-                inset 0 1px 0 rgba(6, 182, 212, 0.2);
-            transform: translateY(-5px) scale(1.01);
+        @keyframes amberCardPulse {
+            0%, 100% {
+                border-color: rgba(250, 204, 21, 0.2);
+                box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.85),
+                    0 0 30px rgba(250, 204, 21, 0.03),
+                    inset 0 1px 0 rgba(250, 204, 21, 0.08);
+            }
+            50% {
+                border-color: rgba(250, 204, 21, 0.45);
+                box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.85),
+                    0 0 45px rgba(250, 204, 21, 0.12),
+                    inset 0 1px 0 rgba(250, 204, 21, 0.15);
+            }
+        }
+
+        .team-card-cyber.cyan-theme {
+            animation: cyanCardPulse 5s infinite ease-in-out;
         }
 
         .team-card-cyber.amber-theme {
-            border: 1px solid rgba(250, 204, 21, 0.2);
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.85),
-                0 0 40px rgba(250, 204, 21, 0.04),
-                inset 0 1px 0 rgba(250, 204, 21, 0.08);
-        }
-
-        .team-card-cyber.amber-theme:hover {
-            border-color: rgba(250, 204, 21, 0.5);
-            box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.95),
-                0 0 50px rgba(250, 204, 21, 0.15),
-                inset 0 1px 0 rgba(250, 204, 21, 0.15);
-            transform: translateY(-5px) scale(1.01);
+            animation: amberCardPulse 5s infinite ease-in-out;
+            animation-delay: 2.5s;
         }
 
         /* ══════════════════════════════════════════════════════
@@ -636,7 +645,7 @@
                 @endphp
 
                 {{-- Floating Glass Stats Capsule with Staggered Entrance and Outward Segmented Progress Bars --}}
-                <div class="slide-up-capsule bg-slate-950/94 border {{ $isLead1 ? 'border-cyan-500/30 stat-card-glow-cyan' : ($isLead2 ? 'border-yellow-500/25 stat-card-glow-amber' : 'border-slate-800/80') }} rounded-2xl px-6 py-4 flex flex-col justify-center shadow-[0_15px_40px_rgba(0,0,0,0.8)] relative overflow-hidden backdrop-blur-md group transition-all duration-300 hover:scale-[1.03] hover:border-slate-700" style="animation-delay: {{ $capsuleDelay }}s;">
+                <div class="slide-up-capsule bg-slate-950/94 border {{ $isLead1 ? 'border-cyan-500/30 stat-card-glow-cyan' : ($isLead2 ? 'border-yellow-500/25 stat-card-glow-amber' : 'border-slate-800/80') }} rounded-2xl px-6 py-4 flex flex-col justify-center shadow-[0_15px_40px_rgba(0,0,0,0.8)] relative overflow-hidden backdrop-blur-md group transition-all duration-300" style="animation-delay: {{ $capsuleDelay }}s;">
                     <div class="absolute inset-0 bg-grid-tiny opacity-[0.08] pointer-events-none"></div>
                     <div class="absolute inset-0 bg-linear-to-r {{ $isLead1 ? 'from-cyan-500/4 via-transparent to-transparent' : ($isLead2 ? 'from-transparent via-transparent to-yellow-500/3' : 'from-transparent to-transparent') }} pointer-events-none"></div>
 
@@ -645,7 +654,7 @@
 
                         {{-- Left score (Cyan) --}}
                         <div class="flex items-center gap-2.5 w-36 justify-start">
-                            <span class="font-hud text-3xl font-black leading-none text-slate-400 transition-all duration-300 group-hover:scale-105 {{ $isLead1 ? 'text-glow-cyan text-cyan-400' : '' }}">
+                            <span class="font-hud text-3xl font-black leading-none text-slate-400 transition-all duration-300 {{ $isLead1 ? 'text-glow-cyan text-cyan-400' : '' }}">
                                 {{ sprintf($comp['format'], $comp['val1']) }}
                             </span>
                             @if($isLead1 && $diff > 0)
@@ -657,7 +666,7 @@
 
                         {{-- Center category title pill --}}
                         <div class="flex-1 flex justify-center">
-                            <span class="text-[9.5px] font-black tracking-[0.25em] font-hud text-slate-300 bg-slate-900/90 px-4 py-1.5 rounded-lg border border-slate-800/80 text-center uppercase leading-none shadow-inner group-hover:border-slate-700/60 transition-colors">
+                            <span class="text-[9.5px] font-black tracking-[0.25em] font-hud text-slate-300 bg-slate-900/90 px-4 py-1.5 rounded-lg border border-slate-800/80 text-center uppercase leading-none shadow-inner transition-colors">
                                 {{ $comp['title'] }}
                             </span>
                         </div>
@@ -669,7 +678,7 @@
                                 +{{ $diff }}
                             </span>
                             @endif
-                            <span class="font-hud text-3xl font-black leading-none text-slate-400 transition-all duration-300 group-hover:scale-105 {{ $isLead2 ? 'text-glow-gold text-yellow-400' : '' }}">
+                            <span class="font-hud text-3xl font-black leading-none text-slate-400 transition-all duration-300 {{ $isLead2 ? 'text-glow-gold text-yellow-400' : '' }}">
                                 {{ sprintf($comp['format'], $comp['val2']) }}
                             </span>
                         </div>

@@ -172,43 +172,59 @@
             backdrop-filter: blur(16px);
         }
 
+        @keyframes cyanRowPulse {
+            0%, 100% {
+                border-color: rgba(6, 182, 212, 0.25);
+                box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            }
+            50% {
+                border-color: rgba(6, 182, 212, 0.5);
+                box-shadow: 0 0 25px rgba(6, 182, 212, 0.06);
+            }
+        }
+
+        @keyframes goldRowPulse {
+            0%, 100% {
+                border-color: rgba(250, 204, 21, 0.35) !important;
+                box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            }
+            50% {
+                border-color: rgba(250, 204, 21, 0.65) !important;
+                box-shadow: 0 0 25px rgba(250, 204, 21, 0.08);
+            }
+        }
+
+        @keyframes emeraldRowPulse {
+            0%, 100% {
+                border-color: rgba(16, 185, 129, 0.35) !important;
+                box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            }
+            50% {
+                border-color: rgba(16, 185, 129, 0.65) !important;
+                box-shadow: 0 0 25px rgba(16, 185, 129, 0.08);
+            }
+        }
+
         .map-row {
             background: linear-gradient(90deg, rgba(10, 15, 30, 0.88) 0%, rgba(6, 8, 16, 0.96) 100%);
             border: 1.5px solid rgba(6, 182, 212, 0.25);
             border-left: 6px solid rgba(6, 182, 212, 0.6) !important;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             backdrop-filter: blur(20px);
-        }
-
-        .map-row:hover {
-            transform: translateY(-4px) scale(1.008);
-            border-color: rgba(6, 182, 212, 0.55);
-            border-left-color: rgba(6, 182, 212, 0.95) !important;
-            box-shadow: 0 15px 35px rgba(6, 182, 212, 0.1), 0 0 25px rgba(6, 182, 212, 0.05);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
         }
 
         .completed-row-active {
             background: linear-gradient(90deg, rgba(20, 18, 12, 0.92) 0%, rgba(8, 7, 5, 0.97) 100%) !important;
-            border: 1.5px solid rgba(250, 204, 21, 0.35) !important;
+            border-color: rgba(250, 204, 21, 0.35) !important;
             border-left: 7px solid #facc15 !important;
-        }
-
-        .completed-row-active:hover {
-            border-color: rgba(250, 204, 21, 0.75) !important;
-            border-left-color: #facc15 !important;
-            box-shadow: 0 15px 35px rgba(250, 204, 21, 0.12), 0 0 25px rgba(250, 204, 21, 0.06);
+            box-shadow: 0 0 20px rgba(250, 204, 21, 0.08), 0 0 15px rgba(0, 0, 0, 0.5) !important;
         }
 
         .live-row-active {
             background: linear-gradient(90deg, rgba(6, 20, 14, 0.92) 0%, rgba(3, 10, 6, 0.97) 100%) !important;
-            border: 1.5px solid rgba(16, 185, 129, 0.35) !important;
+            border-color: rgba(16, 185, 129, 0.35) !important;
             border-left: 7px solid #10b981 !important;
-        }
-
-        .live-row-active:hover {
-            border-color: rgba(16, 185, 129, 0.75) !important;
-            border-left-color: #10b981 !important;
-            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.12), 0 0 25px rgba(16, 185, 129, 0.06);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.08), 0 0 15px rgba(0, 0, 0, 0.5) !important;
         }
 
         /* Holographic micro-grid backdrop */
@@ -324,14 +340,14 @@
                     <div class="flex items-center gap-5 z-10 relative pl-2 shrink-0">
                         {{-- Dedicated Widescreen Map Showcase Card --}}
                         <div class="relative overflow-hidden rounded-xl border-2 {{ $match->is_completed ? 'border-yellow-500/50 shadow-[0_0_15px_rgba(250,204,21,0.2)]' : ($match->is_active ? 'border-emerald-500/60 shadow-[0_0_18px_rgba(16,185,129,0.25)]' : 'border-cyan-500/40 shadow-[0_0_12px_rgba(6,182,212,0.1)]') }} shrink-0 group" style="width: {{ $useGrid ? 140 : 210 }}px; height: {{ $useGrid ? 85 : 110 }}px;">
-                            <img src="{{ $mapImage }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 pointer-events-none">
+                            <img src="{{ $mapImage }}" class="w-full h-full object-cover transition-transform duration-700 pointer-events-none">
 
                             {{-- High-tech grid & scanning overlay inside thumbnail --}}
                             <div class="absolute inset-0 bg-linear-to-t from-slate-950/80 via-slate-950/20 to-transparent z-5"></div>
                             <div class="absolute inset-0 bg-grid-tiny opacity-20 z-5"></div>
 
-                            {{-- Internal corner ticks --}}
-                            <div class="absolute inset-1.5 border border-dashed {{ $match->is_completed ? 'border-yellow-400/30' : ($match->is_active ? 'border-emerald-450/40' : 'border-cyan-500/30') }} rounded-lg z-5"></div>
+                             {{-- Internal corner ticks --}}
+                             <div class="absolute inset-1.5 border border-dashed {{ $match->is_completed ? 'border-yellow-400/30' : ($match->is_active ? 'border-emerald-400/40' : 'border-cyan-500/30') }} rounded-lg z-5"></div>
                         </div>
 
                         {{-- Map Name Metadata --}}

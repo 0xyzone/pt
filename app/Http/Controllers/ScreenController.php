@@ -866,6 +866,27 @@ class ScreenController extends Controller
     }
 
 
+    public function roadmap(Request $request)
+    {
+        $user = User::findOrFail($request->route('user_id'));
+        $activeMatch = $user->getActiveMatch();
+        $tournament = $activeMatch ? $activeMatch->tournament : null;
+        
+        if (!$tournament) {
+            $tournament = \App\Models\Tournament::where('user_id', $user->id)->latest()->first();
+        }
+
+        $roadmap = $tournament ? $tournament->tournamentRoadmap()->first() : null;
+
+        $bgTypeKey = "bg_type_{$user->id}";
+        $bgType = Cache::get($bgTypeKey, 'transparent');
+        $customVideoKey = "custom_video_{$user->id}";
+        $customVideo = Cache::get($customVideoKey);
+
+        return view('screens.roadmapScreen', compact('activeMatch', 'user', 'tournament', 'roadmap', 'bgType', 'customVideo'));
+    }
+
+
     /**
      * Safely attempt to broadcast an event without throwing a 500 if
      * the WebSocket / Pusher connection is unavailable.
