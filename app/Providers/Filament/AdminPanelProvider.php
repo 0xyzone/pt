@@ -59,6 +59,20 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::HEAD_START,
+                fn (): string => \Illuminate\Support\Facades\Blade::render(<<<'HTML'
+                    <meta property="og:type" content="website">
+                    <meta property="og:url" content="{{ url()->current() }}">
+                    <meta property="og:title" content="BroadKaster — Admin Panel">
+                    <meta property="og:description" content="BroadKaster is a professional real-time tournament broadcasting platform.">
+                    <meta property="og:image" content="{{ asset('img/symbol.png') }}">
+                    <meta name="twitter:card" content="summary">
+                    <meta name="twitter:title" content="BroadKaster — Admin Panel">
+                    <meta name="twitter:description" content="BroadKaster is a professional real-time tournament broadcasting platform.">
+                    <meta name="twitter:image" content="{{ asset('img/symbol.png') }}">
+                HTML)
+            )
             ->plugins([
                 PasskeysPlugin::make(),
                 FilamentQuickNotesPlugin::make()

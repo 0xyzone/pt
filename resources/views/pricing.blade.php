@@ -1,10 +1,24 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Pricing Plans — BroadKaster</title>
     <meta name="description" content="Choose a BroadKaster plan that fits your esports production needs. From daily passes to annual subscriptions — flexible pricing for every tournament organizer.">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="Pricing Plans — BroadKaster">
+    <meta property="og:description" content="Choose a BroadKaster plan that fits your esports production needs. From daily passes to annual subscriptions — flexible pricing for every tournament organizer.">
+    <meta property="og:image" content="{{ asset('img/symbol.png') }}">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:url" content="{{ url()->current() }}">
+    <meta name="twitter:title" content="Pricing Plans — BroadKaster">
+    <meta name="twitter:description" content="Choose a BroadKaster plan that fits your esports production needs. From daily passes to annual subscriptions — flexible pricing for every tournament organizer.">
+    <meta name="twitter:image" content="{{ asset('img/symbol.png') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,559 +28,70 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('img/symbol.png') }}">
 
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        :root {
-            --orange: #f97316;
-            --orange-deep: #ea580c;
-            --orange-glow: rgba(249, 115, 22, 0.35);
-            --amber: #f59e0b;
-            --dark: #0a0b0e;
-            --dark-2: #0f1117;
-            --dark-3: #161923;
-            --dark-4: #1e2535;
-            --slate: #8b9ab0;
-            --slate-light: #c4cedc;
-            --green: #22c55e;
-            --red: #ef4444;
-        }
-
-        html { scroll-behavior: smooth; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--dark);
-            color: #e2e8f0;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Background orbs */
-        .orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(110px);
-            pointer-events: none;
-            will-change: transform;
-            animation: orbDrift linear infinite alternate;
-        }
-        .orb-1 { width: 700px; height: 700px; top: -15%; right: -10%; background: radial-gradient(circle, rgba(249, 115, 22, 0.15), transparent 70%); animation-duration: 22s; }
-        .orb-2 { width: 600px; height: 600px; bottom: -20%; left: -12%; background: radial-gradient(circle, rgba(245, 158, 11, 0.1), transparent 70%); animation-duration: 28s; animation-delay: -8s; }
-
-        @keyframes orbDrift {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(40px, -60px) scale(1.08); }
-            100% { transform: translate(-30px, 40px) scale(0.95); }
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            opacity: 0.025;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* ─── Navbar ─── */
-        nav {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            padding: 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            background: rgba(10, 11, 14, 0.85);
-            backdrop-filter: blur(24px) saturate(1.5);
-        }
-
-        .nav-inner {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            height: 72px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            text-decoration: none;
-        }
-
-        .nav-logo img { height: 36px; width: auto; }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .btn-ghost {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--slate-light);
-            text-decoration: none;
-            padding: 8px 18px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-            background: transparent;
-            transition: all 0.2s ease;
-        }
-
-        .btn-ghost:hover {
-            color: #fff;
-            border-color: rgba(249, 115, 22, 0.4);
-            background: rgba(249, 115, 22, 0.06);
-        }
-
-        .btn-primary {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: #fff;
-            text-decoration: none;
-            padding: 9px 22px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, #f97316, #ea580c);
-            box-shadow: 0 0 20px rgba(249, 115, 22, 0.3);
-            transition: all 0.2s ease;
-            border: 1px solid transparent;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 0 35px rgba(249, 115, 22, 0.5);
-        }
-
-        /* ─── Page Header ─── */
-        .page-hero {
-            position: relative;
-            z-index: 10;
-            text-align: center;
-            padding: 80px 2rem 60px;
-        }
-
-        .hero-eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.22em;
-            text-transform: uppercase;
-            color: var(--orange);
-            background: rgba(249, 115, 22, 0.08);
-            border: 1px solid rgba(249, 115, 22, 0.22);
-            padding: 7px 16px;
-            border-radius: 99px;
-            margin-bottom: 28px;
-        }
-
-        .hero-eyebrow .dot {
-            width: 6px; height: 6px;
-            background: var(--orange);
-            border-radius: 50%;
-            animation: blink 1.5s ease-in-out infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.2; }
-        }
-
-        .page-title {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: clamp(36px, 6vw, 64px);
-            font-weight: 700;
-            color: #f1f5f9;
-            line-height: 1.05;
-            margin-bottom: 20px;
-            letter-spacing: -0.02em;
-        }
-
-        .page-title .highlight {
-            background: linear-gradient(135deg, #f97316, #f59e0b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .page-sub {
-            font-size: 16px;
-            color: var(--slate);
-            max-width: 520px;
-            margin: 0 auto;
-            line-height: 1.7;
-        }
-
-        /* ─── Pricing Grid ─── */
-        .pricing-section {
-            position: relative;
-            z-index: 10;
-            padding: 0 2rem 100px;
-        }
-
-        .pricing-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 20px;
-        }
-
-        /* ─── Plan Card ─── */
-        .plan-card {
-            background: var(--dark-2);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 20px;
-            padding: 32px;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            animation: cardIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-        }
-
-        @keyframes cardIn {
-            from { opacity: 0; transform: translateY(24px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .plan-card:hover {
-            border-color: rgba(249, 115, 22, 0.25);
-            transform: translateY(-4px);
-            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(249, 115, 22, 0.1);
-        }
-
-        .plan-card.featured {
-            background: linear-gradient(145deg, rgba(249, 115, 22, 0.07), var(--dark-2) 60%);
-            border-color: rgba(249, 115, 22, 0.35);
-        }
-
-        .plan-card.featured::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--orange), transparent);
-        }
-
-        .featured-badge {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--dark);
-            background: linear-gradient(135deg, #f97316, #f59e0b);
-            padding: 5px 12px;
-            border-radius: 99px;
-        }
-
-        /* Card header */
-        .plan-header { margin-bottom: 24px; }
-
-        .plan-name {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 22px;
-            font-weight: 700;
-            color: #f1f5f9;
-            letter-spacing: 0.02em;
-            margin-bottom: 6px;
-        }
-
-        .plan-description {
-            font-size: 12.5px;
-            color: var(--slate);
-            line-height: 1.6;
-        }
-
-        /* Price block */
-        .plan-price-block {
-            margin-bottom: 24px;
-            padding-bottom: 24px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .plan-price {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 38px;
-            font-weight: 700;
-            color: var(--orange);
-            line-height: 1;
-            margin-bottom: 4px;
-        }
-
-        .plan-price.free {
-            color: var(--green);
-        }
-
-        .plan-duration {
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--slate);
-        }
-
-        /* Features list */
-        .plan-features {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 28px;
-        }
-
-        .feature-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            color: var(--slate-light);
-        }
-
-        .feature-item.disabled {
-            color: rgba(139, 154, 176, 0.4);
-            text-decoration: line-through;
-        }
-
-        .feature-icon {
-            flex-shrink: 0;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .feature-icon.check {
-            background: rgba(34, 197, 94, 0.12);
-            border: 1px solid rgba(34, 197, 94, 0.25);
-        }
-
-        .feature-icon.check svg { width: 10px; height: 10px; color: var(--green); }
-
-        .feature-icon.cross {
-            background: rgba(239, 68, 68, 0.08);
-            border: 1px solid rgba(239, 68, 68, 0.15);
-        }
-
-        .feature-icon.cross svg { width: 10px; height: 10px; color: var(--red); opacity: 0.6; }
-
-        .feature-limit {
-            margin-left: auto;
-            font-size: 11px;
-            font-weight: 700;
-            font-family: 'Rajdhani', sans-serif;
-            color: var(--orange);
-            background: rgba(249, 115, 22, 0.08);
-            border: 1px solid rgba(249, 115, 22, 0.15);
-            padding: 2px 8px;
-            border-radius: 99px;
-        }
-
-        /* CTA Button */
-        .plan-cta {
-            display: block;
-            text-align: center;
-            padding: 13px 24px;
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            text-decoration: none;
-            transition: all 0.25s ease;
-        }
-
-        .plan-cta.primary {
-            background: linear-gradient(135deg, #f97316, #ea580c);
-            color: #fff;
-            box-shadow: 0 0 24px rgba(249, 115, 22, 0.3);
-        }
-
-        .plan-cta.primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 40px rgba(249, 115, 22, 0.5);
-        }
-
-        .plan-cta.secondary {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--slate-light);
-        }
-
-        .plan-cta.secondary:hover {
-            background: rgba(249, 115, 22, 0.07);
-            border-color: rgba(249, 115, 22, 0.3);
-            color: #fff;
-        }
-
-        /* ─── FAQ Note ─── */
-        .note-section {
-            position: relative;
-            z-index: 10;
-            text-align: center;
-            padding: 0 2rem 80px;
-        }
-
-        .note-card {
-            max-width: 700px;
-            margin: 0 auto;
-            background: rgba(249, 115, 22, 0.04);
-            border: 1px solid rgba(249, 115, 22, 0.12);
-            border-radius: 16px;
-            padding: 28px 36px;
-        }
-
-        .note-card p {
-            font-size: 14px;
-            color: var(--slate);
-            line-height: 1.7;
-        }
-
-        .note-card a {
-            color: var(--orange);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .note-card a:hover {
-            text-decoration: underline;
-        }
-
-        /* ─── Footer ─── */
-        footer {
-            position: relative;
-            z-index: 10;
-            border-top: 1px solid rgba(255, 255, 255, 0.04);
-            padding: 32px 2rem;
-            text-align: center;
-        }
-
-        footer p {
-            font-size: 12px;
-            color: var(--slate);
-            letter-spacing: 0.05em;
-        }
-
-        /* ─── Responsive ─── */
-        @media (max-width: 768px) {
-            .pricing-grid { grid-template-columns: 1fr; }
-            .page-title { font-size: clamp(30px, 8vw, 48px); }
-        }
-
-        /* ─── Mobile Menu ─── */
-        .mobile-menu-btn {
-            display: none;
-            background: transparent;
-            border: none;
-            color: #fff;
-            cursor: pointer;
-            padding: 8px;
-        }
-
-        .mobile-menu {
-            display: none;
-            position: absolute;
-            top: 72px;
-            left: 0;
-            right: 0;
-            background: var(--dark-2);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 1rem 2rem;
-            flex-direction: column;
-            gap: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .mobile-menu.active {
-            display: flex;
-        }
-
-        .mobile-menu a {
-            padding: 12px 16px;
-            text-decoration: none;
-            color: #f1f5f9;
-            font-weight: 600;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.03);
-            text-align: center;
-        }
-
-        @media (max-width: 768px) {
-            .nav-actions {
-                display: none;
-            }
-            .mobile-menu-btn {
-                display: block;
-            }
-        }
-    </style>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
+<body class="font-['Inter'] bg-[#0a0b0e] text-slate-200 min-h-screen overflow-x-hidden antialiased relative">
+    <!-- Background overlay -->
+    <div class="fixed inset-0 opacity-[0.025] pointer-events-none z-0" style="background-image: url(&quot;data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E&quot;);"></div>
 
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
+    <!-- Atmospheric Orbs -->
+    <div class="orb w-[700px] h-[700px] -top-[15%] -right-[10%] bg-[radial-gradient(circle,rgba(249,115,22,0.15),transparent_70%)] [animation-duration:22s]" aria-hidden="true"></div>
+    <div class="orb w-[600px] h-[600px] -bottom-[20%] -left-[12%] bg-[radial-gradient(circle,rgba(245,158,11,0.1),transparent_70%)] [animation-duration:28s] [animation-delay:-8s]" aria-hidden="true"></div>
 
-    <!-- Navbar -->
-    <nav>
-        <div class="nav-inner">
-            <a href="/" class="nav-logo">
-                <img src="{{ asset('img/logo.png') }}" alt="BroadKaster">
+    <!-- ─── NAVBAR ─── -->
+    <nav class="sticky top-0 z-[100] bg-[#0a0b0e]/85 backdrop-blur-[24px] saturate-150 border-b border-white/5 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 h-[72px] flex justify-between items-center">
+            <a href="/" class="flex items-center gap-3 decoration-0">
+                <img src="{{ asset('img/logo.png') }}" alt="BroadKaster" class="h-[36px]">
             </a>
-            <div class="nav-actions">
-                <a href="/" class="btn-ghost">Home</a>
+            
+            <div class="hidden md:flex items-center gap-3">
+                <a href="/" class="px-[18px] py-[8px] text-[11px] font-bold tracking-[0.12em] uppercase text-slate-300 hover:text-white border border-white/10 hover:border-orange-500/40 hover:bg-orange-500/10 transition-all duration-200 rounded-lg">Home</a>
+                <a href="/#contact" class="px-[18px] py-[8px] text-[11px] font-bold tracking-[0.12em] uppercase text-slate-300 hover:text-white border border-white/10 hover:border-orange-500/40 hover:bg-orange-500/10 transition-all duration-200 rounded-lg">Contact</a>
                 @auth
-                    <a href="/maidan" class="btn-primary">Dashboard</a>
+                    <a href="{{ url('/maidan') }}" class="px-[22px] py-[9px] text-[11px] font-bold tracking-[0.12em] uppercase text-white bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_35px_rgba(249,115,22,0.5)] hover:-translate-y-[1px] transition-all duration-200 border border-transparent">Dashboard</a>
                 @else
-                    <a href="/maidan" class="btn-primary">Get Started</a>
+                    <a href="{{ url('/maidan/login') }}" class="px-[22px] py-[9px] text-[11px] font-bold tracking-[0.12em] uppercase text-white bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_35px_rgba(249,115,22,0.5)] hover:-translate-y-[1px] transition-all duration-200 border border-transparent">Get Started</a>
                 @endauth
             </div>
-            <button class="mobile-menu-btn" id="mobile-menu-btn">
+            
+            <button class="md:hidden flex items-center justify-center p-2 text-white bg-transparent cursor-pointer" id="mobile-menu-btn">
                 <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
             </button>
         </div>
-        <div class="mobile-menu" id="mobile-menu">
-            <a href="/">Home</a>
+        
+        <!-- Mobile Menu -->
+        <div class="hidden flex-col gap-3 p-4 bg-[#0f1117] border-b border-white/5 absolute top-[72px] left-0 right-0 shadow-[0_10px_30px_rgba(0,0,0,0.5)]" id="mobile-menu">
+            <a href="/" class="block px-4 py-3 font-semibold text-slate-100 bg-white/5 rounded-lg text-center decoration-0">Home</a>
+            <a href="/#contact" class="block px-4 py-3 font-semibold text-slate-100 bg-white/5 rounded-lg text-center decoration-0">Contact</a>
             @auth
-                <a href="/maidan">Dashboard</a>
+                <a href="{{ url('/maidan') }}" class="block px-4 py-3 font-semibold text-slate-100 bg-white/5 rounded-lg text-center decoration-0">Dashboard</a>
             @else
-                <a href="/maidan/login" style="background: linear-gradient(135deg, #f97316, #ea580c); color: #fff;">Get Started</a>
+                <a href="{{ url('/maidan/login') }}" class="block px-4 py-3 font-semibold text-white bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg text-center decoration-0">Get Started</a>
             @endauth
         </div>
     </nav>
 
-    <!-- Hero Header -->
-    <div class="page-hero">
-        <div class="hero-eyebrow">
-            <span class="dot"></span>
+    <!-- ─── PAGE HEADER ─── -->
+    <div class="relative z-10 text-center pt-[80px] px-8 pb-[60px]">
+        <div class="inline-flex items-center gap-2 px-4 py-[7px] mb-7 bg-orange-500/10 border border-orange-500/20 rounded-full text-[10px] font-bold uppercase tracking-[0.22em] text-orange-500">
+            <span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-blink"></span>
             Transparent Pricing
         </div>
-        <h1 class="page-title">
-            Plans for Every<br><span class="highlight">Tournament Scale</span>
+        <h1 class="font-['Rajdhani'] text-[clamp(36px,6vw,64px)] font-bold text-slate-100 leading-[1.05] mb-5 tracking-[-0.02em]">
+            Plans for Every<br>
+            <span class="bg-gradient-to-br from-orange-500 to-amber-500 text-transparent bg-clip-text">Tournament Scale</span>
         </h1>
-        <p class="page-sub">From a single day event to a full esports season — choose the plan that fits your production needs. All plans include OBS overlays and real-time sync.</p>
+        <p class="text-[16px] text-slate-400 max-w-[520px] mx-auto leading-[1.7]">
+            From a single day event to a full esports season — choose the plan that fits your production needs. All plans include OBS overlays and real-time sync.
+        </p>
     </div>
 
-    <!-- Pricing Cards -->
-    <section class="pricing-section">
-        <div class="pricing-grid">
+    <!-- ─── PRICING GRID ─── -->
+    <section class="relative z-10 px-8 pb-[100px]">
+        <div class="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             @php
                 $popular = ['1-month-plan', '3-month-plan'];
             @endphp
@@ -588,117 +113,121 @@
                     default => 'Lifetime Access',
                 };
             @endphp
-            <div class="plan-card {{ $isFeatured ? 'featured' : '' }}" style="animation-delay: {{ $index * 0.07 }}s;">
+            <div class="flex flex-col relative overflow-hidden transition-all duration-300 rounded-[20px] p-8 border {{ $isFeatured ? 'bg-[linear-gradient(145deg,rgba(249,115,22,0.07),#0f1117_60%)] border-orange-500/35 hover:border-orange-500/25 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(0,0,0,0.5),0_0_0_1px_rgba(249,115,22,0.1)]' : 'bg-[#0f1117] border-white/5 hover:border-orange-500/25 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(0,0,0,0.5),0_0_0_1px_rgba(249,115,22,0.1)]' }} animate-[cardIn_0.5s_cubic-bezier(0.22,1,0.36,1)_both]" style="animation-delay: {{ $index * 0.07 }}s;">
+                
                 @if($isFeatured)
-                    <div class="featured-badge">Most Popular</div>
+                    <!-- Top gradient line -->
+                    <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
+                    <!-- Badge -->
+                    <div class="absolute top-5 right-5 text-[9px] font-bold tracking-[0.15em] uppercase text-[#0a0b0e] bg-gradient-to-br from-orange-500 to-amber-500 px-3 py-1.5 rounded-full">Most Popular</div>
                 @endif
 
-                <div class="plan-header">
-                    <div class="plan-name">{{ $plan->name }}</div>
-                    <div class="plan-description">{{ $plan->description }}</div>
+                <div class="mb-6">
+                    <div class="font-['Rajdhani'] text-[22px] font-bold text-slate-100 tracking-[0.02em] mb-1.5">{{ $plan->name }}</div>
+                    <div class="text-[12.5px] text-slate-400 leading-[1.6]">{{ $plan->description }}</div>
                 </div>
 
-                <div class="plan-price-block">
-                    <div class="plan-price {{ $isFree ? 'free' : '' }}">
+                <div class="mb-6 pb-6 border-b border-white/5">
+                    <div class="font-['Rajdhani'] text-[38px] font-bold leading-none mb-1 {{ $isFree ? 'text-green-500' : 'text-orange-500' }}">
                         {{ $plan->price_display }}
                     </div>
-                    <div class="plan-duration">{{ $durationLabel }}</div>
+                    <div class="text-[11px] font-semibold tracking-[0.1em] uppercase text-slate-400">{{ $durationLabel }}</div>
                 </div>
 
-                <div class="plan-features">
+                <div class="flex-1 flex flex-col gap-2.5 mb-7">
                     <!-- Tournaments -->
-                    <div class="feature-item">
-                        <span class="feature-icon check">
-                            <svg fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
+                    <div class="flex items-center gap-2.5 text-[13px] text-slate-300">
+                        <span class="shrink-0 w-[18px] h-[18px] rounded-full flex items-center justify-center bg-green-500/10 border border-green-500/25">
+                            <svg class="w-2.5 h-2.5 text-green-500" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
                         </span>
                         <span>Tournaments</span>
-                        <span class="feature-limit">{{ $maxTournaments === -1 ? '∞' : $maxTournaments }}</span>
+                        <span class="ml-auto text-[11px] font-bold font-['Rajdhani'] text-orange-500 bg-orange-500/10 border border-orange-500/15 px-2 py-0.5 rounded-full">{{ $maxTournaments === -1 ? '∞' : $maxTournaments }}</span>
                     </div>
                     <!-- Teams -->
-                    <div class="feature-item">
-                        <span class="feature-icon check">
-                            <svg fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
+                    <div class="flex items-center gap-2.5 text-[13px] text-slate-300">
+                        <span class="shrink-0 w-[18px] h-[18px] rounded-full flex items-center justify-center bg-green-500/10 border border-green-500/25">
+                            <svg class="w-2.5 h-2.5 text-green-500" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
                         </span>
                         <span>Teams per Tournament</span>
-                        <span class="feature-limit">{{ $maxTeams === -1 ? '∞' : $maxTeams }}</span>
+                        <span class="ml-auto text-[11px] font-bold font-['Rajdhani'] text-orange-500 bg-orange-500/10 border border-orange-500/15 px-2 py-0.5 rounded-full">{{ $maxTeams === -1 ? '∞' : $maxTeams }}</span>
                     </div>
                     <!-- Matches -->
-                    <div class="feature-item">
-                        <span class="feature-icon check">
-                            <svg fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
+                    <div class="flex items-center gap-2.5 text-[13px] text-slate-300">
+                        <span class="shrink-0 w-[18px] h-[18px] rounded-full flex items-center justify-center bg-green-500/10 border border-green-500/25">
+                            <svg class="w-2.5 h-2.5 text-green-500" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
                         </span>
                         <span>Matches per Tournament</span>
-                        <span class="feature-limit">{{ ($features['max_matches'] ?? 0) === -1 ? '∞' : ($features['max_matches'] ?? 0) }}</span>
+                        <span class="ml-auto text-[11px] font-bold font-['Rajdhani'] text-orange-500 bg-orange-500/10 border border-orange-500/15 px-2 py-0.5 rounded-full">{{ ($features['max_matches'] ?? 0) === -1 ? '∞' : ($features['max_matches'] ?? 0) }}</span>
                     </div>
                     <!-- OBS Overlays -->
-                    <div class="feature-item {{ ($features['obs_overlays'] ?? false) ? '' : 'disabled' }}">
-                        <span class="feature-icon {{ ($features['obs_overlays'] ?? false) ? 'check' : 'cross' }}">
+                    <div class="flex items-center gap-2.5 text-[13px] {{ ($features['obs_overlays'] ?? false) ? 'text-slate-300' : 'text-slate-500/40 line-through' }}">
+                        <span class="shrink-0 w-[18px] h-[18px] rounded-full flex items-center justify-center {{ ($features['obs_overlays'] ?? false) ? 'bg-green-500/10 border border-green-500/25' : 'bg-red-500/10 border border-red-500/15' }}">
                             @if($features['obs_overlays'] ?? false)
-                                <svg fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
+                                <svg class="w-2.5 h-2.5 text-green-500" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
                             @else
-                                <svg fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l6 6M9 3l-6 6"/></svg>
+                                <svg class="w-2.5 h-2.5 text-red-500/60" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l6 6M9 3l-6 6"/></svg>
                             @endif
                         </span>
                         <span>OBS Overlays</span>
                     </div>
                     <!-- WebSocket Sync -->
-                    <div class="feature-item {{ ($features['websocket_sync'] ?? false) ? '' : 'disabled' }}">
-                        <span class="feature-icon {{ ($features['websocket_sync'] ?? false) ? 'check' : 'cross' }}">
+                    <div class="flex items-center gap-2.5 text-[13px] {{ ($features['websocket_sync'] ?? false) ? 'text-slate-300' : 'text-slate-500/40 line-through' }}">
+                        <span class="shrink-0 w-[18px] h-[18px] rounded-full flex items-center justify-center {{ ($features['websocket_sync'] ?? false) ? 'bg-green-500/10 border border-green-500/25' : 'bg-red-500/10 border border-red-500/15' }}">
                             @if($features['websocket_sync'] ?? false)
-                                <svg fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
+                                <svg class="w-2.5 h-2.5 text-green-500" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
                             @else
-                                <svg fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l6 6M9 3l-6 6"/></svg>
+                                <svg class="w-2.5 h-2.5 text-red-500/60" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l6 6M9 3l-6 6"/></svg>
                             @endif
                         </span>
                         <span>Real-Time WebSocket Sync</span>
                     </div>
                     <!-- Roadmap Overlay -->
-                    <div class="feature-item {{ ($features['roadmap_overlay'] ?? false) ? '' : 'disabled' }}">
-                        <span class="feature-icon {{ ($features['roadmap_overlay'] ?? false) ? 'check' : 'cross' }}">
+                    <div class="flex items-center gap-2.5 text-[13px] {{ ($features['roadmap_overlay'] ?? false) ? 'text-slate-300' : 'text-slate-500/40 line-through' }}">
+                        <span class="shrink-0 w-[18px] h-[18px] rounded-full flex items-center justify-center {{ ($features['roadmap_overlay'] ?? false) ? 'bg-green-500/10 border border-green-500/25' : 'bg-red-500/10 border border-red-500/15' }}">
                             @if($features['roadmap_overlay'] ?? false)
-                                <svg fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
+                                <svg class="w-2.5 h-2.5 text-green-500" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
                             @else
-                                <svg fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l6 6M9 3l-6 6"/></svg>
+                                <svg class="w-2.5 h-2.5 text-red-500/60" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l6 6M9 3l-6 6"/></svg>
                             @endif
                         </span>
                         <span>Roadmap Overlay</span>
                     </div>
                     <!-- Casters Management -->
-                    <div class="feature-item {{ ($features['casters_management'] ?? false) ? '' : 'disabled' }}">
-                        <span class="feature-icon {{ ($features['casters_management'] ?? false) ? 'check' : 'cross' }}">
+                    <div class="flex items-center gap-2.5 text-[13px] {{ ($features['casters_management'] ?? false) ? 'text-slate-300' : 'text-slate-500/40 line-through' }}">
+                        <span class="shrink-0 w-[18px] h-[18px] rounded-full flex items-center justify-center {{ ($features['casters_management'] ?? false) ? 'bg-green-500/10 border border-green-500/25' : 'bg-red-500/10 border border-red-500/15' }}">
                             @if($features['casters_management'] ?? false)
-                                <svg fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
+                                <svg class="w-2.5 h-2.5 text-green-500" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
                             @else
-                                <svg fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l6 6M9 3l-6 6"/></svg>
+                                <svg class="w-2.5 h-2.5 text-red-500/60" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l6 6M9 3l-6 6"/></svg>
                             @endif
                         </span>
                         <span>Casters Management</span>
                     </div>
                     <!-- Player Management -->
-                    <div class="feature-item {{ ($features['player_management'] ?? false) ? '' : 'disabled' }}">
-                        <span class="feature-icon {{ ($features['player_management'] ?? false) ? 'check' : 'cross' }}">
+                    <div class="flex items-center gap-2.5 text-[13px] {{ ($features['player_management'] ?? false) ? 'text-slate-300' : 'text-slate-500/40 line-through' }}">
+                        <span class="shrink-0 w-[18px] h-[18px] rounded-full flex items-center justify-center {{ ($features['player_management'] ?? false) ? 'bg-green-500/10 border border-green-500/25' : 'bg-red-500/10 border border-red-500/15' }}">
                             @if($features['player_management'] ?? false)
-                                <svg fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
+                                <svg class="w-2.5 h-2.5 text-green-500" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
                             @else
-                                <svg fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l6 6M9 3l-6 6"/></svg>
+                                <svg class="w-2.5 h-2.5 text-red-500/60" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l6 6M9 3l-6 6"/></svg>
                             @endif
                         </span>
                         <span>Player Management</span>
                     </div>
                     <!-- Custom Branding -->
-                    <div class="feature-item {{ ($features['custom_branding'] ?? false) ? '' : 'disabled' }}">
-                        <span class="feature-icon {{ ($features['custom_branding'] ?? false) ? 'check' : 'cross' }}">
+                    <div class="flex items-center gap-2.5 text-[13px] {{ ($features['custom_branding'] ?? false) ? 'text-slate-300' : 'text-slate-500/40 line-through' }}">
+                        <span class="shrink-0 w-[18px] h-[18px] rounded-full flex items-center justify-center {{ ($features['custom_branding'] ?? false) ? 'bg-green-500/10 border border-green-500/25' : 'bg-red-500/10 border border-red-500/15' }}">
                             @if($features['custom_branding'] ?? false)
-                                <svg fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
+                                <svg class="w-2.5 h-2.5 text-green-500" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
                             @else
-                                <svg fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l6 6M9 3l-6 6"/></svg>
+                                <svg class="w-2.5 h-2.5 text-red-500/60" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l6 6M9 3l-6 6"/></svg>
                             @endif
                         </span>
                         <span>Custom Branding</span>
                     </div>
                 </div>
 
-                <a href="/maidan" class="plan-cta {{ $isFeatured ? 'primary' : 'secondary' }}">
+                <a href="/maidan" class="block text-center px-6 py-[13px] rounded-[10px] text-[12px] font-bold tracking-[0.12em] uppercase transition-all duration-250 {{ $isFeatured ? 'bg-gradient-to-br from-orange-500 to-orange-600 text-white shadow-[0_0_24px_rgba(249,115,22,0.3)] hover:-translate-y-0.5 hover:shadow-[0_0_40px_rgba(249,115,22,0.5)]' : 'bg-white/5 border border-white/10 text-slate-300 hover:bg-orange-500/10 hover:border-orange-500/30 hover:text-white' }}">
                     Get Started
                 </a>
             </div>
@@ -706,24 +235,31 @@
         </div>
     </section>
 
-    <!-- Note Section -->
-    <div class="note-section">
-        <div class="note-card">
-            <p>
+    <!-- ─── NOTE SECTION ─── -->
+    <div class="relative z-10 text-center px-8 pb-[80px]">
+        <div class="max-w-[700px] mx-auto bg-orange-500/5 border border-orange-500/10 rounded-[16px] px-9 py-7">
+            <p class="text-[14px] text-slate-400 leading-[1.7]">
                 All plans are activated manually by our team after verifying your payment. Once logged in, head to your dashboard and submit a subscription request with your transaction screenshot.
-                Have questions? <a href="/">Contact us</a> and we'll help you choose the right plan.
+                Have questions? <a href="/#contact" class="text-orange-500 font-semibold no-underline hover:underline">Contact us</a> and we'll help you choose the right plan.
             </p>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; {{ date('Y') }} BroadKaster &mdash; All rights reserved.</p>
+    <!-- ─── FOOTER ─── -->
+    <footer class="relative z-10 border-t border-white/5 px-8 py-8 text-center">
+        <p class="text-[12px] text-slate-500 tracking-[0.05em]">&copy; {{ date('Y') }} BroadKaster &mdash; All rights reserved.</p>
     </footer>
 
     <script>
         document.getElementById('mobile-menu-btn').addEventListener('click', function() {
-            document.getElementById('mobile-menu').classList.toggle('active');
+            const menu = document.getElementById('mobile-menu');
+            if(menu.classList.contains('hidden')){
+                menu.classList.remove('hidden');
+                menu.classList.add('flex');
+            } else {
+                menu.classList.add('hidden');
+                menu.classList.remove('flex');
+            }
         });
     </script>
 </body>

@@ -1,10 +1,24 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>BroadKaster — Live Tournament Broadcasting System</title>
     <meta name="description" content="BroadKaster is a professional real-time tournament broadcasting platform with OBS-ready overlays, live stats, and dynamic rankings for PUBG Mobile esports events.">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="BroadKaster — Live Tournament Broadcasting System">
+    <meta property="og:description" content="BroadKaster is a professional real-time tournament broadcasting platform with OBS-ready overlays, live stats, and dynamic rankings for PUBG Mobile esports events.">
+    <meta property="og:image" content="{{ asset('img/symbol.png') }}">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:url" content="{{ url()->current() }}">
+    <meta name="twitter:title" content="BroadKaster — Live Tournament Broadcasting System">
+    <meta name="twitter:description" content="BroadKaster is a professional real-time tournament broadcasting platform with OBS-ready overlays, live stats, and dynamic rankings for PUBG Mobile esports events.">
+    <meta name="twitter:image" content="{{ asset('img/symbol.png') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,1053 +28,77 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('img/symbol.png') }}">
 
-    <style>
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        :root {
-            --orange: #f97316;
-            --orange-deep: #ea580c;
-            --orange-glow: rgba(249, 115, 22, 0.35);
-            --amber: #f59e0b;
-            --dark: #0a0b0e;
-            --dark-2: #0f1117;
-            --dark-3: #161923;
-            --dark-4: #1e2535;
-            --slate: #8b9ab0;
-            --slate-light: #c4cedc;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--dark);
-            color: #e2e8f0;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* ─── Canvas / Background ─── */
-        #bg-canvas {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(110px);
-            pointer-events: none;
-            will-change: transform;
-            animation: orbDrift linear infinite alternate;
-        }
-
-        .orb-1 {
-            width: 700px;
-            height: 700px;
-            top: -15%;
-            right: -10%;
-            background: radial-gradient(circle, rgba(249, 115, 22, 0.18), transparent 70%);
-            animation-duration: 22s;
-        }
-
-        .orb-2 {
-            width: 600px;
-            height: 600px;
-            bottom: -20%;
-            left: -12%;
-            background: radial-gradient(circle, rgba(245, 158, 11, 0.12), transparent 70%);
-            animation-duration: 28s;
-            animation-delay: -8s;
-        }
-
-        .orb-3 {
-            width: 400px;
-            height: 400px;
-            top: 40%;
-            left: 35%;
-            background: radial-gradient(circle, rgba(234, 88, 12, 0.08), transparent 70%);
-            animation-duration: 35s;
-            animation-delay: -15s;
-        }
-
-        @keyframes orbDrift {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-
-            50% {
-                transform: translate(40px, -60px) scale(1.08);
-            }
-
-            100% {
-                transform: translate(-30px, 40px) scale(0.95);
-            }
-        }
-
-        /* ─── Noise texture overlay ─── */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            opacity: 0.025;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* ─── Layout ─── */
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            position: relative;
-            z-index: 10;
-        }
-
-        /* ─── Navbar ─── */
-        nav {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            padding: 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            background: rgba(10, 11, 14, 0.85);
-            backdrop-filter: blur(24px) saturate(1.5);
-        }
-
-        .nav-inner {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            height: 72px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            text-decoration: none;
-        }
-
-        .nav-logo img {
-            height: 36px;
-            width: auto;
-        }
-
-        .nav-badge {
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--orange);
-            background: rgba(249, 115, 22, 0.1);
-            border: 1px solid rgba(249, 115, 22, 0.25);
-            padding: 3px 8px;
-            border-radius: 99px;
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .btn-ghost {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--slate-light);
-            text-decoration: none;
-            padding: 8px 18px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-            background: transparent;
-            transition: all 0.2s ease;
-        }
-
-        .btn-ghost:hover {
-            color: #fff;
-            border-color: rgba(249, 115, 22, 0.4);
-            background: rgba(249, 115, 22, 0.06);
-        }
-
-        .btn-primary {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: #fff;
-            text-decoration: none;
-            padding: 9px 22px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, #f97316, #ea580c);
-            box-shadow: 0 0 20px rgba(249, 115, 22, 0.3);
-            transition: all 0.2s ease;
-            border: 1px solid transparent;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 0 35px rgba(249, 115, 22, 0.5);
-        }
-
-        /* ─── HERO ─── */
-        .hero {
-            position: relative;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            padding: 100px 2rem 80px;
-        }
-
-        .hero-eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.22em;
-            text-transform: uppercase;
-            color: var(--orange);
-            background: rgba(249, 115, 22, 0.08);
-            border: 1px solid rgba(249, 115, 22, 0.22);
-            padding: 7px 16px;
-            border-radius: 99px;
-            margin-bottom: 36px;
-        }
-
-        .hero-eyebrow .dot {
-            width: 6px;
-            height: 6px;
-            background: var(--orange);
-            border-radius: 50%;
-            animation: blink 1.5s ease-in-out infinite;
-        }
-
-        @keyframes blink {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.2;
-            }
-        }
-
-        .hero-logo-wrap {
-            margin-bottom: 32px;
-            animation: heroLogoIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
-        }
-
-        @keyframes heroLogoIn {
-            from {
-                opacity: 0;
-                transform: translateY(24px) scale(0.92);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .hero-logo {
-            width: min(520px, 80vw);
-            height: auto;
-            filter: drop-shadow(0 0 40px rgba(249, 115, 22, 0.22));
-        }
-
-        .hero-tagline {
-            font-size: clamp(14px, 2.5vw, 18px);
-            font-weight: 400;
-            line-height: 1.7;
-            color: var(--slate);
-            max-width: 580px;
-            margin-bottom: 48px;
-            animation: fadeUp 0.9s 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
-        }
-
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(16px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .hero-ctas {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 80px;
-            animation: fadeUp 0.9s 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
-        }
-
-        .btn-hero-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 700;
-            font-size: 15px;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: #fff;
-            text-decoration: none;
-            padding: 14px 34px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-            box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.4), 0 8px 32px rgba(249, 115, 22, 0.35);
-            transition: all 0.25s ease;
-        }
-
-        .btn-hero-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.6), 0 12px 48px rgba(249, 115, 22, 0.5);
-        }
-
-        .btn-hero-secondary {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 700;
-            font-size: 15px;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--slate-light);
-            text-decoration: none;
-            padding: 14px 34px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.25s ease;
-        }
-
-        .btn-hero-secondary:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(249, 115, 22, 0.3);
-            color: #fff;
-        }
-
-        /* ─── Stats bar ─── */
-        .stats-bar {
-            display: flex;
-            justify-content: center;
-            gap: 0;
-            flex-wrap: wrap;
-            margin-bottom: 100px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 16px;
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(12px);
-            overflow: hidden;
-            animation: fadeUp 0.9s 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
-            max-width: 760px;
-            width: 100%;
-        }
-
-        .stat-item {
-            flex: 1;
-            min-width: 140px;
-            padding: 24px 20px;
-            text-align: center;
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .stat-item:last-child {
-            border-right: none;
-        }
-
-        .stat-num {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--orange);
-            display: block;
-            line-height: 1;
-        }
-
-        .stat-label {
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--slate);
-            margin-top: 6px;
-            display: block;
-        }
-
-        /* ─── Section heading ─── */
-        .section-label {
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--orange);
-            margin-bottom: 12px;
-        }
-
-        .section-heading {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: clamp(28px, 4vw, 42px);
-            font-weight: 700;
-            color: #f1f5f9;
-            line-height: 1.1;
-            margin-bottom: 16px;
-        }
-
-        .section-sub {
-            font-size: 15px;
-            color: var(--slate);
-            max-width: 520px;
-            line-height: 1.7;
-        }
-
-        /* ─── Features Grid ─── */
-        .features-section {
-            padding: 0 2rem 100px;
-        }
-
-        .features-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .features-header .section-sub {
-            margin: 0 auto;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            overflow: hidden;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .feature-card {
-            background: var(--dark-2);
-            padding: 40px 36px;
-            position: relative;
-            overflow: hidden;
-            transition: background 0.3s ease;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--orange), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .feature-card:hover {
-            background: var(--dark-3);
-        }
-
-        .feature-card:hover::before {
-            opacity: 1;
-        }
-
-        .feature-card.featured {
-            background: linear-gradient(145deg, rgba(249, 115, 22, 0.08), var(--dark-2));
-        }
-
-        .feature-card.featured::before {
-            opacity: 0.5;
-        }
-
-        .feature-icon-wrap {
-            width: 52px;
-            height: 52px;
-            border-radius: 12px;
-            background: rgba(249, 115, 22, 0.1);
-            border: 1px solid rgba(249, 115, 22, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 24px;
-            transition: transform 0.3s ease;
-        }
-
-        .feature-card:hover .feature-icon-wrap {
-            transform: scale(1.08);
-        }
-
-        .feature-icon {
-            width: 24px;
-            height: 24px;
-            color: var(--orange);
-        }
-
-        .feature-title {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 20px;
-            font-weight: 700;
-            color: #f1f5f9;
-            letter-spacing: 0.02em;
-            margin-bottom: 10px;
-        }
-
-        .feature-desc {
-            font-size: 13.5px;
-            line-height: 1.7;
-            color: var(--slate);
-        }
-
-        .feature-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--orange);
-            background: rgba(249, 115, 22, 0.1);
-            border: 1px solid rgba(249, 115, 22, 0.2);
-            padding: 4px 10px;
-            border-radius: 99px;
-            margin-top: 18px;
-        }
-
-        /* ─── Workflow Section ─── */
-        .workflow-section {
-            padding: 60px 2rem 100px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .workflow-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 80px;
-            align-items: center;
-        }
-
-        .workflow-steps {
-            display: flex;
-            flex-direction: column;
-            gap: 32px;
-        }
-
-        .workflow-step {
-            display: flex;
-            gap: 20px;
-            align-items: flex-start;
-        }
-
-        .step-num {
-            flex-shrink: 0;
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, #f97316, #ea580c);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 15px;
-            font-weight: 700;
-            color: #fff;
-            box-shadow: 0 0 16px rgba(249, 115, 22, 0.3);
-        }
-
-        .step-content {}
-
-        .step-title {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 17px;
-            font-weight: 700;
-            color: #f1f5f9;
-            margin-bottom: 6px;
-        }
-
-        .step-desc {
-            font-size: 13.5px;
-            color: var(--slate);
-            line-height: 1.6;
-        }
-
-        /* ─── Dashboard mockup card ─── */
-        .dashboard-mockup {
-            background: var(--dark-3);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(249, 115, 22, 0.07);
-        }
-
-        .mockup-topbar {
-            background: var(--dark-4);
-            padding: 10px 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .mockup-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-        }
-
-        .mockup-body {
-            padding: 24px;
-        }
-
-        .mockup-row {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .mockup-block {
-            flex: 1;
-            border-radius: 8px;
-            padding: 14px 16px;
-            background: var(--dark-2);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .mockup-block-label {
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--slate);
-            margin-bottom: 6px;
-        }
-
-        .mockup-block-val {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--orange);
-        }
-
-        .mockup-table-row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-        }
-
-        .mockup-rank {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--orange);
-            width: 20px;
-            text-align: center;
-        }
-
-        .mockup-team {
-            flex: 1;
-            font-size: 12px;
-            font-weight: 600;
-            color: #e2e8f0;
-        }
-
-        .mockup-pts {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 13px;
-            font-weight: 700;
-            color: #64748b;
-        }
-
-        .mockup-bar-wrap {
-            height: 4px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 99px;
-            overflow: hidden;
-            margin-top: 8px;
-        }
-
-        .mockup-bar {
-            height: 100%;
-            border-radius: 99px;
-            background: linear-gradient(90deg, #f97316, #f59e0b);
-        }
-
-        /* ─── Demo Form Section ─── */
-        .demo-section {
-            padding: 0 2rem 120px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .demo-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 80px;
-            align-items: center;
-            background: linear-gradient(135deg, rgba(249, 115, 22, 0.06), rgba(10, 11, 14, 0.5));
-            border: 1px solid rgba(249, 115, 22, 0.15);
-            border-radius: 24px;
-            padding: 64px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .demo-inner::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 50%; transform: translateX(-50%);
-            width: 40%; height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(249, 115, 22, 0.4), transparent);
-        }
-
-        .demo-value-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-top: 28px;
-        }
-
-        .demo-value-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            font-size: 14px;
-            color: var(--slate-light);
-            line-height: 1.5;
-        }
-
-        .demo-check {
-            flex-shrink: 0;
-            width: 20px; height: 20px;
-            border-radius: 50%;
-            background: rgba(249, 115, 22, 0.12);
-            border: 1px solid rgba(249, 115, 22, 0.3);
-            display: flex; align-items: center; justify-content: center;
-            margin-top: 1px;
-        }
-
-        .demo-check svg { width: 11px; height: 11px; color: var(--orange); }
-
-        /* ─── Form Styles ─── */
-        .demo-form { display: flex; flex-direction: column; gap: 16px; }
-
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-        .form-group { display: flex; flex-direction: column; gap: 6px; }
-
-        .form-label {
-            font-size: 11px; font-weight: 700;
-            letter-spacing: 0.1em; text-transform: uppercase;
-            color: var(--slate);
-        }
-
-        .form-input, .form-textarea {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.09);
-            border-radius: 8px;
-            padding: 10px 14px;
-            color: #f1f5f9;
-            font-size: 13.5px;
-            font-family: 'Inter', sans-serif;
-            transition: border-color 0.2s, background 0.2s;
-            outline: none;
-            width: 100%;
-        }
-
-        .form-input::placeholder, .form-textarea::placeholder { color: #475569; }
-
-        .form-input:focus, .form-textarea:focus {
-            border-color: rgba(249, 115, 22, 0.5);
-            background: rgba(249, 115, 22, 0.04);
-        }
-
-        .form-input.error { border-color: rgba(239, 68, 68, 0.6); }
-
-        .form-textarea { resize: vertical; min-height: 90px; }
-
-        .form-error { font-size: 11px; color: #f87171; margin-top: 2px; }
-
-        .form-submit {
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 15px;
-            letter-spacing: 0.08em; text-transform: uppercase;
-            color: #fff;
-            padding: 13px 28px;
-            border: none; cursor: pointer;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #f97316, #ea580c);
-            box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.4), 0 6px 24px rgba(249, 115, 22, 0.3);
-            transition: all 0.25s ease;
-            width: 100%;
-        }
-
-        .form-submit:hover { box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.6), 0 8px 32px rgba(249, 115, 22, 0.45); }
-        .form-submit:disabled { opacity: 0.6; cursor: not-allowed; }
-
-        .success-card {
-            background: rgba(34, 197, 94, 0.08);
-            border: 1px solid rgba(34, 197, 94, 0.25);
-            border-radius: 12px;
-            padding: 28px;
-            text-align: center;
-        }
-
-        .success-card .success-icon {
-            width: 48px; height: 48px;
-            background: rgba(34, 197, 94, 0.15);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 16px;
-        }
-
-        @media (max-width: 900px) {
-            .demo-inner { grid-template-columns: 1fr; gap: 48px; padding: 40px 28px; }
-            .form-row { grid-template-columns: 1fr; }
-        }
-
-        /* ─── Footer ─── */
-        footer {
-            position: relative;
-            z-index: 10;
-            border-top: 1px solid rgba(255, 255, 255, 0.04);
-            background: rgba(10, 11, 14, 0.9);
-        }
-
-        .footer-inner {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        .footer-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .footer-brand img {
-            height: 22px;
-            opacity: 0.6;
-        }
-
-        .footer-copy {
-            font-size: 11px;
-            color: #334155;
-            font-weight: 500;
-        }
-
-        .footer-build {
-            font-family: monospace;
-            font-size: 10px;
-            color: #1e293b;
-            letter-spacing: 0.08em;
-        }
-
-        /* ─── Responsive ─── */
-        @media (max-width: 900px) {
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .workflow-inner {
-                grid-template-columns: 1fr;
-                gap: 48px;
-            }
-
-            .dashboard-mockup {
-                display: none;
-            }
-
-            .stats-bar {
-                max-width: 100%;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .hero {
-                padding: 64px 1.5rem 48px;
-            }
-
-            .hero-logo {
-                width: 90vw;
-            }
-
-            .hero-ctas {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .btn-hero-primary,
-            .btn-hero-secondary {
-                text-align: center;
-                justify-content: center;
-            }
-
-            .stat-item {
-                min-width: 110px;
-                padding: 18px 12px;
-            }
-
-            .cta-card {
-                padding: 40px 24px;
-            }
-        }
-
-        /* ─── Mobile Menu ─── */
-        .mobile-menu-btn {
-            display: none;
-            background: transparent;
-            border: none;
-            color: #fff;
-            cursor: pointer;
-            padding: 8px;
-        }
-
-        .mobile-menu {
-            display: none;
-            position: absolute;
-            top: 72px;
-            left: 0;
-            right: 0;
-            background: var(--dark-2);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 1rem 2rem;
-            flex-direction: column;
-            gap: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .mobile-menu.active {
-            display: flex;
-        }
-
-        .mobile-menu a {
-            padding: 12px 16px;
-            text-decoration: none;
-            color: #f1f5f9;
-            font-weight: 600;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.03);
-            text-align: center;
-        }
-
-        @media (max-width: 768px) {
-            .nav-actions {
-                display: none;
-            }
-            .mobile-menu-btn {
-                display: block;
-            }
-        }
-    </style>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-
-<body>
+<body class="font-['Inter'] bg-[#0a0b0e] text-slate-200 min-h-screen overflow-x-hidden antialiased">
     <!-- Atmospheric Orbs -->
-    <div class="orb orb-1" aria-hidden="true"></div>
-    <div class="orb orb-2" aria-hidden="true"></div>
-    <div class="orb orb-3" aria-hidden="true"></div>
+    <div class="orb w-[700px] h-[700px] -top-[15%] -right-[10%] bg-[radial-gradient(circle,rgba(249,115,22,0.18),transparent_70%)] [animation-duration:22s]" aria-hidden="true"></div>
+    <div class="orb w-[600px] h-[600px] -bottom-[20%] -left-[12%] bg-[radial-gradient(circle,rgba(245,158,11,0.12),transparent_70%)] [animation-duration:28s] [animation-delay:-8s]" aria-hidden="true"></div>
+    <div class="orb w-[400px] h-[400px] top-[40%] left-[35%] bg-[radial-gradient(circle,rgba(234,88,12,0.08),transparent_70%)] [animation-duration:35s] [animation-delay:-15s]" aria-hidden="true"></div>
 
     <!-- ─── NAVBAR ─── -->
-    <nav>
-        <div class="nav-inner">
-            <a href="/" class="nav-logo">
-                <img src="{{ asset('img/logo.png') }}" alt="BroadKaster">
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-[#0a0b0e]/80 backdrop-blur-md border-b border-white/5 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 h-[72px] flex justify-between items-center">
+            <a href="/" class="flex items-center gap-3 decoration-0">
+                <img src="{{ asset('img/logo.png') }}" alt="BroadKaster" class="h-[28px] drop-shadow-[0_0_12px_rgba(249,115,22,0.4)]">
             </a>
-            <div class="nav-actions">
-                    <a href="{{ route('pricing') }}" class="btn-ghost">Pricing</a>
+            
+            <div class="hidden md:flex items-center gap-2">
+                <a href="#contact" class="px-5 py-2.5 text-[13px] font-semibold tracking-wider uppercase text-slate-400 hover:text-white transition-colors duration-200 rounded-lg">Contact</a>
+                <a href="{{ route('pricing') }}" class="px-5 py-2.5 text-[13px] font-semibold tracking-wider uppercase text-slate-400 hover:text-white transition-colors duration-200 rounded-lg">Pricing</a>
                 @auth
-                    <a href="{{ url('/maidan') }}" class="btn-ghost">Dashboard</a>
+                    <a href="{{ url('/maidan') }}" class="px-5 py-2.5 text-[13px] font-semibold tracking-wider uppercase text-slate-400 hover:text-white transition-colors duration-200 rounded-lg">Dashboard</a>
                 @else
-                    <a href="#request-demo" class="btn-ghost">Request a Demo</a>
-                    <a href="{{ url('/maidan/login') }}" class="btn-primary">Sign In</a>
+                    <a href="#request-demo" class="px-5 py-2.5 text-[13px] font-semibold tracking-wider uppercase text-slate-400 hover:text-white transition-colors duration-200 rounded-lg">Request a Demo</a>
+                    <a href="{{ url('/maidan/login') }}" class="ml-2 px-6 py-2.5 text-[13px] font-bold tracking-wider uppercase text-white bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg shadow-[0_0_0_1px_rgba(249,115,22,0.4),0_6px_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_0_1px_rgba(249,115,22,0.6),0_8px_25px_rgba(249,115,22,0.45)] transition-all duration-250">Sign In</a>
                 @endauth
             </div>
-            <button class="mobile-menu-btn" id="mobile-menu-btn">
+            
+            <button class="md:hidden flex items-center justify-center w-10 h-10 text-slate-300 bg-white/5 border border-white/10 rounded-lg cursor-pointer transition-colors duration-200 hover:bg-white/10 hover:text-white" id="mobile-menu-btn">
                 <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
             </button>
         </div>
-        <div class="mobile-menu" id="mobile-menu">
-            <a href="{{ route('pricing') }}">Pricing</a>
+        
+        <!-- Mobile Menu -->
+        <div class="hidden flex-col gap-2 p-4 bg-[#0f1117] border-b border-white/5" id="mobile-menu">
+            <a href="#contact" class="block px-4 py-3 text-[14px] font-semibold tracking-wide uppercase text-slate-300 bg-white/5 rounded-lg text-center decoration-0 hover:bg-white/10">Contact</a>
+            <a href="{{ route('pricing') }}" class="block px-4 py-3 text-[14px] font-semibold tracking-wide uppercase text-slate-300 bg-white/5 rounded-lg text-center decoration-0 hover:bg-white/10">Pricing</a>
             @auth
-                <a href="{{ url('/maidan') }}">Dashboard</a>
+                <a href="{{ url('/maidan') }}" class="block px-4 py-3 text-[14px] font-semibold tracking-wide uppercase text-slate-300 bg-white/5 rounded-lg text-center decoration-0 hover:bg-white/10">Dashboard</a>
             @else
-                <a href="#request-demo">Request a Demo</a>
-                <a href="{{ url('/maidan/login') }}" style="background: linear-gradient(135deg, #f97316, #ea580c); color: #fff;">Sign In</a>
+                <a href="#request-demo" class="block px-4 py-3 text-[14px] font-semibold tracking-wide uppercase text-slate-300 bg-white/5 rounded-lg text-center decoration-0 hover:bg-white/10">Request a Demo</a>
+                <a href="{{ url('/maidan/login') }}" class="block px-4 py-3 text-[14px] font-bold tracking-wide uppercase text-white bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg text-center decoration-0 shadow-[0_4px_14px_rgba(249,115,22,0.3)]">Sign In</a>
             @endauth
         </div>
     </nav>
 
     <!-- ─── HERO ─── -->
-    <section class="hero">
-        <div class="hero-eyebrow">
-            <span class="dot"></span>
+    <section class="relative pt-32 pb-24 md:pt-[180px] md:pb-[140px] px-4 text-center flex flex-col items-center justify-center min-h-[90vh]">
+        <div class="inline-flex items-center gap-2 px-4 py-2 mb-8 bg-orange-500/10 border border-orange-500/30 rounded-full text-[11px] font-bold uppercase tracking-widest text-orange-400 backdrop-blur-sm shadow-[0_0_20px_rgba(249,115,22,0.15)]">
+            <span class="w-2 h-2 rounded-full bg-orange-500 animate-blink shadow-[0_0_8px_rgba(249,115,22,0.8)]"></span>
             Professional PUBG Mobile Tournament Broadcast System
         </div>
 
-        <div class="hero-logo-wrap">
-            <img class="hero-logo" src="{{ asset('img/logo.png') }}" alt="BroadKaster">
+        <div class="mb-10 animate-pulse-glow">
+            <img class="h-[70px] md:h-[110px] drop-shadow-[0_0_30px_rgba(249,115,22,0.5)]" src="{{ asset('img/logo.png') }}" alt="BroadKaster">
         </div>
 
-        <p class="hero-tagline">
+        <p class="max-w-[700px] mx-auto text-lg md:text-[22px] font-light leading-relaxed text-slate-300 mb-12">
             Command every match moment. Real-time OBS overlays, live rankings, and seamless
             director controls — all in one powerful broadcasting engine.
         </p>
 
-        <div class="hero-ctas">
-            <a href="{{ url('/maidan') }}" id="hero-launch-btn" class="btn-hero-primary">
-                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <div class="flex flex-col md:flex-row gap-4 mb-16 w-full md:w-auto px-4">
+            <a href="{{ url('/maidan') }}" class="flex items-center justify-center gap-2 px-8 py-4 text-[14px] md:text-[15px] font-bold uppercase tracking-widest text-white bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-[0_0_0_1px_rgba(249,115,22,0.5),0_10px_30px_rgba(249,115,22,0.4)] hover:shadow-[0_0_0_1px_rgba(249,115,22,0.7),0_12px_40px_rgba(249,115,22,0.55)] hover:-translate-y-0.5 transition-all duration-300">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
                 </svg>
                 Launch App Panel
             </a>
-            <a href="{{ url('/admin') }}" id="hero-admin-btn" class="btn-hero-secondary">
-                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <a href="{{ url('/admin') }}" class="flex items-center justify-center gap-2 px-8 py-4 text-[14px] md:text-[15px] font-bold uppercase tracking-widest text-slate-200 bg-[#161923]/80 backdrop-blur-md border border-white/10 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.3)] hover:bg-[#1e2535] hover:text-white hover:border-white/20 hover:-translate-y-0.5 transition-all duration-300">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
                 </svg>
                 Mukhiyas Panel
@@ -1068,173 +106,177 @@
         </div>
 
         <!-- Stats bar -->
-        <div class="stats-bar">
-            <div class="stat-item">
-                <span class="stat-num">16+</span>
-                <span class="stat-label">OBS Overlays</span>
+        <div class="flex flex-wrap justify-center gap-3 md:gap-4 max-w-[800px] w-full px-4">
+            <div class="flex-1 min-w-[140px] px-4 py-3 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-xl flex flex-col justify-center transition-transform hover:-translate-y-1">
+                <span class="block font-['Rajdhani'] text-[24px] md:text-[32px] font-bold text-white mb-0.5">16+</span>
+                <span class="block text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-slate-400">OBS Overlays</span>
             </div>
-            <div class="stat-item">
-                <span class="stat-num">Real-Time</span>
-                <span class="stat-label">WebSocket Sync</span>
+            <div class="flex-1 min-w-[140px] px-4 py-3 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-xl flex flex-col justify-center transition-transform hover:-translate-y-1">
+                <span class="block font-['Rajdhani'] text-[24px] md:text-[32px] font-bold text-white mb-0.5">Real-Time</span>
+                <span class="block text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-orange-400 drop-shadow-[0_0_8px_rgba(249,115,22,0.4)]">WebSocket Sync</span>
             </div>
-            <div class="stat-item">
-                <span class="stat-num">1080p</span>
-                <span class="stat-label">Overlay Quality</span>
+            <div class="flex-1 min-w-[140px] px-4 py-3 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-xl flex flex-col justify-center transition-transform hover:-translate-y-1">
+                <span class="block font-['Rajdhani'] text-[24px] md:text-[32px] font-bold text-white mb-0.5">1080p</span>
+                <span class="block text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-slate-400">Overlay Quality</span>
             </div>
-            <div class="stat-item">
-                <span class="stat-num">v{{ $systemVersion }}</span>
-                <span class="stat-label">Build</span>
+            <div class="flex-1 min-w-[140px] px-4 py-3 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-xl flex flex-col justify-center transition-transform hover:-translate-y-1">
+                <span class="block font-['Rajdhani'] text-[24px] md:text-[32px] font-bold text-white mb-0.5">v{{ $systemVersion ?? '1.1.117' }}</span>
+                <span class="block text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-slate-400">Build</span>
             </div>
         </div>
     </section>
 
     <!-- ─── FEATURES GRID ─── -->
-    <section class="features-section">
-        <div class="features-header">
-            <p class="section-label">Core Capabilities</p>
-            <h2 class="section-heading">Everything your broadcast needs</h2>
-            <p class="section-sub">From the first whistle to the final kill, BroadKaster keeps your stream production-ready at all times.</p>
+    <section class="py-24 px-4 relative z-10">
+        <div class="text-center mb-16">
+            <p class="text-[12px] font-bold uppercase tracking-[0.2em] text-orange-500 mb-3 drop-shadow-[0_0_10px_rgba(249,115,22,0.4)]">Core Capabilities</p>
+            <h2 class="font-['Rajdhani'] text-[36px] md:text-[46px] font-bold text-white mb-4">Everything your broadcast needs</h2>
+            <p class="text-slate-400 text-[15px] max-w-[600px] mx-auto">From the first whistle to the final kill, BroadKaster keeps your stream production-ready at all times.</p>
         </div>
 
-        <div class="features-grid">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-[1200px] mx-auto">
             <!-- Card 1 -->
-            <div class="feature-card featured">
-                <div class="feature-icon-wrap">
-                    <svg class="feature-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <div class="group p-8 rounded-2xl bg-[#0f1117]/80 backdrop-blur-md border border-orange-500/20 shadow-[0_15px_35px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.05)] transition-all duration-400 hover:-translate-y-2 hover:bg-[#161923] hover:border-orange-500/40 relative overflow-hidden">
+                <div class="absolute -top-1/2 -right-1/2 w-full h-full bg-[radial-gradient(circle,rgba(249,115,22,0.1)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                <div class="w-14 h-14 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-500 mb-6 group-hover:bg-orange-500 group-hover:text-white group-hover:shadow-[0_0_20px_rgba(249,115,22,0.4)] transition-all duration-300">
+                    <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
                     </svg>
                 </div>
-                <div class="feature-title">Real-Time Sync Engine</div>
-                <p class="feature-desc">WebSocket-powered live data bridge instantly pushes match stat changes, score updates, and phase transitions to all connected OBS sources in under 100ms.</p>
-                <span class="feature-tag">⚡ WebSockets</span>
+                <div class="font-['Rajdhani'] text-[24px] font-bold text-white mb-3">Real-Time Sync Engine</div>
+                <p class="text-[14px] text-slate-400 leading-relaxed mb-6">WebSocket-powered live data bridge instantly pushes match stat changes, score updates, and phase transitions to all connected OBS sources in under 100ms.</p>
+                <span class="inline-block px-3 py-1 bg-orange-500/10 border border-orange-500/20 rounded-md text-[11px] font-bold uppercase tracking-wider text-orange-400">⚡ WebSockets</span>
             </div>
 
             <!-- Card 2 -->
-            <div class="feature-card">
-                <div class="feature-icon-wrap">
-                    <svg class="feature-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <div class="group p-8 rounded-2xl bg-[#0f1117]/80 backdrop-blur-md border border-white/5 shadow-[0_15px_35px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.05)] transition-all duration-400 hover:-translate-y-2 hover:bg-[#161923] hover:border-white/10 relative overflow-hidden">
+                <div class="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 mb-6 group-hover:bg-white/10 group-hover:text-white transition-all duration-300">
+                    <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z" />
                     </svg>
                 </div>
-                <div class="feature-title">OBS Director Console</div>
-                <p class="feature-desc">Centralised control panel to switch between all 16+ live overlay screens with a single click. Pre-match and post-match zones keep the director workflow crystal clear.</p>
-                <span class="feature-tag">🎬 OBS Ready</span>
+                <div class="font-['Rajdhani'] text-[24px] font-bold text-white mb-3">OBS Director Console</div>
+                <p class="text-[14px] text-slate-400 leading-relaxed mb-6">Centralised control panel to switch between all 16+ live overlay screens with a single click. Pre-match and post-match zones keep the director workflow crystal clear.</p>
+                <span class="inline-block px-3 py-1 bg-white/5 border border-white/10 rounded-md text-[11px] font-bold uppercase tracking-wider text-slate-300">🎬 OBS Ready</span>
             </div>
 
             <!-- Card 3 -->
-            <div class="feature-card">
-                <div class="feature-icon-wrap">
-                    <svg class="feature-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <div class="group p-8 rounded-2xl bg-[#0f1117]/80 backdrop-blur-md border border-white/5 shadow-[0_15px_35px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.05)] transition-all duration-400 hover:-translate-y-2 hover:bg-[#161923] hover:border-white/10 relative overflow-hidden">
+                <div class="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 mb-6 group-hover:bg-white/10 group-hover:text-white transition-all duration-300">
+                    <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
                     </svg>
                 </div>
-                <div class="feature-title">Smart Rankings</div>
-                <p class="feature-desc">Automated kill-point and placement scoring aggregates overall tournament leaderboards in real-time. Head-to-head comparisons and Top Fraggers overlays included.</p>
-                <span class="feature-tag">📊 Auto-Calculated</span>
+                <div class="font-['Rajdhani'] text-[24px] font-bold text-white mb-3">Smart Rankings</div>
+                <p class="text-[14px] text-slate-400 leading-relaxed mb-6">Automated kill-point and placement scoring aggregates overall tournament leaderboards in real-time. Head-to-head comparisons and Top Fraggers overlays included.</p>
+                <span class="inline-block px-3 py-1 bg-white/5 border border-white/10 rounded-md text-[11px] font-bold uppercase tracking-wider text-slate-300">📊 Auto-Calculated</span>
             </div>
 
             <!-- Card 4 -->
-            <div class="feature-card">
-                <div class="feature-icon-wrap">
-                    <svg class="feature-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <div class="group p-8 rounded-2xl bg-[#0f1117]/80 backdrop-blur-md border border-white/5 shadow-[0_15px_35px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.05)] transition-all duration-400 hover:-translate-y-2 hover:bg-[#161923] hover:border-white/10 relative overflow-hidden">
+                <div class="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 mb-6 group-hover:bg-white/10 group-hover:text-white transition-all duration-300">
+                    <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z" />
                     </svg>
                 </div>
-                <div class="feature-title">Tournament Roadmap</div>
-                <p class="feature-desc">Visual phase-by-phase tournament progression overlay with cinematic staggered entry animations. Directors update stages in Filament — the overlay refreshes automatically.</p>
-                <span class="feature-tag">🗺️ Live Updates</span>
+                <div class="font-['Rajdhani'] text-[24px] font-bold text-white mb-3">Tournament Roadmap</div>
+                <p class="text-[14px] text-slate-400 leading-relaxed mb-6">Visual phase-by-phase tournament progression overlay with cinematic staggered entry animations. Directors update stages in Filament — the overlay refreshes automatically.</p>
+                <span class="inline-block px-3 py-1 bg-white/5 border border-white/10 rounded-md text-[11px] font-bold uppercase tracking-wider text-slate-300">🗺️ Live Updates</span>
             </div>
 
             <!-- Card 5 -->
-            <div class="feature-card featured">
-                <div class="feature-icon-wrap">
-                    <svg class="feature-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <div class="group p-8 rounded-2xl bg-[#0f1117]/80 backdrop-blur-md border border-orange-500/20 shadow-[0_15px_35px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.05)] transition-all duration-400 hover:-translate-y-2 hover:bg-[#161923] hover:border-orange-500/40 relative overflow-hidden">
+                <div class="absolute -top-1/2 -right-1/2 w-full h-full bg-[radial-gradient(circle,rgba(249,115,22,0.1)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                <div class="w-14 h-14 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-500 mb-6 group-hover:bg-orange-500 group-hover:text-white group-hover:shadow-[0_0_20px_rgba(249,115,22,0.4)] transition-all duration-300">
+                    <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
                     </svg>
                 </div>
-                <div class="feature-title">Cinematic Overlays</div>
-                <p class="feature-desc">16+ professionally animated, 1920×1080 browser-source overlays — Map Pool, Point System, Post Match, Overall Ranking, Head to Head, Top Fraggers, and more.</p>
-                <span class="feature-tag">🎨 Cinematic Quality</span>
+                <div class="font-['Rajdhani'] text-[24px] font-bold text-white mb-3">Cinematic Overlays</div>
+                <p class="text-[14px] text-slate-400 leading-relaxed mb-6">16+ professionally animated, 1920×1080 browser-source overlays — Map Pool, Point System, Post Match, Overall Ranking, Head to Head, Top Fraggers, and more.</p>
+                <span class="inline-block px-3 py-1 bg-orange-500/10 border border-orange-500/20 rounded-md text-[11px] font-bold uppercase tracking-wider text-orange-400">🎨 Cinematic Quality</span>
             </div>
 
             <!-- Card 6 -->
-            <div class="feature-card">
-                <div class="feature-icon-wrap">
-                    <svg class="feature-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <div class="group p-8 rounded-2xl bg-[#0f1117]/80 backdrop-blur-md border border-white/5 shadow-[0_15px_35px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.05)] transition-all duration-400 hover:-translate-y-2 hover:bg-[#161923] hover:border-white/10 relative overflow-hidden">
+                <div class="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 mb-6 group-hover:bg-white/10 group-hover:text-white transition-all duration-300">
+                    <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
                     </svg>
                 </div>
-                <div class="feature-title">Team & Player Management</div>
-                <p class="feature-desc">Full Filament-powered admin panel to manage teams, slots, match rosters, casters, and tournament schedules — with a dedicated operator panel for tournament organizers.</p>
-                <span class="feature-tag">👥 Full Control</span>
+                <div class="font-['Rajdhani'] text-[24px] font-bold text-white mb-3">Team & Player Management</div>
+                <p class="text-[14px] text-slate-400 leading-relaxed mb-6">Full Filament-powered admin panel to manage teams, slots, match rosters, casters, and tournament schedules — with a dedicated operator panel for tournament organizers.</p>
+                <span class="inline-block px-3 py-1 bg-white/5 border border-white/10 rounded-md text-[11px] font-bold uppercase tracking-wider text-slate-300">👥 Full Control</span>
             </div>
         </div>
     </section>
 
     <!-- ─── HOW IT WORKS ─── -->
-    <section class="workflow-section">
-        <div class="workflow-inner">
+    <section class="py-24 px-4 bg-[#08090b] border-y border-white/5 relative z-10">
+        <div class="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
-                <p class="section-label">Workflow</p>
-                <h2 class="section-heading">Set up in minutes,<br>broadcast all day</h2>
-                <p class="section-sub" style="margin-bottom: 40px;">The entire pipeline from match setup to live broadcast is designed to be intuitive and lightning-fast.</p>
+                <p class="text-[12px] font-bold uppercase tracking-[0.2em] text-orange-500 mb-3 drop-shadow-[0_0_10px_rgba(249,115,22,0.4)]">Workflow</p>
+                <h2 class="font-['Rajdhani'] text-[36px] md:text-[46px] font-bold text-white mb-4 leading-tight">Set up in minutes,<br>broadcast all day</h2>
+                <p class="text-slate-400 text-[15px] mb-10">The entire pipeline from match setup to live broadcast is designed to be intuitive and lightning-fast.</p>
 
-                <div class="workflow-steps">
-                    <div class="workflow-step">
-                        <div class="step-num">1</div>
-                        <div class="step-content">
-                            <div class="step-title">Configure your tournament</div>
-                            <p class="step-desc">Set up teams, maps, point rules, and the roadmap phases in the Maidan operator panel.</p>
+                <div class="space-y-6">
+                    <div class="flex items-start gap-5">
+                        <div class="shrink-0 w-9 h-9 rounded-full bg-[#1e2535] border border-white/10 flex items-center justify-center font-['Rajdhani'] text-[18px] font-bold text-white shadow-[0_4px_10px_rgba(0,0,0,0.3)]">1</div>
+                        <div>
+                            <div class="font-['Rajdhani'] text-[20px] font-bold text-white mb-1">Configure your tournament</div>
+                            <p class="text-[14px] text-slate-400 leading-relaxed">Set up teams, maps, point rules, and the roadmap phases in the Maidan operator panel.</p>
                         </div>
                     </div>
-                    <div class="workflow-step">
-                        <div class="step-num">2</div>
-                        <div class="step-content">
-                            <div class="step-title">Add overlay URLs to OBS</div>
-                            <p class="step-desc">Copy the unique browser-source URLs for each overlay from the OBS Hub widget and drop them into OBS Studio as Browser Sources.</p>
+                    <div class="flex items-start gap-5">
+                        <div class="shrink-0 w-9 h-9 rounded-full bg-[#1e2535] border border-white/10 flex items-center justify-center font-['Rajdhani'] text-[18px] font-bold text-white shadow-[0_4px_10px_rgba(0,0,0,0.3)]">2</div>
+                        <div>
+                            <div class="font-['Rajdhani'] text-[20px] font-bold text-white mb-1">Add overlay URLs to OBS</div>
+                            <p class="text-[14px] text-slate-400 leading-relaxed">Copy the unique browser-source URLs for each overlay from the OBS Hub widget and drop them into OBS Studio as Browser Sources.</p>
                         </div>
                     </div>
-                    <div class="workflow-step">
-                        <div class="step-num">3</div>
-                        <div class="step-content">
-                            <div class="step-title">Director controls the show</div>
-                            <p class="step-desc">Use the OBS Director Console to switch active overlays in real-time. Stats, kills, and placements update live on air.</p>
+                    <div class="flex items-start gap-5">
+                        <div class="shrink-0 w-9 h-9 rounded-full bg-[#1e2535] border border-white/10 flex items-center justify-center font-['Rajdhani'] text-[18px] font-bold text-white shadow-[0_4px_10px_rgba(0,0,0,0.3)]">3</div>
+                        <div>
+                            <div class="font-['Rajdhani'] text-[20px] font-bold text-white mb-1">Director controls the show</div>
+                            <p class="text-[14px] text-slate-400 leading-relaxed">Use the OBS Director Console to switch active overlays in real-time. Stats, kills, and placements update live on air.</p>
                         </div>
                     </div>
-                    <div class="workflow-step">
-                        <div class="step-num">4</div>
-                        <div class="step-content">
-                            <div class="step-title">Post-match in one click</div>
-                            <p class="step-desc">Mark the match complete — the system auto-calculates rankings, fraggers, and leaderboards instantly.</p>
+                    <div class="flex items-start gap-5">
+                        <div class="shrink-0 w-9 h-9 rounded-full bg-[#1e2535] border border-white/10 flex items-center justify-center font-['Rajdhani'] text-[18px] font-bold text-white shadow-[0_4px_10px_rgba(0,0,0,0.3)]">4</div>
+                        <div>
+                            <div class="font-['Rajdhani'] text-[20px] font-bold text-white mb-1">Post-match in one click</div>
+                            <p class="text-[14px] text-slate-400 leading-relaxed">Mark the match complete — the system auto-calculates rankings, fraggers, and leaderboards instantly.</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Dashboard Mockup -->
-            <div class="dashboard-mockup">
-                <div class="mockup-topbar">
-                    <div class="mockup-dot" style="background:#ff5f57;"></div>
-                    <div class="mockup-dot" style="background:#febc2e;"></div>
-                    <div class="mockup-dot" style="background:#28c840;"></div>
-                    <span style="flex:1; text-align:center; font-size:11px; color:#334155; font-weight:600;">OBS Director Console — Match 3 of 6</span>
+            <div class="bg-[#161923] border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden transform lg:-rotate-2 transition-transform duration-500 hover:rotate-0">
+                <div class="flex items-center px-4 py-3 bg-[#0a0b0e] border-b border-white/5">
+                    <div class="flex gap-2 mr-4">
+                        <div class="w-3 h-3 rounded-full bg-[#ff5f57]"></div>
+                        <div class="w-3 h-3 rounded-full bg-[#febc2e]"></div>
+                        <div class="w-3 h-3 rounded-full bg-[#28c840]"></div>
+                    </div>
+                    <span class="flex-1 text-center text-[11px] font-bold text-slate-500 tracking-wider uppercase">OBS Director Console — Match 3 of 6</span>
                 </div>
-                <div class="mockup-body">
-                    <div class="mockup-row">
-                        <div class="mockup-block">
-                            <div class="mockup-block-label">Active Match</div>
-                            <div class="mockup-block-val">Match 3</div>
+                <div class="p-6">
+                    <div class="grid grid-cols-3 gap-4 mb-6">
+                        <div class="bg-[#1e2535] border border-white/5 rounded-xl p-4 text-center">
+                            <div class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Active Match</div>
+                            <div class="font-['Rajdhani'] text-[20px] font-bold text-white">Match 3</div>
                         </div>
-                        <div class="mockup-block">
-                            <div class="mockup-block-label">Live Teams</div>
-                            <div class="mockup-block-val">12</div>
+                        <div class="bg-[#1e2535] border border-white/5 rounded-xl p-4 text-center">
+                            <div class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Live Teams</div>
+                            <div class="font-['Rajdhani'] text-[20px] font-bold text-white">12</div>
                         </div>
-                        <div class="mockup-block">
-                            <div class="mockup-block-label">Total Kills</div>
-                            <div class="mockup-block-val">47</div>
+                        <div class="bg-[#1e2535] border border-white/5 rounded-xl p-4 text-center">
+                            <div class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Total Kills</div>
+                            <div class="font-['Rajdhani'] text-[20px] font-bold text-white">47</div>
                         </div>
                     </div>
-                    <div style="margin-bottom: 4px; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #334155; margin-top: 8px;">Overall Standings</div>
+                    <div class="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 mb-2 mt-4">Overall Standings</div>
                     @php
                     $teams = [
                     ['rank' => 1, 'name' => 'Skyline Wolves', 'pts' => 148, 'pct' => 100],
@@ -1245,13 +287,13 @@
                     ];
                     @endphp
                     @foreach ($teams as $t)
-                    <div class="mockup-table-row">
-                        <div class="mockup-rank">#{{ $t['rank'] }}</div>
-                        <div class="mockup-team" style="{{ $t['rank'] == 1 ? 'color:#f97316;' : '' }}">{{ $t['name'] }}</div>
-                        <div class="mockup-pts">{{ $t['pts'] }} pts</div>
-                        <div style="width:70px;">
-                            <div class="mockup-bar-wrap">
-                                <div class="mockup-bar" style="width:{{ $t['pct'] }}%; {{ $t['rank'] > 2 ? 'background: linear-gradient(90deg, #475569, #64748b);' : '' }}"></div>
+                    <div class="flex items-center py-2.5 border-b border-white/5 last:border-0">
+                        <div class="w-8 font-['Rajdhani'] text-[15px] font-bold text-slate-400">#{{ $t['rank'] }}</div>
+                        <div class="flex-1 font-semibold text-[13px] {{ $t['rank'] == 1 ? 'text-orange-500' : 'text-slate-200' }}">{{ $t['name'] }}</div>
+                        <div class="w-16 text-right font-['Rajdhani'] text-[15px] font-bold text-white">{{ $t['pts'] }} pts</div>
+                        <div class="w-[70px] ml-4">
+                            <div class="h-1.5 w-full bg-[#0a0b0e] rounded-full overflow-hidden">
+                                <div class="h-full rounded-full {{ $t['rank'] > 2 ? 'bg-gradient-to-r from-slate-600 to-slate-500' : 'bg-gradient-to-r from-orange-500 to-orange-400' }}" style="width:{{ $t['pct'] }}%;"></div>
                             </div>
                         </div>
                     </div>
@@ -1262,22 +304,22 @@
     </section>
 
     <!-- ─── REQUEST A DEMO ─── -->
-    <section class="demo-section" id="request-demo">
-        <div style="max-width:1100px;margin:0 auto;text-align:center;margin-bottom:48px;">
-            <p class="section-label">Get Started</p>
-            <h2 class="section-heading">Request a Demo</h2>
-            <p class="section-sub" style="margin:0 auto;">Fill in the form and we'll reach out to set you up with a BroadKaster account tailored to your tournament needs.</p>
+    <section class="py-24 px-4 bg-[#0a0b0e] relative z-10" id="request-demo">
+        <div class="max-w-[1100px] mx-auto text-center mb-12">
+            <p class="text-[12px] font-bold uppercase tracking-[0.2em] text-orange-500 mb-3 drop-shadow-[0_0_10px_rgba(249,115,22,0.4)]">Get Started</p>
+            <h2 class="font-['Rajdhani'] text-[36px] md:text-[46px] font-bold text-white mb-4">Request a Demo</h2>
+            <p class="text-slate-400 text-[15px] max-w-[600px] mx-auto">Fill in the form and we'll reach out to set you up with a BroadKaster account tailored to your tournament needs.</p>
         </div>
 
-        <div class="demo-inner">
+        <div class="max-w-[1100px] mx-auto bg-[#0f1117] border border-white/5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden grid grid-cols-1 lg:grid-cols-2">
             <!-- Left: Value props -->
-            <div>
-                <img src="{{ asset('img/symbol.png') }}" alt="BroadKaster" style="width:72px;height:72px;object-fit:contain;margin-bottom:24px;filter:drop-shadow(0 0 20px rgba(249,115,22,0.3));">
-                <h3 style="font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:#f1f5f9;margin-bottom:10px;">What you get with BroadKaster</h3>
-                <p style="font-size:14px;color:var(--slate);line-height:1.7;">
+            <div class="p-10 lg:p-12 border-b lg:border-b-0 lg:border-r border-white/5 bg-[#12151d]">
+                <img src="{{ asset('img/symbol.png') }}" alt="BroadKaster" class="w-16 h-16 object-contain mb-6 drop-shadow-[0_0_20px_rgba(249,115,22,0.3)]">
+                <h3 class="font-['Rajdhani'] text-[28px] font-bold text-white mb-3">What you get with BroadKaster</h3>
+                <p class="text-[14px] text-slate-400 leading-relaxed mb-8">
                     No self-registration. We personally onboard every client to ensure a smooth production experience from day one.
                 </p>
-                <ul class="demo-value-list">
+                <ul class="space-y-4">
                     @php
                         $perks = [
                             'Real-time OBS overlay system — 16+ animated screens',
@@ -1290,9 +332,9 @@
                         ];
                     @endphp
                     @foreach ($perks as $perk)
-                    <li class="demo-value-item">
-                        <span class="demo-check">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <li class="flex items-start gap-3 text-[14px] text-slate-300 font-medium leading-snug">
+                        <span class="shrink-0 w-[18px] h-[18px] rounded-full bg-green-500/10 flex items-center justify-center text-green-500 mt-0.5">
+                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                             </svg>
                         </span>
@@ -1303,73 +345,154 @@
             </div>
 
             <!-- Right: Form -->
-            <div>
+            <div class="p-10 lg:p-12 flex flex-col justify-center">
                 @if (session('demo_success'))
-                    <div class="success-card">
-                        <div class="success-icon">
-                            <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#22c55e" stroke-width="2.5">
+                    <div class="bg-green-500/10 border border-green-500/20 rounded-xl p-8 text-center">
+                        <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-6 h-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                             </svg>
                         </div>
-                        <div style="font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:#f1f5f9;margin-bottom:8px;">Request Received!</div>
-                        <p style="font-size:13px;color:var(--slate);line-height:1.6;">Thank you! We've received your demo request and will get back to you shortly.</p>
+                        <div class="font-['Rajdhani'] text-[22px] font-bold text-white mb-2">Request Received!</div>
+                        <p class="text-[13px] text-slate-400 leading-relaxed">Thank you! We've received your demo request and will get back to you shortly.</p>
                     </div>
                 @else
-                    <form action="{{ route('demo.request') }}" method="POST" class="demo-form">
+                    <form action="{{ route('demo.request') }}" method="POST" class="space-y-5">
                         @csrf
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="demo_name" class="form-label">Full Name <span style="color:var(--orange)">*</span></label>
-                                <input id="demo_name" type="text" name="name" class="form-input {{ $errors->has('name') ? 'error' : '' }}" placeholder="Sumin Shrestha" value="{{ old('name') }}" required>
-                                @error('name') <span class="form-error">{{ $message }}</span> @enderror
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label for="demo_name" class="block text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">Full Name <span class="text-orange-500">*</span></label>
+                                <input id="demo_name" type="text" name="name" class="w-full bg-[#0a0b0e] border {{ $errors->has('name') ? 'border-red-500/60' : 'border-white/10' }} rounded-lg px-4 py-3 text-[13.5px] text-white placeholder-slate-600 focus:outline-none focus:border-orange-500/50 focus:bg-orange-500/5 transition-all" placeholder="Sumin Shrestha" value="{{ old('name') }}" required>
+                                @error('name') <span class="text-[11px] text-red-400 mt-1 block">{{ $message }}</span> @enderror
                             </div>
-                            <div class="form-group">
-                                <label for="demo_email" class="form-label">Email Address <span style="color:var(--orange)">*</span></label>
-                                <input id="demo_email" type="email" name="email" class="form-input {{ $errors->has('email') ? 'error' : '' }}" placeholder="you@esports.com" value="{{ old('email') }}" required>
-                                @error('email') <span class="form-error">{{ $message }}</span> @enderror
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="demo_org" class="form-label">Organization</label>
-                                <input id="demo_org" type="text" name="organization" class="form-input" placeholder="Esports Nepal (optional)" value="{{ old('organization') }}">
-                            </div>
-                            <div class="form-group">
-                                <label for="demo_phone" class="form-label">Phone</label>
-                                <input id="demo_phone" type="tel" name="phone" class="form-input" placeholder="+977 98XXXXXXXX (optional)" value="{{ old('phone') }}">
+                            <div>
+                                <label for="demo_email" class="block text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">Email Address <span class="text-orange-500">*</span></label>
+                                <input id="demo_email" type="email" name="email" class="w-full bg-[#0a0b0e] border {{ $errors->has('email') ? 'border-red-500/60' : 'border-white/10' }} rounded-lg px-4 py-3 text-[13.5px] text-white placeholder-slate-600 focus:outline-none focus:border-orange-500/50 focus:bg-orange-500/5 transition-all" placeholder="you@esports.com" value="{{ old('email') }}" required>
+                                @error('email') <span class="text-[11px] text-red-400 mt-1 block">{{ $message }}</span> @enderror
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="demo_message" class="form-label">What are you looking to broadcast?</label>
-                            <textarea id="demo_message" name="message" class="form-textarea" placeholder="Tell us about your tournament — game title, team count, event scale...">{{ old('message') }}</textarea>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label for="demo_org" class="block text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">Organization</label>
+                                <input id="demo_org" type="text" name="organization" class="w-full bg-[#0a0b0e] border border-white/10 rounded-lg px-4 py-3 text-[13.5px] text-white placeholder-slate-600 focus:outline-none focus:border-orange-500/50 focus:bg-orange-500/5 transition-all" placeholder="Esports Nepal (optional)" value="{{ old('organization') }}">
+                            </div>
+                            <div>
+                                <label for="demo_phone" class="block text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">Phone</label>
+                                <input id="demo_phone" type="tel" name="phone" class="w-full bg-[#0a0b0e] border border-white/10 rounded-lg px-4 py-3 text-[13.5px] text-white placeholder-slate-600 focus:outline-none focus:border-orange-500/50 focus:bg-orange-500/5 transition-all" placeholder="+977 98XXXXXXXX (optional)" value="{{ old('phone') }}">
+                            </div>
                         </div>
-                        <button type="submit" class="form-submit">
+                        <div>
+                            <label for="demo_message" class="block text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">What are you looking to broadcast?</label>
+                            <textarea id="demo_message" name="message" class="w-full min-h-[90px] bg-[#0a0b0e] border border-white/10 rounded-lg px-4 py-3 text-[13.5px] text-white placeholder-slate-600 focus:outline-none focus:border-orange-500/50 focus:bg-orange-500/5 transition-all resize-y" placeholder="Tell us about your tournament — game title, team count, event scale...">{{ old('message') }}</textarea>
+                        </div>
+                        <button type="submit" class="w-full flex items-center justify-center gap-2 px-7 py-3.5 bg-gradient-to-br from-orange-500 to-orange-600 text-white font-['Rajdhani'] font-bold text-[15px] uppercase tracking-widest rounded-lg border-none cursor-pointer shadow-[0_0_0_1px_rgba(249,115,22,0.4),0_6px_24px_rgba(249,115,22,0.3)] hover:shadow-[0_0_0_1px_rgba(249,115,22,0.6),0_8px_32px_rgba(249,115,22,0.45)] transition-all duration-250">
                             <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
                             </svg>
                             Send Demo Request
                         </button>
-                        <p style="font-size:11px;color:#334155;text-align:center;">We typically respond within 1–2 business days.</p>
+                        <p class="text-[11px] text-slate-500 text-center">We typically respond within 1–2 business days.</p>
                     </form>
                 @endif
             </div>
         </div>
     </section>
 
-    <!-- ─── FOOTER ─── -->
-    <footer>
-        <div class="footer-inner">
-            <div class="footer-brand">
-                <img src="{{ asset('img/logo.png') }}" alt="BroadKaster">
+    <!-- ─── CONTACT SECTION ─── -->
+    <section class="pt-24 pb-12 px-4 relative z-10 overflow-hidden" id="contact">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[radial-gradient(circle,rgba(249,115,22,0.08)_0%,transparent_60%)] rounded-full pointer-events-none -z-10 animate-pulse-glow"></div>
+        <div class="text-center mb-12">
+            <h2 class="font-['Rajdhani'] text-[42px] font-bold text-white mb-3">Let's <span class="bg-gradient-to-br from-orange-500 to-amber-500 text-transparent bg-clip-text">Connect</span></h2>
+            <p class="text-[16px] text-slate-400 max-w-[500px] mx-auto">Have questions or need a custom setup? Reach out to OxyZone directly via any platform below.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-[1000px] mx-auto">
+            <!-- Name/Profile -->
+            <div class="group flex flex-col items-center p-8 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-2xl text-center relative overflow-hidden transition-all duration-400 hover:-translate-y-2.5 hover:border-orange-500/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6),0_0_20px_rgba(249,115,22,0.15)] hover:bg-[#0f1117]/90 cursor-default">
+                <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-orange-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
+                <div class="w-14 h-14 bg-orange-500/10 border border-orange-500/20 rounded-xl flex items-center justify-center text-orange-500 mb-5 transition-all duration-400 relative group-hover:bg-orange-500 group-hover:text-white group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-[0_0_20px_rgba(249,115,22,0.4)]">
+                    <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                </div>
+                <div class="text-[11px] text-slate-400 uppercase tracking-[0.15em] font-bold mb-1.5 transition-colors duration-300 group-hover:text-slate-300">Founder</div>
+                <div class="text-[16px] font-semibold text-white transition-colors duration-300 group-hover:text-orange-500">Sumin Shrestha</div>
+                <div class="text-[12px] text-slate-400 mt-1">(A.k.a OxyZone)</div>
             </div>
-            <div class="footer-copy">&copy; {{ date('Y') }} BroadKaster. Built with ❤️ by <a href="https://suminshrestha.com.np" style="color:#f97316;text-decoration:none;">OxyZone</a></div>
-            <div class="footer-build">SYS_BUILD: v{{ $systemVersion }}</div>
+
+            <!-- Phone -->
+            <a href="tel:+9779802350986" class="group flex flex-col items-center p-8 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-2xl text-center relative overflow-hidden transition-all duration-400 hover:-translate-y-2.5 hover:border-orange-500/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6),0_0_20px_rgba(249,115,22,0.15)] hover:bg-[#0f1117]/90 decoration-0">
+                <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-orange-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
+                <div class="w-14 h-14 bg-orange-500/10 border border-orange-500/20 rounded-xl flex items-center justify-center text-orange-500 mb-5 transition-all duration-400 relative group-hover:bg-orange-500 group-hover:text-white group-hover:scale-110 group-hover:-rotate-6 group-hover:shadow-[0_0_20px_rgba(249,115,22,0.4)]">
+                    <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                </div>
+                <div class="text-[11px] text-slate-400 uppercase tracking-[0.15em] font-bold mb-1.5 transition-colors duration-300 group-hover:text-slate-300">Phone</div>
+                <div class="text-[16px] font-semibold text-white transition-colors duration-300 group-hover:text-orange-500">9802350986</div>
+            </a>
+
+            <!-- Email -->
+            <a href="mailto:sumnsth@gmail.com" class="group flex flex-col items-center p-8 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-2xl text-center relative overflow-hidden transition-all duration-400 hover:-translate-y-2.5 hover:border-orange-500/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6),0_0_20px_rgba(249,115,22,0.15)] hover:bg-[#0f1117]/90 decoration-0">
+                <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-orange-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
+                <div class="w-14 h-14 bg-orange-500/10 border border-orange-500/20 rounded-xl flex items-center justify-center text-orange-500 mb-5 transition-all duration-400 relative group-hover:bg-orange-500 group-hover:text-white group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-[0_0_20px_rgba(249,115,22,0.4)]">
+                    <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <div class="text-[11px] text-slate-400 uppercase tracking-[0.15em] font-bold mb-1.5 transition-colors duration-300 group-hover:text-slate-300">Email</div>
+                <div class="text-[16px] font-semibold text-white transition-colors duration-300 group-hover:text-orange-500 truncate w-full">sumnsth@gmail.com</div>
+            </a>
+
+            <!-- Discord -->
+            <a href="#" class="group flex flex-col items-center p-8 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-2xl text-center relative overflow-hidden transition-all duration-400 hover:-translate-y-2.5 hover:border-orange-500/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6),0_0_20px_rgba(249,115,22,0.15)] hover:bg-[#0f1117]/90 decoration-0" onclick="navigator.clipboard.writeText('oxyzone'); alert('Discord username copied to clipboard!'); return false;">
+                <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-orange-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
+                <div class="w-14 h-14 bg-orange-500/10 border border-orange-500/20 rounded-xl flex items-center justify-center text-orange-500 mb-5 transition-all duration-400 relative group-hover:bg-orange-500 group-hover:text-white group-hover:scale-110 group-hover:-rotate-6 group-hover:shadow-[0_0_20px_rgba(249,115,22,0.4)]">
+                    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/>
+                    </svg>
+                </div>
+                <div class="text-[11px] text-slate-400 uppercase tracking-[0.15em] font-bold mb-1.5 transition-colors duration-300 group-hover:text-slate-300">Discord</div>
+                <div class="text-[16px] font-semibold text-white transition-colors duration-300 group-hover:text-orange-500">oxyzone</div>
+            </a>
+
+            <!-- Instagram -->
+            <a href="https://instagram.com/0xyzone" target="_blank" class="group flex flex-col items-center p-8 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-2xl text-center relative overflow-hidden transition-all duration-400 hover:-translate-y-2.5 hover:border-orange-500/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6),0_0_20px_rgba(249,115,22,0.15)] hover:bg-[#0f1117]/90 decoration-0">
+                <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-orange-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
+                <div class="w-14 h-14 bg-orange-500/10 border border-orange-500/20 rounded-xl flex items-center justify-center text-orange-500 mb-5 transition-all duration-400 relative group-hover:bg-orange-500 group-hover:text-white group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-[0_0_20px_rgba(249,115,22,0.4)]">
+                    <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                </div>
+                <div class="text-[11px] text-slate-400 uppercase tracking-[0.15em] font-bold mb-1.5 transition-colors duration-300 group-hover:text-slate-300">Instagram</div>
+                <div class="text-[16px] font-semibold text-white transition-colors duration-300 group-hover:text-orange-500">0xyzone</div>
+            </a>
+        </div>
+    </section>
+
+    <!-- ─── FOOTER ─── -->
+    <footer class="relative z-10 border-t border-white/5 bg-[#0a0b0e]/90">
+        <div class="max-w-7xl mx-auto p-8 flex justify-between items-center flex-wrap gap-4">
+            <div class="flex items-center gap-2.5">
+                <img src="{{ asset('img/logo.png') }}" alt="BroadKaster" class="h-5 opacity-60">
+            </div>
+            <div class="text-[11px] text-slate-600 font-medium">&copy; {{ date('Y') }} BroadKaster. Built with ❤️ by <a href="https://suminshrestha.com.np" class="text-orange-500 decoration-0">OxyZone</a></div>
+            <div class="font-mono text-[10px] text-slate-800 tracking-[0.08em]">SYS_BUILD: v{{ $systemVersion ?? '1.1.117' }}</div>
         </div>
     </footer>
 
     <script>
         document.getElementById('mobile-menu-btn').addEventListener('click', function() {
-            document.getElementById('mobile-menu').classList.toggle('active');
+            const menu = document.getElementById('mobile-menu');
+            if(menu.classList.contains('hidden')){
+                menu.classList.remove('hidden');
+                menu.classList.add('flex');
+            } else {
+                menu.classList.add('hidden');
+                menu.classList.remove('flex');
+            }
         });
     </script>
 </body>

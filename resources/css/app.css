@@ -18,3 +18,40 @@ input[type=range] {
     -webkit-appearance: none;
     appearance: none;
 }
+
+/* ── Public page animations ── */
+@keyframes orbDrift {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(40px, -60px) scale(1.08); }
+    100% { transform: translate(-30px, 40px) scale(0.95); }
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.2; }
+}
+
+@keyframes pulseGlow {
+    0%   { transform: translate(-50%, -50%) scale(0.85); opacity: 0.4; }
+    100% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+}
+
+/* Fixed atmospheric orb */
+.orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(110px);
+    pointer-events: none;
+    will-change: transform;
+    animation: orbDrift linear infinite alternate;
+}
+
+/* Blinking dot in hero eyebrow */
+.animate-blink {
+    animation: blink 1.5s ease-in-out infinite;
+}
+
+/* Pulsing glow behind contact section */
+.animate-pulse-glow {
+    animation: pulseGlow 8s ease-in-out infinite alternate;
+}
