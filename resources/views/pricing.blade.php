@@ -264,7 +264,8 @@
 
     <!-- ─── FOOTER ─── -->
     <footer class="relative z-10 border-t border-white/5 px-8 py-8 text-center animate-fade-in">
-        <p class="text-[12px] text-slate-500 tracking-wider">&copy; {{ date('Y') }} BroadKaster &mdash; All rights reserved.</p>
+        <div class="text-[11px] text-slate-600 font-medium">&copy; {{ date('Y') }} BroadKaster. Built with ❤️ by <a href="https://linktr.ee/0xyzone" class="text-orange-500 decoration-0">OxyZone</a></div>
+            <div class="font-mono text-[10px] text-slate-800 tracking-[0.08em]">SYS_BUILD: v{{ $systemVersion ?? '1.1.117' }}</div>
     </footer>
 
     <!-- Mouse Trail Container -->

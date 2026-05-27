@@ -493,7 +493,7 @@
             <div class="flex items-center gap-2.5">
                 <img src="{{ asset('img/logo.png') }}" alt="BroadKaster" class="h-5 opacity-60">
             </div>
-            <div class="text-[11px] text-slate-600 font-medium">&copy; {{ date('Y') }} BroadKaster. Built with ❤️ by <a href="https://suminshrestha.com.np" class="text-orange-500 decoration-0">OxyZone</a></div>
+            <div class="text-[11px] text-slate-600 font-medium">&copy; {{ date('Y') }} BroadKaster. Built with ❤️ by <a href="https://linktr.ee/0xyzone" class="text-orange-500 decoration-0">OxyZone</a></div>
             <div class="font-mono text-[10px] text-slate-800 tracking-[0.08em]">SYS_BUILD: v{{ $systemVersion ?? '1.1.117' }}</div>
         </div>
     </footer>
