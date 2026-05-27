@@ -18,8 +18,11 @@ class UserForm
                     ->label('Email address')
                     ->email()
                     ->required(),
+                TextInput::make('password')
+                    ->password()
+                    ->revealable(),
                 DateTimePicker::make('email_verified_at')
-                ->native(false),
+                    ->native(false),
             ]);
     }
 }
