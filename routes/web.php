@@ -17,6 +17,11 @@ Route::get('/', function () {
     return view('welcome', compact('systemVersion'));
 });
 
+Route::get('/pricing', function () {
+    $plans = \App\Models\Plan::where('is_active', true)->orderBy('sort_order')->get();
+    return view('pricing', compact('plans'));
+})->name('pricing');
+
 Route::post('/demo-request', [DemoRequestController::class, 'store'])
     ->name('demo.request')
     ->middleware('throttle:5,60'); // 5 per hour per IP

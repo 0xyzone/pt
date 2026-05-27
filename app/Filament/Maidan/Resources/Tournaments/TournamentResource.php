@@ -40,6 +40,11 @@ class TournamentResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    public static function canViewAny(): bool
+    {
+        return \App\Services\SubscriptionService::hasActiveSubscription(\Illuminate\Support\Facades\Auth::user());
+    }
+
     public static function form(Schema $schema): Schema
     {
         return TournamentForm::configure($schema);

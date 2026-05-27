@@ -10,8 +10,12 @@ class ObsControlWidget extends Widget
     protected static ?int $sort = -2; // Put it at the top
     
     protected int | string | array $columnSpan = 'full';
-
     protected string $view = 'filament.maidan.widgets.obs-control-widget';
+
+    public static function canView(): bool
+    {
+        return \App\Services\SubscriptionService::hasActiveSubscription(Auth::user());
+    }
 
     public function getLinks(): array
     {

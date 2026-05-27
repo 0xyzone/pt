@@ -8,6 +8,11 @@ class ApiLink extends Widget
 {
     public int|string|null $userId = null;
 
+    public static function canView(): bool
+    {
+        return \App\Services\SubscriptionService::hasActiveSubscription(\Illuminate\Support\Facades\Auth::user());
+    }
+
     public function mount(): void
     {
         $this->userId = \Illuminate\Support\Facades\Auth::id();

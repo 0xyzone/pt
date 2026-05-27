@@ -53,10 +53,12 @@ class PlanResource extends Resource
                         ->helperText('Auto-generated from name. Must be unique.'),
                     Textarea::make('description')
                         ->rows(2)->columnSpanFull(),
-                    TextInput::make('price_display')
-                        ->label('Price Display')
-                        ->placeholder('e.g. NPR 2,500/mo or Free')
-                        ->maxLength(60),
+                    TextInput::make('price')
+                        ->label('Base Price (NPR)')
+                        ->numeric()
+                        ->placeholder('e.g. 1999 (0 for Free)')
+                        ->required()
+                        ->default(0),
                     TextInput::make('duration_value')
                         ->label('Duration Value')
                         ->numeric()

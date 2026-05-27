@@ -18,9 +18,9 @@ class CasterResource extends Resource
 {
     protected static ?string $model = Caster::class;
 
-    public static function canAccess(array $parameters = []): bool
+    public static function canViewAny(): bool
     {
-        return auth()->check() && \App\Services\SubscriptionService::can(auth()->user(), 'casters_management');
+        return \Illuminate\Support\Facades\Auth::check() && \App\Services\SubscriptionService::can(\Illuminate\Support\Facades\Auth::user(), 'casters_management');
     }
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMicrophone;

@@ -26,7 +26,7 @@ class SubscriptionServiceTest extends TestCase
         $this->oneDayPlan = Plan::create([
             'name' => '1 Day Pass',
             'slug' => '1-day-pass',
-            'price_display' => 'NPR 199/day',
+            'price' => 199,
             'is_active' => true,
             'features' => [
                 'max_tournaments' => 1,
@@ -39,7 +39,7 @@ class SubscriptionServiceTest extends TestCase
         $this->oneMonthPlan = Plan::create([
             'name' => '1 Month Plan',
             'slug' => '1-month-plan',
-            'price_display' => 'NPR 1,999/mo',
+            'price' => 1999,
             'is_active' => true,
             'features' => [
                 'max_tournaments' => 20,

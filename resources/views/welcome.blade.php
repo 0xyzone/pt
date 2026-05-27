@@ -949,6 +949,52 @@
             }
         }
 
+        /* ─── Mobile Menu ─── */
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 72px;
+            left: 0;
+            right: 0;
+            background: var(--dark-2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1rem 2rem;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .mobile-menu a {
+            padding: 12px 16px;
+            text-decoration: none;
+            color: #f1f5f9;
+            font-weight: 600;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .nav-actions {
+                display: none;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
     </style>
 </head>
 
@@ -963,9 +1009,9 @@
         <div class="nav-inner">
             <a href="/" class="nav-logo">
                 <img src="{{ asset('img/logo.png') }}" alt="BroadKaster">
-                <span class="nav-badge">Live Production Suite</span>
             </a>
             <div class="nav-actions">
+                    <a href="{{ route('pricing') }}" class="btn-ghost">Pricing</a>
                 @auth
                     <a href="{{ url('/maidan') }}" class="btn-ghost">Dashboard</a>
                 @else
@@ -973,6 +1019,20 @@
                     <a href="{{ url('/maidan/login') }}" class="btn-primary">Sign In</a>
                 @endauth
             </div>
+            <button class="mobile-menu-btn" id="mobile-menu-btn">
+                <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+        <div class="mobile-menu" id="mobile-menu">
+            <a href="{{ route('pricing') }}">Pricing</a>
+            @auth
+                <a href="{{ url('/maidan') }}">Dashboard</a>
+            @else
+                <a href="#request-demo">Request a Demo</a>
+                <a href="{{ url('/maidan/login') }}" style="background: linear-gradient(135deg, #f97316, #ea580c); color: #fff;">Sign In</a>
+            @endauth
         </div>
     </nav>
 
@@ -1307,5 +1367,10 @@
         </div>
     </footer>
 
+    <script>
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('active');
+        });
+    </script>
 </body>
 </html>

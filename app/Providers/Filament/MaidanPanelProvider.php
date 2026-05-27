@@ -32,6 +32,7 @@ class MaidanPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->registration()
             ->brandLogo(fn () => view('filament.custom.brand-logo'))
             ->favicon(asset('img/symbol.png'))
             ->login()

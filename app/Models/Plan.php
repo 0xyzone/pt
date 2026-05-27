@@ -11,13 +11,44 @@ class Plan extends Model
         'name',
         'slug',
         'description',
-        'price_display',
+        'price',
         'duration_value',
         'duration_period',
         'features',
         'is_active',
         'sort_order',
     ];
+
+    /**
+     * Get the dynamically generated price display.
+     */
+    public function getPriceDisplayAttribute(): string
+    {
+        if (!$this->price || $this->price <= 0) {
+            return 'Free';
+        }
+
+        $formattedPrice = number_format($this->price);
+        
+        if (!$this->duration_value || !$this->duration_period) {
+            return "NPR {$formattedPrice}"; // Lifetime
+        }
+
+        $periodMap = [
+            'days' => 'day',
+            'weeks' => 'week',
+            'months' => 'mo',
+            'years' => 'yr',
+        ];
+
+        $period = $periodMap[$this->duration_period] ?? $this->duration_period;
+        
+        if ($this->duration_value > 1) {
+            return "NPR {$formattedPrice} / {$this->duration_value} {$period}";
+        }
+
+        return "NPR {$formattedPrice} / {$period}";
+    }
 
     /**
      * Calculate the end date for a subscription to this plan starting from a given date.
