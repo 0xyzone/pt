@@ -11,14 +11,17 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="Pricing Plans — BroadKaster">
     <meta property="og:description" content="Choose a BroadKaster plan that fits your esports production needs. From daily passes to annual subscriptions — flexible pricing for every tournament organizer.">
-    <meta property="og:image" content="{{ asset('img/symbol.png') }}">
+    <meta property="og:image" content="{{ asset('img/symbol-preview.jpg') }}">
+    <meta property="og:image:secure_url" content="{{ asset('img/symbol-preview.jpg') }}">
+    <meta property="og:image:width" content="800">
+    <meta property="og:image:height" content="800">
 
     <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="{{ url()->current() }}">
     <meta name="twitter:title" content="Pricing Plans — BroadKaster">
     <meta name="twitter:description" content="Choose a BroadKaster plan that fits your esports production needs. From daily passes to annual subscriptions — flexible pricing for every tournament organizer.">
-    <meta name="twitter:image" content="{{ asset('img/symbol.png') }}">
+    <meta name="twitter:image" content="{{ asset('img/symbol-preview.jpg') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

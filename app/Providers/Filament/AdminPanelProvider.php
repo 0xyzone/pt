@@ -66,11 +66,14 @@ class AdminPanelProvider extends PanelProvider
                     <meta property="og:url" content="{{ url()->current() }}">
                     <meta property="og:title" content="BroadKaster — Admin Panel">
                     <meta property="og:description" content="BroadKaster is a professional real-time tournament broadcasting platform.">
-                    <meta property="og:image" content="{{ asset('img/symbol.png') }}">
-                    <meta name="twitter:card" content="summary">
+                    <meta property="og:image" content="{{ asset('img/symbol-preview.jpg') }}">
+                    <meta property="og:image:secure_url" content="{{ asset('img/symbol-preview.jpg') }}">
+                    <meta property="og:image:width" content="800">
+                    <meta property="og:image:height" content="800">
+                    <meta name="twitter:card" content="summary_large_image">
                     <meta name="twitter:title" content="BroadKaster — Admin Panel">
                     <meta name="twitter:description" content="BroadKaster is a professional real-time tournament broadcasting platform.">
-                    <meta name="twitter:image" content="{{ asset('img/symbol.png') }}">
+                    <meta name="twitter:image" content="{{ asset('img/symbol-preview.jpg') }}">
                 HTML)
             )
             ->plugins([

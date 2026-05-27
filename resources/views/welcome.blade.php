@@ -11,14 +11,15 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="BroadKaster — Live Tournament Broadcasting System">
     <meta property="og:description" content="BroadKaster is a professional real-time tournament broadcasting platform with OBS-ready overlays, live stats, and dynamic rankings for PUBG Mobile esports events.">
-    <meta property="og:image" content="{{ asset('img/symbol.png') }}">
+    <meta property="og:image" content="{{ asset('img/symbol-preview.jpg') }}">
+    <meta property="og:image:secure_url" content="{{ asset('img/symbol-preview.jpg') }}">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:url" content="{{ url()->current() }}">
     <meta name="twitter:title" content="BroadKaster — Live Tournament Broadcasting System">
     <meta name="twitter:description" content="BroadKaster is a professional real-time tournament broadcasting platform with OBS-ready overlays, live stats, and dynamic rankings for PUBG Mobile esports events.">
-    <meta name="twitter:image" content="{{ asset('img/symbol.png') }}">
+    <meta name="twitter:image" content="{{ asset('img/symbol-preview.jpg') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
