@@ -123,4 +123,13 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | System Version Configuration
+    |--------------------------------------------------------------------------
+    */
+
+    'version_major' => env('APP_VERSION_MAJOR', '1'),
+    'version_minor' => env('APP_VERSION_MINOR', '0'),
+
 ];
