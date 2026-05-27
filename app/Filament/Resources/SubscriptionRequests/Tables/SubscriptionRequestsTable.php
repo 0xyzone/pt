@@ -80,7 +80,7 @@ class SubscriptionRequestsTable
                             'plan_id' => $record->plan_id,
                             'status' => 'active',
                             'starts_at' => now(),
-                            'ends_at' => null,
+                            'ends_at' => $record->plan->calculateEndDate(),
                             'granted_by' => Auth::id(),
                             'notes' => 'Automatically approved via request.',
                         ]);

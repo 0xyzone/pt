@@ -12,10 +12,36 @@ class Plan extends Model
         'slug',
         'description',
         'price_display',
+        'duration_value',
+        'duration_period',
         'features',
         'is_active',
         'sort_order',
     ];
+
+    /**
+     * Calculate the end date for a subscription to this plan starting from a given date.
+     * Returns null if the plan is lifetime/unlimited.
+     *
+     * @param \Carbon\Carbon|null $startDate
+     * @return \Carbon\Carbon|null
+     */
+    public function calculateEndDate(?\Carbon\Carbon $startDate = null): ?\Carbon\Carbon
+    {
+        if (!$this->duration_value || !$this->duration_period) {
+            return null; // Lifetime plan
+        }
+
+        $date = $startDate ? $startDate->copy() : now();
+
+        return match ($this->duration_period) {
+            'days' => $date->addDays($this->duration_value),
+            'weeks' => $date->addWeeks($this->duration_value),
+            'months' => $date->addMonths($this->duration_value),
+            'years' => $date->addYears($this->duration_value),
+            default => null,
+        };
+    }
 
     protected $casts = [
         'features'  => 'array',

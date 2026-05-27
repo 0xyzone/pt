@@ -15,6 +15,8 @@ class PlanSeeder extends Seeder
                 'slug'          => '1-day-pass',
                 'description'   => 'Complete access to caster management, players, and real-time HUD overlays for 24 hours. Perfect for one-off events.',
                 'price_display' => 'NPR 199/day',
+                'duration_value' => 1,
+                'duration_period' => 'days',
                 'sort_order'    => 1,
                 'features'      => [
                     'max_tournaments'    => 2,
@@ -33,6 +35,8 @@ class PlanSeeder extends Seeder
                 'slug'          => '1-week-pass',
                 'description'   => 'Full production access for 7 days. Includes roadmap overlays, live stats editor, and match logs.',
                 'price_display' => 'NPR 599/week',
+                'duration_value' => 1,
+                'duration_period' => 'weeks',
                 'sort_order'    => 2,
                 'features'      => [
                     'max_tournaments'    => 5,
@@ -51,6 +55,8 @@ class PlanSeeder extends Seeder
                 'slug'          => '1-month-plan',
                 'description'   => 'Standard monthly subscription. Unlocks custom branding ( logos and sponsor layouts) and higher tournament thresholds.',
                 'price_display' => 'NPR 1,999/mo',
+                'duration_value' => 1,
+                'duration_period' => 'months',
                 'sort_order'    => 3,
                 'features'      => [
                     'max_tournaments'    => 15,
@@ -69,6 +75,8 @@ class PlanSeeder extends Seeder
                 'slug'          => '3-month-plan',
                 'description'   => 'Quarterly production bundle. High match and team limits for multiple tournament leagues.',
                 'price_display' => 'NPR 4,999/3 mo',
+                'duration_value' => 3,
+                'duration_period' => 'months',
                 'sort_order'    => 4,
                 'features'      => [
                     'max_tournaments'    => 50,
@@ -87,6 +95,8 @@ class PlanSeeder extends Seeder
                 'slug'          => '6-month-plan',
                 'description'   => 'Semi-annual package. Unlimited matches and large team configurations for season-long operations.',
                 'price_display' => 'NPR 8,999/6 mo',
+                'duration_value' => 6,
+                'duration_period' => 'months',
                 'sort_order'    => 5,
                 'features'      => [
                     'max_tournaments'    => 120,
@@ -105,6 +115,8 @@ class PlanSeeder extends Seeder
                 'slug'          => '1-year-plan',
                 'description'   => 'Ultimate annual subscription. Complete unlimited access to all features, sync channels, branding, and stats engines.',
                 'price_display' => 'NPR 14,999/yr',
+                'duration_value' => 1,
+                'duration_period' => 'years',
                 'sort_order'    => 6,
                 'features'      => [
                     'max_tournaments'    => -1, // unlimited

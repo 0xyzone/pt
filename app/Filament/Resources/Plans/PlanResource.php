@@ -57,6 +57,19 @@ class PlanResource extends Resource
                         ->label('Price Display')
                         ->placeholder('e.g. NPR 2,500/mo or Free')
                         ->maxLength(60),
+                    TextInput::make('duration_value')
+                        ->label('Duration Value')
+                        ->numeric()
+                        ->placeholder('e.g. 1, 6, 12. Leave empty for Lifetime plan.'),
+                    Select::make('duration_period')
+                        ->label('Duration Period')
+                        ->options([
+                            'days' => 'Days',
+                            'weeks' => 'Weeks',
+                            'months' => 'Months',
+                            'years' => 'Years',
+                        ])
+                        ->placeholder('Select Period'),
                     TextInput::make('sort_order')
                         ->numeric()->default(0),
                     Toggle::make('is_active')
@@ -111,6 +124,10 @@ class PlanResource extends Resource
                 TextColumn::make('name')->weight('bold')->searchable(),
                 TextColumn::make('slug')->badge()->color('gray'),
                 TextColumn::make('price_display')->label('Price'),
+                TextColumn::make('duration_value')
+                    ->label('Duration')
+                    ->formatStateUsing(fn ($record) => $record->duration_value ? "{$record->duration_value} " . ucfirst($record->duration_period) : 'Lifetime')
+                    ->badge()->color('warning'),
                 TextColumn::make('subscriptions_count')
                     ->label('Subscribers')
                     ->counts('subscriptions')
