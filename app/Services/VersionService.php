@@ -58,7 +58,7 @@ class VersionService
             // Graceful fallback if Git shell commands are restricted or not found
         }
 
-        return "{$major}.{$minor}.{$patch}-{$hash}";
+        return "{$major}.{$minor}.{$patch}";
     }
 
     /**
