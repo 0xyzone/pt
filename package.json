@@ -3,7 +3,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "RAYON_NUM_THREADS=1 vite build",
+        "build": "RAYON_NUM_THREADS=1 vite build && php artisan app:sync-version",
         "dev": "vite"
     },
     "devDependencies": {
