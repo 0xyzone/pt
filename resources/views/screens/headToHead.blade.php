@@ -259,6 +259,25 @@
             will-change: transform, opacity;
         }
 
+        @keyframes badgeDrop {
+            from {
+                opacity: 0;
+                transform: translateY(-24px) scale(0.82);
+            }
+            62% {
+                transform: translateY(4px) scale(1.03);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .badge-drop {
+            animation: badgeDrop 0.78s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+            will-change: transform, opacity;
+        }
+
         /* High-contrast neon text shadows */
         .text-glow-cyan {
             text-shadow: 0 0 15px rgba(6, 182, 212, 0.8), 0 0 25px rgba(6, 182, 212, 0.4);
@@ -593,7 +612,7 @@
             <div class="w-xl flex flex-col gap-4.5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
 
                 {{-- Holographic green versus active badge --}}
-                <div class="bg-slate-950/95 border border-emerald-500/40 py-2 px-5 rounded-full flex items-center justify-center gap-2.5 mx-auto shadow-[0_0_20px_rgba(16,185,129,0.15)] shrink-0 mb-1 leading-none">
+                <div class="badge-drop bg-slate-950/95 border border-emerald-500/40 py-2 px-5 rounded-full flex items-center justify-center gap-2.5 mx-auto shadow-[0_0_20px_rgba(16,185,129,0.15)] shrink-0 mb-1 leading-none" style="animation-delay: 0.1s;">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span class="font-hud text-[10px] font-black text-emerald-400 tracking-[0.3em] uppercase">TELEMETRY COMPARISON ACTIVE</span>
                 </div>

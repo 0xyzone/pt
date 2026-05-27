@@ -31,24 +31,18 @@ class VersionService
     }
 
     /**
-     * Calculate version dynamically from local Git environment.
+     * Calculate version dynamically from local Git environment and database history.
      */
     public static function determineFromGit(): string
     {
         // Base major/minor versions configured here or fall back to skeleton values
-        $major = config('app.version_major', '1');
-        $minor = config('app.version_minor', '0');
+        $major = (int)config('app.version_major', '1');
+        $minor = (int)config('app.version_minor', '0');
 
         $patch = 0;
         $hash = 'dev';
 
         try {
-            // Retrieve total commit count to serve as the patch number
-            $commitCount = trim(shell_exec('git rev-list --count HEAD') ?? '');
-            if (is_numeric($commitCount)) {
-                $patch = (int)$commitCount;
-            }
-
             // Retrieve short commit hash
             $lastHash = trim(shell_exec('git log -1 --format="%h"') ?? '');
             if (!empty($lastHash)) {
@@ -56,6 +50,48 @@ class VersionService
             }
         } catch (\Throwable $e) {
             // Graceful fallback if Git shell commands are restricted or not found
+        }
+
+        try {
+            if (Schema::hasTable('system_versions')) {
+                // Find the latest sync record for the CURRENT major/minor combination
+                $latestForVersion = DB::table('system_versions')
+                    ->where('major', $major)
+                    ->where('minor', $minor)
+                    ->latest('id')
+                    ->first();
+
+                if ($latestForVersion) {
+                    $prevPatch = (int)$latestForVersion->patch;
+                    $prevHash = $latestForVersion->commit_hash;
+
+                    if ($hash !== 'dev' && !empty($prevHash)) {
+                        // If Git is available and we have a valid previous commit hash,
+                        // count commits since that previous commit to determine the increment.
+                        $diffCount = trim(shell_exec("git rev-list --count {$prevHash}..HEAD") ?? '');
+                        if (is_numeric($diffCount)) {
+                            $patch = $prevPatch + (int)$diffCount;
+                        } else {
+                            // If the previous hash is not in history (e.g. rebase/squash),
+                            // increment patch by 1 if hash has changed, otherwise keep prev patch.
+                            $patch = ($hash === $prevHash) ? $prevPatch : ($prevPatch + 1);
+                        }
+                    } else {
+                        // Fallback if Git hash is not available or previous hash was empty.
+                        // Increment by 1 if we're doing a new sync/build.
+                        $patch = $prevPatch + 1;
+                    }
+                } else {
+                    // If no previous record exists for this major/minor, start patch at 0!
+                    $patch = 0;
+                }
+            } else {
+                // Fall back to total commit count if database table does not exist
+                $patch = self::getTotalCommitCount();
+            }
+        } catch (\Throwable $e) {
+            // Fall back to total commit count if database query fails
+            $patch = self::getTotalCommitCount();
         }
 
         return "{$major}.{$minor}.{$patch}";
@@ -71,14 +107,22 @@ class VersionService
         try {
             if (Schema::hasTable('system_versions')) {
                 $parts = [];
-                // Parse standard formatted "Major.Minor.Patch-Hash"
-                preg_match('/^(\d+)\.(\d+)\.(\d+)(?:-(.+))?$/', $version, $parts);
+                // Parse standard formatted "Major.Minor.Patch"
+                preg_match('/^(\d+)\.(\d+)\.(\d+)$/', $version, $parts);
+
+                // Retrieve short commit hash to store in DB
+                $commitHash = null;
+                try {
+                    $commitHash = trim(shell_exec('git log -1 --format="%h"') ?? '') ?: null;
+                } catch (\Throwable $e) {
+                    // Ignore
+                }
 
                 DB::table('system_versions')->insert([
                     'major' => $parts[1] ?? 1,
                     'minor' => $parts[2] ?? 0,
                     'patch' => $parts[3] ?? 0,
-                    'commit_hash' => $parts[4] ?? null,
+                    'commit_hash' => $commitHash,
                     'full_version' => $version,
                     'created_at' => now(),
                     'updated_at' => now(),
@@ -91,5 +135,21 @@ class VersionService
         Cache::forever('system_version', $version);
 
         return $version;
+    }
+
+    /**
+     * Get the total number of commits in the current Git branch.
+     */
+    private static function getTotalCommitCount(): int
+    {
+        try {
+            $commitCount = trim(shell_exec('git rev-list --count HEAD') ?? '');
+            if (is_numeric($commitCount)) {
+                return (int)$commitCount;
+            }
+        } catch (\Throwable $e) {
+            // Ignore
+        }
+        return 0;
     }
 }
