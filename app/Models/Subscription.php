@@ -45,7 +45,8 @@ class Subscription extends Model
         if ($this->ends_at === null) {
             return null; // No expiry
         }
-        return (int) max(0, now()->diffInDays($this->ends_at, false));
+        $diff = now()->floatDiffInDays($this->ends_at, false);
+        return (int) max(0, ceil($diff));
     }
 
     // ─── Scopes ───────────────────────────────────────────────
