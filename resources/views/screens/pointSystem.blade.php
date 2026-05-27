@@ -440,7 +440,7 @@
             <div class="h-px w-48 shrink-0 bg-linear-to-r from-transparent via-emerald-400/20 to-transparent"></div>
             <span class="text-emerald-400/60 font-black">Official Point System & Breakdown</span>
             <div class="h-px w-48 shrink-0 bg-linear-to-r from-transparent via-emerald-400/20 to-transparent"></div>
-            <span>SYS_VER_3.5.2</span>
+            <span>SYS_VER_{{ $systemVersion }}</span>
         </div>
 
     </div>

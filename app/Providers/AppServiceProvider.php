@@ -22,5 +22,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Model::unguard();
+
+        // Share current system version dynamically across all Blade files
+        view()->share('systemVersion', \App\Services\VersionService::current());
     }
 }

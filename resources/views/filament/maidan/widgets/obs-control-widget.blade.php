@@ -142,7 +142,7 @@
                                                 </span>
                                             @endif
                                         </div>
-                                        <span class="text-[9.5px] text-gray-500 dark:text-gray-400 block truncate mt-0.5 max-w-[180px]">
+                                        <span class="text-[9.5px] text-gray-500 dark:text-gray-400 block truncate mt-0.5 max-w-45">
                                             {{ $link['description'] }}
                                         </span>
                                     </div>
@@ -201,7 +201,7 @@
                                         <span class="text-xs font-bold text-gray-900 dark:text-white truncate block group-hover:text-primary-500 transition-colors">
                                             {{ $link['name'] }}
                                         </span>
-                                        <span class="text-[9.5px] text-gray-500 dark:text-gray-400 block truncate mt-0.5 max-w-[180px]">
+                                        <span class="text-[9.5px] text-gray-500 dark:text-gray-400 block truncate mt-0.5 max-w-45">
                                             {{ $link['description'] }}
                                         </span>
                                     </div>
@@ -261,7 +261,7 @@
                                         <span class="text-xs font-bold text-gray-900 dark:text-white truncate block group-hover:text-primary-500 transition-colors">
                                             {{ $link['name'] }}
                                         </span>
-                                        <span class="text-[9.5px] text-gray-500 dark:text-gray-400 block truncate mt-0.5 max-w-[180px]">
+                                        <span class="text-[9.5px] text-gray-500 dark:text-gray-400 block truncate mt-0.5 max-w-45">
                                             {{ $link['description'] }}
                                         </span>
                                     </div>
@@ -295,8 +295,9 @@
         </div>
 
         <x-slot name="footer">
-            <div class="text-xs text-gray-500 dark:text-gray-400 text-center italic">
-                Tip: Copy the OBS link and paste it into OBS Studio as a Browser Source set to 1920x1080 resolution.
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                <span class="italic">Tip: Copy the OBS link and paste it into OBS Studio as a Browser Source set to 1920x1080 resolution.</span>
+                <span class="font-mono text-[10px] bg-gray-100 dark:bg-gray-800/80 px-2 py-0.5 rounded border border-gray-200 dark:border-gray-700/50 uppercase tracking-wider">SYS_BUILD: v{{ $systemVersion }}</span>
             </div>
         </x-slot>
     </x-filament::section>

@@ -708,7 +708,7 @@
             <div class="h-px w-48 shrink-0" style="height:1.5px; width:192px; background: linear-gradient(90deg, transparent, rgba(245,158,11,0.35), transparent);"></div>
             <span class="text-yellow-400/60 font-black">Official Tournament Schedule & Milestones</span>
             <div class="h-px w-48 shrink-0" style="height:1.5px; width:192px; background: linear-gradient(90deg, transparent, rgba(245,158,11,0.35), transparent);"></div>
-            <span>SYS_VER_4.1.0</span>
+            <span>SYS_VER_{{ $systemVersion }}</span>
         </div>
 
     </div>

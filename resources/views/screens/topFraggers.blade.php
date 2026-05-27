@@ -665,7 +665,7 @@
             <div class="h-px w-36 shrink-0" style="background:linear-gradient(to right,transparent,rgba(250,204,21,0.2),transparent);"></div>
             <span class="text-yellow-500/60">Official Match Kill Leaderboard Overlay</span>
             <div class="h-px w-36 shrink-0" style="background:linear-gradient(to right,transparent,rgba(250,204,21,0.2),transparent);"></div>
-            <span>SYS_VER_3.5.2</span>
+            <span>SYS_VER_{{ $systemVersion }}</span>
         </div>
     </div>
 

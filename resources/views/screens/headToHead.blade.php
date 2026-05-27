@@ -763,7 +763,7 @@
             <div class="h-px w-44 shrink-0" style="background:linear-gradient(to right,transparent,rgba(6,182,212,0.25),transparent);"></div>
             <span class="text-emerald-400/80 font-hud text-[9px] tracking-[0.3em]">Official Broadcast Analytical Comparison</span>
             <div class="h-px w-44 shrink-0" style="background:linear-gradient(to right,transparent,rgba(250,204,21,0.2),transparent);"></div>
-            <span>SYS_VER_3.6.0</span>
+            <span>SYS_VER_{{ $systemVersion }}</span>
         </div>
     </div>
 

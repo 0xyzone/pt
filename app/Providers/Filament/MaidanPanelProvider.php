@@ -10,8 +10,6 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
@@ -34,6 +32,8 @@ class MaidanPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->brandLogo(asset('img/logo.png'))
+            ->favicon(asset('img/symbol.png'))
             ->login()
             ->profile()
             ->passwordReset()
@@ -67,6 +67,18 @@ class MaidanPanelProvider extends PanelProvider
                 PasskeysPlugin::make(),
                 FilamentQuickNotesPlugin::make()
             ])
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::SIDEBAR_LOGO_AFTER,
+                fn(): string => filament()->getCurrentPanel()->getBrandLogo() !== null
+                    ? view('filament.custom.topbar-version')->render()
+                    : '',
+            )
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::TOPBAR_START,
+                fn(): string => filament()->getCurrentPanel()->getBrandLogo() === null
+                    ? view('filament.custom.topbar-version')->render()
+                    : '',
+            )
             ->resourceEditPageRedirect('index')
             ->resourceCreatePageRedirect('index');
     }
