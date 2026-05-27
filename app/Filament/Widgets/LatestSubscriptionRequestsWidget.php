@@ -5,7 +5,6 @@ namespace App\Filament\Widgets;
 use App\Models\SubscriptionRequest;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Tables\Actions\Action;
 use Filament\Widgets\TableWidget as BaseWidget;
 use App\Filament\Resources\SubscriptionRequests\SubscriptionRequestResource;
 
@@ -43,10 +42,8 @@ class LatestSubscriptionRequestsWidget extends BaseWidget
                     ->dateTime()
                     ->sortable(),
             ])
-            ->actions([
-                Action::make('view')
-                    ->url(fn (SubscriptionRequest $record): string => SubscriptionRequestResource::getUrl('edit', ['record' => $record]))
-                    ->icon('heroicon-m-eye'),
-            ]);
+            ->recordUrl(
+                fn (SubscriptionRequest $record): string => SubscriptionRequestResource::getUrl('edit', ['record' => $record])
+            );
     }
 }
