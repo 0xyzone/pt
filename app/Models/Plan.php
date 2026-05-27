@@ -28,7 +28,7 @@ class Plan extends Model
             return 'Free';
         }
 
-        $formattedPrice = number_format($this->price);
+        $formattedPrice = number_format((float) $this->price);
         
         if (!$this->duration_value || !$this->duration_period) {
             return "NPR {$formattedPrice}"; // Lifetime
@@ -64,12 +64,13 @@ class Plan extends Model
         }
 
         $date = $startDate ? $startDate->copy() : now();
+        $value = (int) $this->duration_value;
 
         return match ($this->duration_period) {
-            'days' => $date->addDays($this->duration_value),
-            'weeks' => $date->addWeeks($this->duration_value),
-            'months' => $date->addMonths($this->duration_value),
-            'years' => $date->addYears($this->duration_value),
+            'days' => $date->addDays($value),
+            'weeks' => $date->addWeeks($value),
+            'months' => $date->addMonths($value),
+            'years' => $date->addYears($value),
             default => null,
         };
     }
@@ -77,6 +78,8 @@ class Plan extends Model
     protected $casts = [
         'features'  => 'array',
         'is_active' => 'boolean',
+        'duration_value' => 'integer',
+        'price' => 'decimal:2',
     ];
 
     /**
