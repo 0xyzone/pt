@@ -62,8 +62,15 @@ class ListTournamentMatches extends ListRecords
 
     protected function getHeaderActions(): array
     {
+        $tournament = $this->getParentRecord();
+        $user = Auth::user();
+        $currentCount = $tournament ? $tournament->tournamentMatches()->count() : 0;
+        $isWithinLimit = \App\Services\SubscriptionService::withinLimit($user, 'max_matches', $currentCount);
+
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->disabled(!$isWithinLimit)
+                ->tooltip(!$isWithinLimit ? 'Match limit reached for this tournament.' : null),
             Action::make('Overall Ranking')
                 ->url(fn() => route('screens.overallranking', ['user_id' => Auth::id()]))
                 ->openUrlInNewTab()

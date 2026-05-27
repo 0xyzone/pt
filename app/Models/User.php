@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use App\Models\Caster;
+use App\Models\Plan;
+use App\Models\Subscription;
+use App\Models\SubscriptionRequest;
 use App\Models\Tournament;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -10,6 +13,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Rarq\FilamentQuickNotes\Traits\HasFilamentQuickNotes;
@@ -43,6 +47,74 @@ class User extends Authenticatable implements MustVerifyEmail, HasPasskeys, Fila
     public function tournaments(): HasMany
     {
         return $this->hasMany(Tournament::class);
+    }
+
+    /**
+     * Get the user's active subscription (latest active one).
+     */
+    public function activeSubscription(): HasOne
+    {
+        return $this->hasOne(Subscription::class)
+            ->where('status', 'active')
+            ->where(fn ($q) => $q->whereNull('ends_at')->orWhere('ends_at', '>', now()))
+            ->latestOfMany();
+    }
+
+    /**
+     * Get the user's latest subscription (active, expired, or cancelled).
+     */
+    public function latestSubscription(): HasOne
+    {
+        return $this->hasOne(Subscription::class)->latestOfMany();
+    }
+
+    /**
+     * All subscriptions history.
+     */
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    /**
+     * Get all of the subscription requests for the User.
+     */
+    public function subscriptionRequests(): HasMany
+    {
+        return $this->hasMany(SubscriptionRequest::class);
+    }
+
+    /**
+     * Get the current active Plan, or null if no subscription.
+     */
+    public function activePlan(): ?Plan
+    {
+        return $this->activeSubscription?->plan;
+    }
+
+    /**
+     * Check if the user's current plan has a boolean feature enabled.
+     */
+    public function canUseFeature(string $feature): bool
+    {
+        $plan = $this->activePlan();
+        if ($plan === null) {
+            return false;
+        }
+        return $plan->hasFeature($feature);
+    }
+
+    /**
+     * Get a numeric limit from the user's current plan.
+     * Returns 0 if no plan, -1 means unlimited.
+     */
+    public function getFeatureLimit(string $feature, int $default = 0): int
+    {
+        $plan = $this->activePlan();
+        if ($plan === null) {
+            return $default;
+        }
+        return $plan->getLimit($feature, $default);
     }
 
     public function canAccessPanel(\Filament\Panel $panel): bool

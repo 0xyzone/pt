@@ -40,11 +40,13 @@ class TournamentTeamForm
                         ->automaticallyOpenImageEditorForAspectRatio(),
 
                     Section::make('Team Players')
-                        ->description('Manage players on this team and their in-game details.')
+                        ->description(auth()->check() && auth()->user()->canUseFeature('player_management')
+                            ? 'Manage players on this team and their in-game details.'
+                            : '🔒 Team Players is a Premium Feature. Upgrade to Pro or Enterprise to unlock player rosters, IGNs, and portraits.')
                         ->icon('heroicon-o-users')
                         ->collapsible()
                         ->columnSpanFull()
-                        ->schema([
+                        ->schema(auth()->check() && auth()->user()->canUseFeature('player_management') ? [
                             Repeater::make('players')
                                 ->relationship('players')
                                 ->label(false) // Hide label of repeater as the section header serves as the label
@@ -92,7 +94,7 @@ class TournamentTeamForm
                                 ->grid(2)
                                 ->defaultItems(0)
                                 ->addActionLabel('Add Player')
-                        ]),
+                        ] : []),
             ]);
     }
 }

@@ -6,11 +6,11 @@ use Filament\Widgets\Widget;
 
 class ApiLink extends Widget
 {
-    public $userId;
+    public int|string|null $userId = null;
 
     public function mount(): void
     {
-        $this->userId = auth()->id();
+        $this->userId = \Illuminate\Support\Facades\Auth::id();
     }
 
     // In your Widget class (e.g., ApiEndpointsWidget.php)

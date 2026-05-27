@@ -18,6 +18,7 @@ use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Form;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @property-read Schema $form
@@ -30,6 +31,11 @@ class EditTournamentRoadmap extends Page
     protected static ?int $navigationSort = 4;
     protected static ?string $navigationLabel = 'Edit Tournament Roadmap';
     protected string $view = 'filament.maidan.resources.tournaments.pages.tournament-roadmap';
+
+    public static function canAccess(array $parameters = []): bool
+    {
+        return Auth::check() && \App\Services\SubscriptionService::can(Auth::user(), 'roadmap_overlay');
+    }
 
     protected static function getTournamentId(): ?string
     {

@@ -16,6 +16,22 @@ class CreateTournamentTeam extends CreateRecord
     protected static ?string $navigationLabel = 'Add Teams';
     protected ?string $heading = 'Create team for tournament';
 
+    protected function beforeCreate(): void
+    {
+        $tournament = $this->getParentRecord();
+        $user = auth()->user();
+        $currentCount = $tournament ? $tournament->tournamentTeams()->count() : 0;
+        if (!\App\Services\SubscriptionService::withinLimit($user, 'max_teams', $currentCount)) {
+            \Filament\Notifications\Notification::make()
+                ->title('Team limit reached')
+                ->body('Upgrade your plan to add more teams to this tournament.')
+                ->danger()
+                ->send();
+
+            $this->halt();
+        }
+    }
+
 
 
     public static function getNavigationBadge(): ?string

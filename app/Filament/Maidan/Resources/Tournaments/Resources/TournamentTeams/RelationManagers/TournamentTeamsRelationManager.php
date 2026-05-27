@@ -154,11 +154,25 @@ class TournamentTeamsRelationManager extends RelationManager
             ->headerActions([
                 CreateAction::make()
                     ->keyBindings(['ctrl+n'])
-                    ->label('Add Team (Ctrl + N)'),
+                    ->label('Add Team (Ctrl + N)')
+                    ->disabled(fn () => !\App\Services\SubscriptionService::withinLimit(auth()->user(), 'max_teams', $this->getOwnerRecord()->tournamentTeams()->count()))
+                    ->tooltip(fn () => !\App\Services\SubscriptionService::withinLimit(auth()->user(), 'max_teams', $this->getOwnerRecord()->tournamentTeams()->count()) ? 'Team limit reached for this tournament.' : null)
+                    ->before(function (\Filament\Actions\CreateAction $action) {
+                        if (!\App\Services\SubscriptionService::withinLimit(auth()->user(), 'max_teams', $this->getOwnerRecord()->tournamentTeams()->count())) {
+                            \Filament\Notifications\Notification::make()
+                                ->title('Team limit reached')
+                                ->body('Upgrade your plan to add more teams.')
+                                ->danger()
+                                ->send();
+                            $action->halt();
+                        }
+                    }),
                 Action::make('associateExistingTeam')
                     ->label('Associate Existing')
                     ->icon('heroicon-o-link')
                     ->color('info')
+                    ->disabled(fn () => !\App\Services\SubscriptionService::withinLimit(auth()->user(), 'max_teams', $this->getOwnerRecord()->tournamentTeams()->count()))
+                    ->tooltip(fn () => !\App\Services\SubscriptionService::withinLimit(auth()->user(), 'max_teams', $this->getOwnerRecord()->tournamentTeams()->count()) ? 'Team limit reached for this tournament.' : null)
                     ->form([
                         Select::make('team_ids')
                             ->label('Select Teams')
@@ -174,18 +188,31 @@ class TournamentTeamsRelationManager extends RelationManager
                     ])
                     ->action(function (array $data) {
                         $teamIds = $data['team_ids'] ?? [];
+                        $user = auth()->user();
+                        $associated = 0;
 
                         foreach ($teamIds as $teamId) {
+                            $currentCount = $this->getOwnerRecord()->tournamentTeams()->count();
+                            if (!\App\Services\SubscriptionService::withinLimit($user, 'max_teams', $currentCount)) {
+                                \Filament\Notifications\Notification::make()
+                                    ->title('Team limit reached')
+                                    ->body('Some teams could not be associated because the team limit was reached.')
+                                    ->warning()
+                                    ->send();
+                                break;
+                            }
+
                             $team = TournamentTeam::find($teamId);
                             if ($team) {
                                 $team->tournament_id = $this->getOwnerRecord()->id;
                                 $team->save();
+                                $associated++;
                             }
                         }
 
-                        if (count($teamIds) > 0) {
+                        if ($associated > 0) {
                             \Filament\Notifications\Notification::make()
-                                ->title(count($teamIds) . ' teams associated successfully')
+                                ->title($associated . ' teams associated successfully')
                                 ->success()
                                 ->send();
                         }

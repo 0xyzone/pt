@@ -68,7 +68,30 @@ class Tournament extends Model
      */
     public function tournamentSponsors(): HasMany
     {
-        return $this->hasMany(TournamentSponsor::class)->orderBy('sort_order');
+        $relation = $this->hasMany(TournamentSponsor::class)->orderBy('sort_order');
+
+        if (request()->is('*/screens/*') || request()->routeIs('screens.*')) {
+            $user = $this->user;
+            if ($user && !$user->canUseFeature('custom_branding')) {
+                return $relation->whereRaw('1 = 0');
+            }
+        }
+
+        return $relation;
+    }
+
+    /**
+     * Get the logo image, gating it on screens if custom branding is disabled.
+     */
+    public function getLogoImageAttribute($value)
+    {
+        if (request()->is('*/screens/*') || request()->routeIs('screens.*')) {
+            $user = $this->user;
+            if ($user && !$user->canUseFeature('custom_branding')) {
+                return null;
+            }
+        }
+        return $value;
     }
 
     /**

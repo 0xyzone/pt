@@ -33,7 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Emerald,
             ])
-            ->brandLogo(asset('img/logo.png'))
+            ->brandLogo(fn () => view('filament.custom.brand-logo'))
             ->favicon(asset('img/symbol.png'))
             ->profile()
             ->passwordReset()
@@ -63,18 +63,7 @@ class AdminPanelProvider extends PanelProvider
                 PasskeysPlugin::make(),
                 FilamentQuickNotesPlugin::make()
             ])
-            ->renderHook(
-                \Filament\View\PanelsRenderHook::SIDEBAR_LOGO_AFTER,
-                fn (): string => filament()->getCurrentPanel()->getBrandLogo() !== null
-                    ? view('filament.custom.topbar-version')->render()
-                    : '',
-            )
-            ->renderHook(
-                \Filament\View\PanelsRenderHook::TOPBAR_START,
-                fn (): string => filament()->getCurrentPanel()->getBrandLogo() === null
-                    ? view('filament.custom.topbar-version')->render()
-                    : '',
-            )
+
             ->resourceEditPageRedirect('index')
             ->resourceCreatePageRedirect('index');
     }

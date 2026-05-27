@@ -66,8 +66,15 @@ class ListTournamentTeams extends ListRecords
     }
     protected function getHeaderActions(): array
     {
+        $tournament = $this->getParentRecord();
+        $user = auth()->user();
+        $currentCount = $tournament ? $tournament->tournamentTeams()->count() : 0;
+        $isWithinLimit = \App\Services\SubscriptionService::withinLimit($user, 'max_teams', $currentCount);
+
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->disabled(!$isWithinLimit)
+                ->tooltip(!$isWithinLimit ? 'Team limit reached for this tournament.' : null),
             Action::make('downloadSample')
                 ->label('Download CSV Template')
                 ->icon('heroicon-o-document-arrow-down')
@@ -159,6 +166,10 @@ class ListTournamentTeams extends ListRecords
                             // Find or create the team for this tournament
                             $teamKey = strtolower($teamName);
                             if (!isset($teamsCreated[$teamKey])) {
+                                $currentCount = TournamentTeam::where('tournament_id', $tournamentId)->count();
+                                if (!\App\Services\SubscriptionService::withinLimit(auth()->user(), 'max_teams', $currentCount)) {
+                                    throw new \Exception("Team limit reached! You can only have a maximum of " . \App\Services\SubscriptionService::limit(auth()->user(), 'max_teams') . " teams in a tournament.");
+                                }
                                 $team = TournamentTeam::firstOrCreate([
                                     'tournament_id' => $tournamentId,
                                     'name' => $teamName,

@@ -1,12 +1,27 @@
 <?php
 
+use App\Http\Controllers\DemoRequestController;
 use App\Http\Controllers\ScreenController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    if (Auth::check()) {
+        $email = Auth::user()->email;
+        if (str_ends_with($email, '@suminshrestha.com.np') || str_ends_with($email, '@admin.com')) {
+            return redirect('/admin');
+        }
+        return redirect('/maidan');
+    }
+    $systemVersion = app(\App\Services\VersionService::class)->current();
+    return view('welcome', compact('systemVersion'));
 });
-Route::prefix('{user_id}/screens')->group( function () {
+
+Route::post('/demo-request', [DemoRequestController::class, 'store'])
+    ->name('demo.request')
+    ->middleware('throttle:5,60'); // 5 per hour per IP
+
+Route::prefix('{user_id}/screens')->middleware(\App\Http\Middleware\CheckSubscriptionOverlay::class)->group( function () {
     Route::get('/activematch', [ScreenController::class, 'activematch'])->name('screens.activematch');
     Route::get('/postmatch', [ScreenController::class, 'postMatch'])->name('screens.postmatch');
     Route::get('/overallranking', [ScreenController::class, 'overallRanking'])->name('screens.overallranking');

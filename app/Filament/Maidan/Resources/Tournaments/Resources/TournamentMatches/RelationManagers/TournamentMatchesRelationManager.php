@@ -17,7 +17,19 @@ class TournamentMatchesRelationManager extends RelationManager
     {
         return $table
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()
+                    ->disabled(fn () => !\App\Services\SubscriptionService::withinLimit(auth()->user(), 'max_matches', $this->getOwnerRecord()->tournamentMatches()->count()))
+                    ->tooltip(fn () => !\App\Services\SubscriptionService::withinLimit(auth()->user(), 'max_matches', $this->getOwnerRecord()->tournamentMatches()->count()) ? 'Match limit reached for this tournament.' : null)
+                    ->before(function (\Filament\Actions\CreateAction $action) {
+                        if (!\App\Services\SubscriptionService::withinLimit(auth()->user(), 'max_matches', $this->getOwnerRecord()->tournamentMatches()->count())) {
+                            \Filament\Notifications\Notification::make()
+                                ->title('Match limit reached')
+                                ->body('Upgrade your plan to add more matches.')
+                                ->danger()
+                                ->send();
+                            $action->halt();
+                        }
+                    }),
             ]);
     }
 }

@@ -19,9 +19,33 @@ class UsersTable
                 TextColumn::make('email')
                     ->label('Email address')
                     ->searchable(),
+                TextColumn::make('latestSubscription.plan.name')
+                    ->label('Plan')
+                    ->badge()
+                    ->color('info')
+                    ->placeholder('No Plan'),
+                TextColumn::make('latestSubscription.status')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn ($state) => match($state) {
+                        'active' => 'success',
+                        'expired', 'cancelled' => 'danger',
+                        default => 'gray',
+                    })
+                    ->placeholder('Inactive'),
+                TextColumn::make('latestSubscription.ends_at')
+                    ->label('Expires At')
+                    ->dateTime('d M Y')
+                    ->placeholder('No Expiry'),
+                TextColumn::make('tournaments_count')
+                    ->counts('tournaments')
+                    ->label('Tournaments')
+                    ->badge()
+                    ->color('gray'),
                 TextColumn::make('email_verified_at')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

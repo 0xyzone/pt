@@ -17,6 +17,11 @@ class TournamentCastersRelationManager extends RelationManager
 {
     protected static string $relationship = 'casters';
 
+    public static function canViewForRecord(\Illuminate\Database\Eloquent\Model $ownerRecord, string $pageClass): bool
+    {
+        return auth()->check() && \App\Services\SubscriptionService::can(auth()->user(), 'casters_management');
+    }
+
     public function form(Schema $schema): Schema
     {
         return $schema
