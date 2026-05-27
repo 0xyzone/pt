@@ -32,12 +32,12 @@
 </head>
 <body class="font-['Inter'] bg-[#0a0b0e] text-slate-200 min-h-screen overflow-x-hidden antialiased relative">
     <!-- Cinematic Preloader -->
-    <div id="preloader" class="fixed inset-0 z-[99999] pointer-events-none flex flex-col">
+    <div id="preloader" class="fixed inset-0 z-99999 pointer-events-none flex flex-col">
         <div id="preloader-top" class="flex-1 bg-[#050508] transition-transform duration-1000 ease-[cubic-bezier(0.85,0,0.15,1)] border-b border-orange-500/20"></div>
         <div id="preloader-bottom" class="flex-1 bg-[#050508] transition-transform duration-1000 ease-[cubic-bezier(0.85,0,0.15,1)] border-t border-orange-500/20"></div>
         
         <!-- The glowing line in the center -->
-        <div id="preloader-line" class="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 h-[2px] bg-orange-500 shadow-[0_0_20px_rgba(249,115,22,1)] w-0 transition-all duration-700 ease-in-out z-10"></div>
+        <div id="preloader-line" class="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 h-0.5 bg-orange-500 shadow-[0_0_20px_rgba(249,115,22,1)] w-0 transition-all duration-700 ease-in-out z-10"></div>
         
         <!-- Tech text -->
         <div id="preloader-text" class="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-orange-500 font-mono text-[10px] md:text-[12px] uppercase tracking-[0.3em] md:tracking-[0.5em] opacity-0 transition-opacity duration-300 z-20 whitespace-nowrap">
@@ -49,23 +49,23 @@
     <div class="fixed inset-0 opacity-[0.025] pointer-events-none z-0" style="background-image: url(&quot;data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E&quot;);"></div>
 
     <!-- Atmospheric Orbs -->
-    <div class="orb w-[700px] h-[700px] -top-[15%] -right-[10%] bg-[radial-gradient(circle,rgba(249,115,22,0.15),transparent_70%)] [animation-duration:22s]" aria-hidden="true"></div>
-    <div class="orb w-[600px] h-[600px] -bottom-[20%] -left-[12%] bg-[radial-gradient(circle,rgba(245,158,11,0.1),transparent_70%)] [animation-duration:28s] [animation-delay:-8s]" aria-hidden="true"></div>
+    <div class="orb w-175 h-175 top-[-15%] right-[-10%] bg-[radial-gradient(circle,rgba(249,115,22,0.15),transparent_70%)] [animation-duration:22s]" aria-hidden="true"></div>
+    <div class="orb w-150 h-150 bottom-[-20%] left-[-12%] bg-[radial-gradient(circle,rgba(245,158,11,0.1),transparent_70%)] [animation-duration:28s] [animation-delay:-8s]" aria-hidden="true"></div>
 
     <!-- ─── NAVBAR ─── -->
-    <nav class="sticky top-0 z-[100] bg-[#0a0b0e]/85 backdrop-blur-[24px] saturate-150 border-b border-white/5 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 md:px-8 h-[72px] flex justify-between items-center">
+    <nav class="sticky top-0 z-100 bg-[#0a0b0e]/85 backdrop-blur-xl saturate-150 border-b border-white/5 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 h-18 flex justify-between items-center">
             <a href="/" class="flex items-center gap-3 decoration-0">
-                <img src="{{ asset('img/logo.png') }}" alt="BroadKaster" class="h-[36px]">
+                <img src="{{ asset('img/logo.png') }}" alt="BroadKaster" class="h-9">
             </a>
             
             <div class="hidden md:flex items-center gap-3">
-                <a href="/" class="px-[18px] py-[8px] text-[11px] font-bold tracking-[0.12em] uppercase text-slate-300 hover:text-white border border-white/10 hover:border-orange-500/40 hover:bg-orange-500/10 transition-all duration-200 rounded-lg">Home</a>
-                <a href="/#contact" class="px-[18px] py-[8px] text-[11px] font-bold tracking-[0.12em] uppercase text-slate-300 hover:text-white border border-white/10 hover:border-orange-500/40 hover:bg-orange-500/10 transition-all duration-200 rounded-lg">Contact</a>
+                <a href="/" class="px-4.5 py-2 text-[11px] font-bold tracking-[0.12em] uppercase text-slate-300 hover:text-white border border-white/10 hover:border-orange-500/40 hover:bg-orange-500/10 transition-all duration-200 rounded-lg">Home</a>
+                <a href="/#contact" class="px-4.5 py-2 text-[11px] font-bold tracking-[0.12em] uppercase text-slate-300 hover:text-white border border-white/10 hover:border-orange-500/40 hover:bg-orange-500/10 transition-all duration-200 rounded-lg">Contact</a>
                 @auth
-                    <a href="{{ url('/maidan') }}" class="px-[22px] py-[9px] text-[11px] font-bold tracking-[0.12em] uppercase text-white bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_35px_rgba(249,115,22,0.5)] hover:-translate-y-[1px] transition-all duration-200 border border-transparent">Dashboard</a>
+                    <a href="{{ url('/maidan') }}" class="px-5.5 py-2.25 text-[11px] font-bold tracking-[0.12em] uppercase text-white bg-linear-to-br from-orange-500 to-orange-600 rounded-lg shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_35px_rgba(249,115,22,0.5)] hover:-translate-y-px transition-all duration-200 border border-transparent">Dashboard</a>
                 @else
-                    <a href="{{ url('/maidan/login') }}" class="px-[22px] py-[9px] text-[11px] font-bold tracking-[0.12em] uppercase text-white bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_35px_rgba(249,115,22,0.5)] hover:-translate-y-[1px] transition-all duration-200 border border-transparent">Get Started</a>
+                    <a href="{{ url('/maidan/login') }}" class="px-5.5 py-2.25 text-[11px] font-bold tracking-[0.12em] uppercase text-white bg-linear-to-br from-orange-500 to-orange-600 rounded-lg shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_35px_rgba(249,115,22,0.5)] hover:-translate-y-px transition-all duration-200 border border-transparent">Get Started</a>
                 @endauth
             </div>
             
@@ -77,35 +77,35 @@
         </div>
         
         <!-- Mobile Menu -->
-        <div class="hidden flex-col gap-3 p-4 bg-[#0f1117] border-b border-white/5 absolute top-[72px] left-0 right-0 shadow-[0_10px_30px_rgba(0,0,0,0.5)]" id="mobile-menu">
+        <div class="hidden flex-col gap-3 p-4 bg-[#0f1117] border-b border-white/5 absolute top-18 left-0 right-0 shadow-[0_10px_30px_rgba(0,0,0,0.5)]" id="mobile-menu">
             <a href="/" class="block px-4 py-3 font-semibold text-slate-100 bg-white/5 rounded-lg text-center decoration-0">Home</a>
             <a href="/#contact" class="block px-4 py-3 font-semibold text-slate-100 bg-white/5 rounded-lg text-center decoration-0">Contact</a>
             @auth
                 <a href="{{ url('/maidan') }}" class="block px-4 py-3 font-semibold text-slate-100 bg-white/5 rounded-lg text-center decoration-0">Dashboard</a>
             @else
-                <a href="{{ url('/maidan/login') }}" class="block px-4 py-3 font-semibold text-white bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg text-center decoration-0">Get Started</a>
+                <a href="{{ url('/maidan/login') }}" class="block px-4 py-3 font-semibold text-white bg-linear-to-br from-orange-500 to-orange-600 rounded-lg text-center decoration-0">Get Started</a>
             @endauth
         </div>
     </nav>
 
     <!-- ─── PAGE HEADER ─── -->
-    <div class="relative z-10 text-center pt-[80px] px-8 pb-[60px]">
-        <div class="inline-flex items-center gap-2 px-4 py-[7px] mb-7 bg-orange-500/10 border border-orange-500/20 rounded-full text-[10px] font-bold uppercase tracking-[0.22em] text-orange-500 reveal-on-scroll">
+    <div class="relative z-10 text-center pt-20 px-8 pb-15">
+        <div class="inline-flex items-center gap-2 px-4 py-1.75 mb-7 bg-orange-500/10 border border-orange-500/20 rounded-full text-[10px] font-bold uppercase tracking-[0.22em] text-orange-500 reveal-on-scroll">
             <span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-blink"></span>
             Transparent Pricing
         </div>
         <h1 class="font-['Rajdhani'] text-[clamp(36px,6vw,64px)] font-bold text-slate-100 leading-[1.05] mb-5 tracking-[-0.02em] reveal-on-scroll delay-200">
             Plans for Every<br>
-            <span class="bg-gradient-to-br from-orange-500 to-amber-500 text-transparent bg-clip-text">Tournament Scale</span>
+            <span class="bg-linear-to-br from-orange-500 to-amber-500 text-transparent bg-clip-text">Tournament Scale</span>
         </h1>
-        <p class="text-[16px] text-slate-400 max-w-[520px] mx-auto leading-[1.7] reveal-on-scroll delay-300">
+        <p class="text-[16px] text-slate-400 max-w-130 mx-auto leading-[1.7] reveal-on-scroll delay-300">
             From a single day event to a full esports season — choose the plan that fits your production needs. All plans include OBS overlays and real-time sync.
         </p>
     </div>
 
     <!-- ─── PRICING GRID ─── -->
-    <section class="relative z-10 px-8 pb-[100px]">
-        <div class="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+    <section class="relative z-10 px-8 pb-25">
+        <div class="max-w-300 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             @php
                 $popular = ['1-month-plan', '3-month-plan'];
             @endphp
@@ -131,9 +131,9 @@
                 
                 @if($isFeatured)
                     <!-- Top gradient line -->
-                    <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
+                    <div class="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-transparent via-orange-500 to-transparent"></div>
                     <!-- Badge -->
-                    <div class="absolute top-5 right-5 text-[9px] font-bold tracking-[0.15em] uppercase text-[#0a0b0e] bg-gradient-to-br from-orange-500 to-amber-500 px-3 py-1.5 rounded-full">Most Popular</div>
+                    <div class="absolute top-5 right-5 text-[9px] font-bold tracking-[0.15em] uppercase text-[#0a0b0e] bg-linear-to-br from-orange-500 to-amber-500 px-3 py-1.5 rounded-full">Most Popular</div>
                 @endif
 
                 <div class="mb-6">
@@ -145,13 +145,13 @@
                     <div class="font-['Rajdhani'] text-[38px] font-bold leading-none mb-1 {{ $isFree ? 'text-green-500' : 'text-orange-500' }}">
                         {{ $plan->price_display }}
                     </div>
-                    <div class="text-[11px] font-semibold tracking-[0.1em] uppercase text-slate-400">{{ $durationLabel }}</div>
+                    <div class="text-[11px] font-semibold tracking-widest uppercase text-slate-400">{{ $durationLabel }}</div>
                 </div>
 
                 <div class="flex-1 flex flex-col gap-2.5 mb-7">
                     <!-- Tournaments -->
                     <div class="flex items-center gap-2.5 text-[13px] text-slate-300">
-                        <span class="shrink-0 w-[18px] h-[18px] rounded-full flex items-center justify-center bg-green-500/10 border border-green-500/25">
+                        <span class="shrink-0 w-4.5 h-4.5 rounded-full flex items-center justify-center bg-green-500/10 border border-green-500/25">
                             <svg class="w-2.5 h-2.5 text-green-500" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
                         </span>
                         <span>Tournaments</span>
@@ -159,7 +159,7 @@
                     </div>
                     <!-- Teams -->
                     <div class="flex items-center gap-2.5 text-[13px] text-slate-300">
-                        <span class="shrink-0 w-[18px] h-[18px] rounded-full flex items-center justify-center bg-green-500/10 border border-green-500/25">
+                        <span class="shrink-0 w-4.5 h-4.5 rounded-full flex items-center justify-center bg-green-500/10 border border-green-500/25">
                             <svg class="w-2.5 h-2.5 text-green-500" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
                         </span>
                         <span>Teams per Tournament</span>
@@ -167,7 +167,7 @@
                     </div>
                     <!-- Matches -->
                     <div class="flex items-center gap-2.5 text-[13px] text-slate-300">
-                        <span class="shrink-0 w-[18px] h-[18px] rounded-full flex items-center justify-center bg-green-500/10 border border-green-500/25">
+                        <span class="shrink-0 w-4.5 h-4.5 rounded-full flex items-center justify-center bg-green-500/10 border border-green-500/25">
                             <svg class="w-2.5 h-2.5 text-green-500" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
                         </span>
                         <span>Matches per Tournament</span>
@@ -175,7 +175,7 @@
                     </div>
                     <!-- OBS Overlays -->
                     <div class="flex items-center gap-2.5 text-[13px] {{ ($features['obs_overlays'] ?? false) ? 'text-slate-300' : 'text-slate-500/40 line-through' }}">
-                        <span class="shrink-0 w-[18px] h-[18px] rounded-full flex items-center justify-center {{ ($features['obs_overlays'] ?? false) ? 'bg-green-500/10 border border-green-500/25' : 'bg-red-500/10 border border-red-500/15' }}">
+                        <span class="shrink-0 w-4.5 h-4.5 rounded-full flex items-center justify-center {{ ($features['obs_overlays'] ?? false) ? 'bg-green-500/10 border border-green-500/25' : 'bg-red-500/10 border border-red-500/15' }}">
                             @if($features['obs_overlays'] ?? false)
                                 <svg class="w-2.5 h-2.5 text-green-500" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
                             @else
@@ -186,7 +186,7 @@
                     </div>
                     <!-- WebSocket Sync -->
                     <div class="flex items-center gap-2.5 text-[13px] {{ ($features['websocket_sync'] ?? false) ? 'text-slate-300' : 'text-slate-500/40 line-through' }}">
-                        <span class="shrink-0 w-[18px] h-[18px] rounded-full flex items-center justify-center {{ ($features['websocket_sync'] ?? false) ? 'bg-green-500/10 border border-green-500/25' : 'bg-red-500/10 border border-red-500/15' }}">
+                        <span class="shrink-0 w-4.5 h-4.5 rounded-full flex items-center justify-center {{ ($features['websocket_sync'] ?? false) ? 'bg-green-500/10 border border-green-500/25' : 'bg-red-500/10 border border-red-500/15' }}">
                             @if($features['websocket_sync'] ?? false)
                                 <svg class="w-2.5 h-2.5 text-green-500" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
                             @else
@@ -197,7 +197,7 @@
                     </div>
                     <!-- Roadmap Overlay -->
                     <div class="flex items-center gap-2.5 text-[13px] {{ ($features['roadmap_overlay'] ?? false) ? 'text-slate-300' : 'text-slate-500/40 line-through' }}">
-                        <span class="shrink-0 w-[18px] h-[18px] rounded-full flex items-center justify-center {{ ($features['roadmap_overlay'] ?? false) ? 'bg-green-500/10 border border-green-500/25' : 'bg-red-500/10 border border-red-500/15' }}">
+                        <span class="shrink-0 w-4.5 h-4.5 rounded-full flex items-center justify-center {{ ($features['roadmap_overlay'] ?? false) ? 'bg-green-500/10 border border-green-500/25' : 'bg-red-500/10 border border-red-500/15' }}">
                             @if($features['roadmap_overlay'] ?? false)
                                 <svg class="w-2.5 h-2.5 text-green-500" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
                             @else
@@ -208,7 +208,7 @@
                     </div>
                     <!-- Casters Management -->
                     <div class="flex items-center gap-2.5 text-[13px] {{ ($features['casters_management'] ?? false) ? 'text-slate-300' : 'text-slate-500/40 line-through' }}">
-                        <span class="shrink-0 w-[18px] h-[18px] rounded-full flex items-center justify-center {{ ($features['casters_management'] ?? false) ? 'bg-green-500/10 border border-green-500/25' : 'bg-red-500/10 border border-red-500/15' }}">
+                        <span class="shrink-0 w-4.5 h-4.5 rounded-full flex items-center justify-center {{ ($features['casters_management'] ?? false) ? 'bg-green-500/10 border border-green-500/25' : 'bg-red-500/10 border border-red-500/15' }}">
                             @if($features['casters_management'] ?? false)
                                 <svg class="w-2.5 h-2.5 text-green-500" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
                             @else
@@ -219,7 +219,7 @@
                     </div>
                     <!-- Player Management -->
                     <div class="flex items-center gap-2.5 text-[13px] {{ ($features['player_management'] ?? false) ? 'text-slate-300' : 'text-slate-500/40 line-through' }}">
-                        <span class="shrink-0 w-[18px] h-[18px] rounded-full flex items-center justify-center {{ ($features['player_management'] ?? false) ? 'bg-green-500/10 border border-green-500/25' : 'bg-red-500/10 border border-red-500/15' }}">
+                        <span class="shrink-0 w-4.5 h-4.5 rounded-full flex items-center justify-center {{ ($features['player_management'] ?? false) ? 'bg-green-500/10 border border-green-500/25' : 'bg-red-500/10 border border-red-500/15' }}">
                             @if($features['player_management'] ?? false)
                                 <svg class="w-2.5 h-2.5 text-green-500" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
                             @else
@@ -230,7 +230,7 @@
                     </div>
                     <!-- Custom Branding -->
                     <div class="flex items-center gap-2.5 text-[13px] {{ ($features['custom_branding'] ?? false) ? 'text-slate-300' : 'text-slate-500/40 line-through' }}">
-                        <span class="shrink-0 w-[18px] h-[18px] rounded-full flex items-center justify-center {{ ($features['custom_branding'] ?? false) ? 'bg-green-500/10 border border-green-500/25' : 'bg-red-500/10 border border-red-500/15' }}">
+                        <span class="shrink-0 w-4.5 h-4.5 rounded-full flex items-center justify-center {{ ($features['custom_branding'] ?? false) ? 'bg-green-500/10 border border-green-500/25' : 'bg-red-500/10 border border-red-500/15' }}">
                             @if($features['custom_branding'] ?? false)
                                 <svg class="w-2.5 h-2.5 text-green-500" fill="none" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2 6l3 3 5-5"/></svg>
                             @else
@@ -241,7 +241,7 @@
                     </div>
                 </div>
 
-                <a href="/maidan" class="block text-center px-6 py-[13px] rounded-[10px] text-[12px] font-bold tracking-[0.12em] uppercase transition-all duration-250 {{ $isFeatured ? 'bg-gradient-to-br from-orange-500 to-orange-600 text-white shadow-[0_0_24px_rgba(249,115,22,0.3)] hover:-translate-y-0.5 hover:shadow-[0_0_40px_rgba(249,115,22,0.5)]' : 'bg-white/5 border border-white/10 text-slate-300 hover:bg-orange-500/10 hover:border-orange-500/30 hover:text-white' }}">
+                <a href="/maidan" class="block text-center px-6 py-3.25 rounded-[10px] text-[12px] font-bold tracking-[0.12em] uppercase transition-all duration-250 {{ $isFeatured ? 'bg-linear-to-br from-orange-500 to-orange-600 text-white shadow-[0_0_24px_rgba(249,115,22,0.3)] hover:-translate-y-0.5 hover:shadow-[0_0_40px_rgba(249,115,22,0.5)]' : 'bg-white/5 border border-white/10 text-slate-300 hover:bg-orange-500/10 hover:border-orange-500/30 hover:text-white' }}">
                     Get Started
                 </a>
             </div>
@@ -250,8 +250,8 @@
     </section>
 
     <!-- ─── NOTE SECTION ─── -->
-    <div class="relative z-10 text-center px-8 pb-[80px]">
-        <div class="max-w-[700px] mx-auto bg-orange-500/5 border border-orange-500/10 rounded-[16px] px-9 py-7 reveal-on-scroll delay-300">
+    <div class="relative z-10 text-center px-8 pb-20">
+        <div class="max-w-175 mx-auto bg-orange-500/5 border border-orange-500/10 rounded-2xl px-9 py-7 reveal-on-scroll delay-300">
             <p class="text-[14px] text-slate-400 leading-[1.7]">
                 All plans are activated manually by our team after verifying your payment. Once logged in, head to your dashboard and submit a subscription request with your transaction screenshot.
                 Have questions? <a href="/#contact" class="text-orange-500 font-semibold no-underline hover:underline">Contact us</a> and we'll help you choose the right plan.
@@ -261,7 +261,7 @@
 
     <!-- ─── FOOTER ─── -->
     <footer class="relative z-10 border-t border-white/5 px-8 py-8 text-center animate-fade-in">
-        <p class="text-[12px] text-slate-500 tracking-[0.05em]">&copy; {{ date('Y') }} BroadKaster &mdash; All rights reserved.</p>
+        <p class="text-[12px] text-slate-500 tracking-wider">&copy; {{ date('Y') }} BroadKaster &mdash; All rights reserved.</p>
     </footer>
 
     <!-- Mouse Trail Container -->

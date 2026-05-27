@@ -32,12 +32,12 @@
 </head>
 <body class="font-['Inter'] bg-[#0a0b0e] text-slate-200 min-h-screen overflow-x-hidden antialiased">
     <!-- Cinematic Preloader -->
-    <div id="preloader" class="fixed inset-0 z-[99999] pointer-events-none flex flex-col">
+    <div id="preloader" class="fixed inset-0 z-99999 pointer-events-none flex flex-col">
         <div id="preloader-top" class="flex-1 bg-[#050508] transition-transform duration-1000 ease-[cubic-bezier(0.85,0,0.15,1)] border-b border-orange-500/20"></div>
         <div id="preloader-bottom" class="flex-1 bg-[#050508] transition-transform duration-1000 ease-[cubic-bezier(0.85,0,0.15,1)] border-t border-orange-500/20"></div>
         
         <!-- The glowing line in the center -->
-        <div id="preloader-line" class="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 h-[2px] bg-orange-500 shadow-[0_0_20px_rgba(249,115,22,1)] w-0 transition-all duration-700 ease-in-out z-10"></div>
+        <div id="preloader-line" class="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 h-0.5 bg-orange-500 shadow-[0_0_20px_rgba(249,115,22,1)] w-0 transition-all duration-700 ease-in-out z-10"></div>
         
         <!-- Tech text -->
         <div id="preloader-text" class="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-orange-500 font-mono text-[10px] md:text-[12px] uppercase tracking-[0.3em] md:tracking-[0.5em] opacity-0 transition-opacity duration-300 z-20 whitespace-nowrap">
@@ -46,15 +46,15 @@
     </div>
 
     <!-- Atmospheric Orbs -->
-    <div class="orb w-[700px] h-[700px] -top-[15%] -right-[10%] bg-[radial-gradient(circle,rgba(249,115,22,0.18),transparent_70%)] [animation-duration:22s]" aria-hidden="true"></div>
-    <div class="orb w-[600px] h-[600px] -bottom-[20%] -left-[12%] bg-[radial-gradient(circle,rgba(245,158,11,0.12),transparent_70%)] [animation-duration:28s] [animation-delay:-8s]" aria-hidden="true"></div>
-    <div class="orb w-[400px] h-[400px] top-[40%] left-[35%] bg-[radial-gradient(circle,rgba(234,88,12,0.08),transparent_70%)] [animation-duration:35s] [animation-delay:-15s]" aria-hidden="true"></div>
+    <div class="orb w-175 h-175 top-[-15%] right-[-10%] bg-[radial-gradient(circle,rgba(249,115,22,0.18),transparent_70%)] [animation-duration:22s]" aria-hidden="true"></div>
+    <div class="orb w-150 h-150 bottom-[-20%] left-[-12%] bg-[radial-gradient(circle,rgba(245,158,11,0.12),transparent_70%)] [animation-duration:28s] [animation-delay:-8s]" aria-hidden="true"></div>
+    <div class="orb w-100 h-100 top-[40%] left-[35%] bg-[radial-gradient(circle,rgba(234,88,12,0.08),transparent_70%)] [animation-duration:35s] [animation-delay:-15s]" aria-hidden="true"></div>
 
     <!-- ─── NAVBAR ─── -->
     <nav class="fixed top-0 left-0 right-0 z-50 bg-[#0a0b0e]/80 backdrop-blur-md border-b border-white/5 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 md:px-8 h-[72px] flex justify-between items-center">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 h-18 flex justify-between items-center">
             <a href="/" class="flex items-center gap-3 decoration-0">
-                <img src="{{ asset('img/logo.png') }}" alt="BroadKaster" class="h-[28px] drop-shadow-[0_0_12px_rgba(249,115,22,0.4)]">
+                <img src="{{ asset('img/logo.png') }}" alt="BroadKaster" class="h-7 drop-shadow-[0_0_12px_rgba(249,115,22,0.4)]">
             </a>
             
             <div class="hidden md:flex items-center gap-2">
@@ -64,7 +64,7 @@
                     <a href="{{ url('/maidan') }}" class="px-5 py-2.5 text-[13px] font-semibold tracking-wider uppercase text-slate-400 hover:text-white transition-colors duration-200 rounded-lg">Dashboard</a>
                 @else
                     <a href="#request-demo" class="px-5 py-2.5 text-[13px] font-semibold tracking-wider uppercase text-slate-400 hover:text-white transition-colors duration-200 rounded-lg">Request a Demo</a>
-                    <a href="{{ url('/maidan/login') }}" class="ml-2 px-6 py-2.5 text-[13px] font-bold tracking-wider uppercase text-white bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg shadow-[0_0_0_1px_rgba(249,115,22,0.4),0_6px_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_0_1px_rgba(249,115,22,0.6),0_8px_25px_rgba(249,115,22,0.45)] transition-all duration-250">Sign In</a>
+                    <a href="{{ url('/maidan/login') }}" class="ml-2 px-6 py-2.5 text-[13px] font-bold tracking-wider uppercase text-white bg-linear-to-br from-orange-500 to-orange-600 rounded-lg shadow-[0_0_0_1px_rgba(249,115,22,0.4),0_6px_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_0_1px_rgba(249,115,22,0.6),0_8px_25px_rgba(249,115,22,0.45)] transition-all duration-250">Sign In</a>
                 @endauth
             </div>
             
@@ -83,29 +83,29 @@
                 <a href="{{ url('/maidan') }}" class="block px-4 py-3 text-[14px] font-semibold tracking-wide uppercase text-slate-300 bg-white/5 rounded-lg text-center decoration-0 hover:bg-white/10">Dashboard</a>
             @else
                 <a href="#request-demo" class="block px-4 py-3 text-[14px] font-semibold tracking-wide uppercase text-slate-300 bg-white/5 rounded-lg text-center decoration-0 hover:bg-white/10">Request a Demo</a>
-                <a href="{{ url('/maidan/login') }}" class="block px-4 py-3 text-[14px] font-bold tracking-wide uppercase text-white bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg text-center decoration-0 shadow-[0_4px_14px_rgba(249,115,22,0.3)]">Sign In</a>
+                <a href="{{ url('/maidan/login') }}" class="block px-4 py-3 text-[14px] font-bold tracking-wide uppercase text-white bg-linear-to-br from-orange-500 to-orange-600 rounded-lg text-center decoration-0 shadow-[0_4px_14px_rgba(249,115,22,0.3)]">Sign In</a>
             @endauth
         </div>
     </nav>
 
     <!-- ─── HERO ─── -->
-    <section class="relative pt-32 pb-24 md:pt-[180px] md:pb-[140px] px-4 text-center flex flex-col items-center justify-center min-h-[90vh]">
+    <section class="relative pt-32 pb-24 md:pt-45 md:pb-35 px-4 text-center flex flex-col items-center justify-center min-h-[90vh]">
         <div class="inline-flex items-center gap-2 px-4 py-2 mb-8 bg-orange-500/10 border border-orange-500/30 rounded-full text-[11px] font-bold uppercase tracking-widest text-orange-400 backdrop-blur-sm shadow-[0_0_20px_rgba(249,115,22,0.15)] animate-fade-in-up">
             <span class="w-2 h-2 rounded-full bg-orange-500 animate-blink shadow-[0_0_8px_rgba(249,115,22,0.8)]"></span>
             Professional PUBG Mobile Tournament Broadcast System
         </div>
 
         <div class="mb-10 animate-fade-in-up delay-200">
-            <img class="h-[70px] md:h-[110px] animate-breathe" src="{{ asset('img/logo.png') }}" alt="BroadKaster">
+            <img class="h-17.5 md:h-27.5 animate-breathe object-scale-down" src="{{ asset('img/logo.png') }}" alt="BroadKaster">
         </div>
 
-        <p class="max-w-[700px] mx-auto text-lg md:text-[22px] font-light leading-relaxed text-slate-300 mb-12 animate-fade-in-up delay-300">
+        <p class="max-w-175 mx-auto text-lg md:text-[22px] font-light leading-relaxed text-slate-300 mb-12 animate-fade-in-up delay-300">
             Command every match moment. Real-time OBS overlays, live rankings, and seamless
             director controls — all in one powerful broadcasting engine.
         </p>
 
         <div class="flex flex-col md:flex-row gap-4 mb-16 w-full md:w-auto px-4 reveal-on-scroll delay-400">
-            <a href="{{ url('/maidan') }}" class="flex items-center justify-center gap-2 px-8 py-4 text-[14px] md:text-[15px] font-bold uppercase tracking-widest text-white bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-[0_0_0_1px_rgba(249,115,22,0.5),0_10px_30px_rgba(249,115,22,0.4)] hover:shadow-[0_0_0_1px_rgba(249,115,22,0.7),0_12px_40px_rgba(249,115,22,0.55)] hover:-translate-y-0.5 transition-all duration-300">
+            <a href="{{ url('/maidan') }}" class="flex items-center justify-center gap-2 px-8 py-4 text-[14px] md:text-[15px] font-bold uppercase tracking-widest text-white bg-linear-to-br from-orange-500 to-orange-600 rounded-xl shadow-[0_0_0_1px_rgba(249,115,22,0.5),0_10px_30px_rgba(249,115,22,0.4)] hover:shadow-[0_0_0_1px_rgba(249,115,22,0.7),0_12px_40px_rgba(249,115,22,0.55)] hover:-translate-y-0.5 transition-all duration-300">
                 <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
                 </svg>
@@ -120,20 +120,20 @@
         </div>
 
         <!-- Stats bar -->
-        <div class="flex flex-wrap justify-center gap-3 md:gap-4 max-w-[800px] w-full px-4 reveal-on-scroll delay-500">
-            <div class="flex-1 min-w-[140px] px-4 py-3 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-xl flex flex-col justify-center transition-transform hover:-translate-y-1">
+        <div class="flex flex-wrap justify-center gap-3 md:gap-4 max-w-200 w-full px-4 reveal-on-scroll delay-500">
+            <div class="flex-1 min-w-35 px-4 py-3 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-xl flex flex-col justify-center transition-transform hover:-translate-y-1">
                 <span class="block font-['Rajdhani'] text-[24px] md:text-[32px] font-bold text-white mb-0.5">16+</span>
                 <span class="block text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-slate-400">OBS Overlays</span>
             </div>
-            <div class="flex-1 min-w-[140px] px-4 py-3 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-xl flex flex-col justify-center transition-transform hover:-translate-y-1">
+            <div class="flex-1 min-w-35 px-4 py-3 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-xl flex flex-col justify-center transition-transform hover:-translate-y-1">
                 <span class="block font-['Rajdhani'] text-[24px] md:text-[32px] font-bold text-white mb-0.5">Real-Time</span>
                 <span class="block text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-orange-400 drop-shadow-[0_0_8px_rgba(249,115,22,0.4)]">WebSocket Sync</span>
             </div>
-            <div class="flex-1 min-w-[140px] px-4 py-3 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-xl flex flex-col justify-center transition-transform hover:-translate-y-1">
+            <div class="flex-1 min-w-35 px-4 py-3 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-xl flex flex-col justify-center transition-transform hover:-translate-y-1">
                 <span class="block font-['Rajdhani'] text-[24px] md:text-[32px] font-bold text-white mb-0.5">1080p</span>
                 <span class="block text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-slate-400">Overlay Quality</span>
             </div>
-            <div class="flex-1 min-w-[140px] px-4 py-3 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-xl flex flex-col justify-center transition-transform hover:-translate-y-1">
+            <div class="flex-1 min-w-35 px-4 py-3 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-xl flex flex-col justify-center transition-transform hover:-translate-y-1">
                 <span class="block font-['Rajdhani'] text-[24px] md:text-[32px] font-bold text-white mb-0.5">v{{ $systemVersion ?? '1.1.117' }}</span>
                 <span class="block text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-slate-400">Build</span>
             </div>
@@ -145,10 +145,10 @@
         <div class="text-center mb-16 reveal-on-scroll delay-200">
             <p class="text-[12px] font-bold uppercase tracking-[0.2em] text-orange-500 mb-3 drop-shadow-[0_0_10px_rgba(249,115,22,0.4)]">Core Capabilities</p>
             <h2 class="font-['Rajdhani'] text-[36px] md:text-[46px] font-bold text-white mb-4">Everything your broadcast needs</h2>
-            <p class="text-slate-400 text-[15px] max-w-[600px] mx-auto">From the first whistle to the final kill, BroadKaster keeps your stream production-ready at all times.</p>
+            <p class="text-slate-400 text-[15px] max-w-150 mx-auto">From the first whistle to the final kill, BroadKaster keeps your stream production-ready at all times.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-[1200px] mx-auto reveal-on-scroll delay-400">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-300 mx-auto reveal-on-scroll delay-400">
             <!-- Card 1 -->
             <div class="group p-8 rounded-2xl bg-[#0f1117]/80 backdrop-blur-md border border-orange-500/20 shadow-[0_15px_35px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.05)] transition-all duration-400 hover:-translate-y-2 hover:bg-[#161923] hover:border-orange-500/40 relative overflow-hidden">
                 <div class="absolute -top-1/2 -right-1/2 w-full h-full bg-[radial-gradient(circle,rgba(249,115,22,0.1)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
@@ -227,7 +227,7 @@
 
     <!-- ─── HOW IT WORKS ─── -->
     <section class="py-24 px-4 bg-[#08090b] border-y border-white/5 relative z-10">
-        <div class="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div class="max-w-300 mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div class="reveal-on-scroll delay-200">
                 <p class="text-[12px] font-bold uppercase tracking-[0.2em] text-orange-500 mb-3 drop-shadow-[0_0_10px_rgba(249,115,22,0.4)]">Workflow</p>
                 <h2 class="font-['Rajdhani'] text-[36px] md:text-[46px] font-bold text-white mb-4 leading-tight">Set up in minutes,<br>broadcast all day</h2>
@@ -305,9 +305,9 @@
                         <div class="w-8 font-['Rajdhani'] text-[15px] font-bold text-slate-400">#{{ $t['rank'] }}</div>
                         <div class="flex-1 font-semibold text-[13px] {{ $t['rank'] == 1 ? 'text-orange-500' : 'text-slate-200' }}">{{ $t['name'] }}</div>
                         <div class="w-16 text-right font-['Rajdhani'] text-[15px] font-bold text-white">{{ $t['pts'] }} pts</div>
-                        <div class="w-[70px] ml-4">
+                        <div class="w-17.5 ml-4">
                             <div class="h-1.5 w-full bg-[#0a0b0e] rounded-full overflow-hidden">
-                                <div class="h-full rounded-full {{ $t['rank'] > 2 ? 'bg-gradient-to-r from-slate-600 to-slate-500' : 'bg-gradient-to-r from-orange-500 to-orange-400' }}" style="width:{{ $t['pct'] }}%;"></div>
+                                <div class="h-full rounded-full {{ $t['rank'] > 2 ? 'bg-linear-to-r from-slate-600 to-slate-500' : 'bg-linear-to-r from-orange-500 to-orange-400' }}" style="width:{{ $t['pct'] }}%;"></div>
                             </div>
                         </div>
                     </div>
@@ -319,13 +319,13 @@
 
     <!-- ─── REQUEST A DEMO ─── -->
     <section class="py-24 px-4 bg-[#0a0b0e] relative z-10" id="request-demo">
-        <div class="max-w-[1100px] mx-auto text-center mb-12 reveal-on-scroll delay-200">
+        <div class="max-w-275 mx-auto text-center mb-12 reveal-on-scroll delay-200">
             <p class="text-[12px] font-bold uppercase tracking-[0.2em] text-orange-500 mb-3 drop-shadow-[0_0_10px_rgba(249,115,22,0.4)]">Get Started</p>
             <h2 class="font-['Rajdhani'] text-[36px] md:text-[46px] font-bold text-white mb-4">Request a Demo</h2>
-            <p class="text-slate-400 text-[15px] max-w-[600px] mx-auto">Fill in the form and we'll reach out to set you up with a BroadKaster account tailored to your tournament needs.</p>
+            <p class="text-slate-400 text-[15px] max-w-150 mx-auto">Fill in the form and we'll reach out to set you up with a BroadKaster account tailored to your tournament needs.</p>
         </div>
 
-        <div class="max-w-[1100px] mx-auto bg-[#0f1117] border border-white/5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden grid grid-cols-1 lg:grid-cols-2 reveal-on-scroll delay-400">
+        <div class="max-w-275 mx-auto bg-[#0f1117] border border-white/5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden grid grid-cols-1 lg:grid-cols-2 reveal-on-scroll delay-400">
             <!-- Left: Value props -->
             <div class="p-10 lg:p-12 border-b lg:border-b-0 lg:border-r border-white/5 bg-[#12151d]">
                 <img src="{{ asset('img/symbol.png') }}" alt="BroadKaster" class="w-16 h-16 object-contain mb-6 drop-shadow-[0_0_20px_rgba(249,115,22,0.3)]">
@@ -347,7 +347,7 @@
                     @endphp
                     @foreach ($perks as $perk)
                     <li class="flex items-start gap-3 text-[14px] text-slate-300 font-medium leading-snug">
-                        <span class="shrink-0 w-[18px] h-[18px] rounded-full bg-green-500/10 flex items-center justify-center text-green-500 mt-0.5">
+                        <span class="shrink-0 w-4.5 h-4.5 rounded-full bg-green-500/10 flex items-center justify-center text-green-500 mt-0.5">
                             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                             </svg>
@@ -397,9 +397,9 @@
                         </div>
                         <div>
                             <label for="demo_message" class="block text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">What are you looking to broadcast?</label>
-                            <textarea id="demo_message" name="message" class="w-full min-h-[90px] bg-[#0a0b0e] border border-white/10 rounded-lg px-4 py-3 text-[13.5px] text-white placeholder-slate-600 focus:outline-none focus:border-orange-500/50 focus:bg-orange-500/5 transition-all resize-y" placeholder="Tell us about your tournament — game title, team count, event scale...">{{ old('message') }}</textarea>
+                            <textarea id="demo_message" name="message" class="w-full min-h-22.5 bg-[#0a0b0e] border border-white/10 rounded-lg px-4 py-3 text-[13.5px] text-white placeholder-slate-600 focus:outline-none focus:border-orange-500/50 focus:bg-orange-500/5 transition-all resize-y" placeholder="Tell us about your tournament — game title, team count, event scale...">{{ old('message') }}</textarea>
                         </div>
-                        <button type="submit" class="w-full flex items-center justify-center gap-2 px-7 py-3.5 bg-gradient-to-br from-orange-500 to-orange-600 text-white font-['Rajdhani'] font-bold text-[15px] uppercase tracking-widest rounded-lg border-none cursor-pointer shadow-[0_0_0_1px_rgba(249,115,22,0.4),0_6px_24px_rgba(249,115,22,0.3)] hover:shadow-[0_0_0_1px_rgba(249,115,22,0.6),0_8px_32px_rgba(249,115,22,0.45)] transition-all duration-250">
+                        <button type="submit" class="w-full flex items-center justify-center gap-2 px-7 py-3.5 bg-linear-to-br from-orange-500 to-orange-600 text-white font-['Rajdhani'] font-bold text-[15px] uppercase tracking-widest rounded-lg border-none cursor-pointer shadow-[0_0_0_1px_rgba(249,115,22,0.4),0_6px_24px_rgba(249,115,22,0.3)] hover:shadow-[0_0_0_1px_rgba(249,115,22,0.6),0_8px_32px_rgba(249,115,22,0.45)] transition-all duration-250">
                             <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
                             </svg>
@@ -414,16 +414,16 @@
 
     <!-- ─── CONTACT SECTION ─── -->
     <section class="pt-24 pb-12 px-4 relative z-10 overflow-hidden" id="contact">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[radial-gradient(circle,rgba(249,115,22,0.08)_0%,transparent_60%)] rounded-full pointer-events-none -z-10 animate-pulse-glow"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-200 bg-[radial-gradient(circle,rgba(249,115,22,0.08)_0%,transparent_60%)] rounded-full pointer-events-none -z-10 animate-pulse-glow"></div>
         <div class="text-center mb-12 reveal-on-scroll delay-200">
-            <h2 class="font-['Rajdhani'] text-[42px] font-bold text-white mb-3">Let's <span class="bg-gradient-to-br from-orange-500 to-amber-500 text-transparent bg-clip-text">Connect</span></h2>
-            <p class="text-[16px] text-slate-400 max-w-[500px] mx-auto">Have questions or need a custom setup? Reach out to OxyZone directly via any platform below.</p>
+            <h2 class="font-['Rajdhani'] text-[42px] font-bold text-white mb-3">Let's <span class="bg-linear-to-br from-orange-500 to-amber-500 text-transparent bg-clip-text">Connect</span></h2>
+            <p class="text-[16px] text-slate-400 max-w-125 mx-auto">Have questions or need a custom setup? Reach out to OxyZone directly via any platform below.</p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-[1000px] mx-auto reveal-on-scroll delay-400">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-250 mx-auto reveal-on-scroll delay-400">
             <!-- Name/Profile -->
             <div class="group flex flex-col items-center p-8 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-2xl text-center relative overflow-hidden transition-all duration-400 hover:-translate-y-2.5 hover:border-orange-500/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6),0_0_20px_rgba(249,115,22,0.15)] hover:bg-[#0f1117]/90 cursor-default">
-                <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-orange-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
+                <div class="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-transparent via-orange-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
                 <div class="w-14 h-14 bg-orange-500/10 border border-orange-500/20 rounded-xl flex items-center justify-center text-orange-500 mb-5 transition-all duration-400 relative group-hover:bg-orange-500 group-hover:text-white group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-[0_0_20px_rgba(249,115,22,0.4)]">
                     <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -436,7 +436,7 @@
 
             <!-- Phone -->
             <a href="tel:+9779802350986" class="group flex flex-col items-center p-8 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-2xl text-center relative overflow-hidden transition-all duration-400 hover:-translate-y-2.5 hover:border-orange-500/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6),0_0_20px_rgba(249,115,22,0.15)] hover:bg-[#0f1117]/90 decoration-0">
-                <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-orange-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
+                <div class="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-transparent via-orange-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
                 <div class="w-14 h-14 bg-orange-500/10 border border-orange-500/20 rounded-xl flex items-center justify-center text-orange-500 mb-5 transition-all duration-400 relative group-hover:bg-orange-500 group-hover:text-white group-hover:scale-110 group-hover:-rotate-6 group-hover:shadow-[0_0_20px_rgba(249,115,22,0.4)]">
                     <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
@@ -448,7 +448,7 @@
 
             <!-- Email -->
             <a href="mailto:sumnsth@gmail.com" class="group flex flex-col items-center p-8 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-2xl text-center relative overflow-hidden transition-all duration-400 hover:-translate-y-2.5 hover:border-orange-500/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6),0_0_20px_rgba(249,115,22,0.15)] hover:bg-[#0f1117]/90 decoration-0">
-                <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-orange-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
+                <div class="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-transparent via-orange-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
                 <div class="w-14 h-14 bg-orange-500/10 border border-orange-500/20 rounded-xl flex items-center justify-center text-orange-500 mb-5 transition-all duration-400 relative group-hover:bg-orange-500 group-hover:text-white group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-[0_0_20px_rgba(249,115,22,0.4)]">
                     <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -460,7 +460,7 @@
 
             <!-- Discord -->
             <a href="#" class="group flex flex-col items-center p-8 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-2xl text-center relative overflow-hidden transition-all duration-400 hover:-translate-y-2.5 hover:border-orange-500/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6),0_0_20px_rgba(249,115,22,0.15)] hover:bg-[#0f1117]/90 decoration-0" onclick="navigator.clipboard.writeText('oxyzone'); alert('Discord username copied to clipboard!'); return false;">
-                <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-orange-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
+                <div class="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-transparent via-orange-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
                 <div class="w-14 h-14 bg-orange-500/10 border border-orange-500/20 rounded-xl flex items-center justify-center text-orange-500 mb-5 transition-all duration-400 relative group-hover:bg-orange-500 group-hover:text-white group-hover:scale-110 group-hover:-rotate-6 group-hover:shadow-[0_0_20px_rgba(249,115,22,0.4)]">
                     <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/>
@@ -472,7 +472,7 @@
 
             <!-- Instagram -->
             <a href="https://instagram.com/0xyzone" target="_blank" class="group flex flex-col items-center p-8 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-2xl text-center relative overflow-hidden transition-all duration-400 hover:-translate-y-2.5 hover:border-orange-500/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6),0_0_20px_rgba(249,115,22,0.15)] hover:bg-[#0f1117]/90 decoration-0">
-                <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-orange-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
+                <div class="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-transparent via-orange-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
                 <div class="w-14 h-14 bg-orange-500/10 border border-orange-500/20 rounded-xl flex items-center justify-center text-orange-500 mb-5 transition-all duration-400 relative group-hover:bg-orange-500 group-hover:text-white group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-[0_0_20px_rgba(249,115,22,0.4)]">
                     <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
