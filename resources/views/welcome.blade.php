@@ -31,6 +31,20 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-['Inter'] bg-[#0a0b0e] text-slate-200 min-h-screen overflow-x-hidden antialiased">
+    <!-- Cinematic Preloader -->
+    <div id="preloader" class="fixed inset-0 z-[99999] pointer-events-none flex flex-col">
+        <div id="preloader-top" class="flex-1 bg-[#050508] transition-transform duration-1000 ease-[cubic-bezier(0.85,0,0.15,1)] border-b border-orange-500/20"></div>
+        <div id="preloader-bottom" class="flex-1 bg-[#050508] transition-transform duration-1000 ease-[cubic-bezier(0.85,0,0.15,1)] border-t border-orange-500/20"></div>
+        
+        <!-- The glowing line in the center -->
+        <div id="preloader-line" class="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 h-[2px] bg-orange-500 shadow-[0_0_20px_rgba(249,115,22,1)] w-0 transition-all duration-700 ease-in-out z-10"></div>
+        
+        <!-- Tech text -->
+        <div id="preloader-text" class="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-orange-500 font-mono text-[10px] md:text-[12px] uppercase tracking-[0.3em] md:tracking-[0.5em] opacity-0 transition-opacity duration-300 z-20 whitespace-nowrap">
+            System Initializing...
+        </div>
+    </div>
+
     <!-- Atmospheric Orbs -->
     <div class="orb w-[700px] h-[700px] -top-[15%] -right-[10%] bg-[radial-gradient(circle,rgba(249,115,22,0.18),transparent_70%)] [animation-duration:22s]" aria-hidden="true"></div>
     <div class="orb w-[600px] h-[600px] -bottom-[20%] -left-[12%] bg-[radial-gradient(circle,rgba(245,158,11,0.12),transparent_70%)] [animation-duration:28s] [animation-delay:-8s]" aria-hidden="true"></div>
@@ -76,21 +90,21 @@
 
     <!-- ─── HERO ─── -->
     <section class="relative pt-32 pb-24 md:pt-[180px] md:pb-[140px] px-4 text-center flex flex-col items-center justify-center min-h-[90vh]">
-        <div class="inline-flex items-center gap-2 px-4 py-2 mb-8 bg-orange-500/10 border border-orange-500/30 rounded-full text-[11px] font-bold uppercase tracking-widest text-orange-400 backdrop-blur-sm shadow-[0_0_20px_rgba(249,115,22,0.15)]">
+        <div class="inline-flex items-center gap-2 px-4 py-2 mb-8 bg-orange-500/10 border border-orange-500/30 rounded-full text-[11px] font-bold uppercase tracking-widest text-orange-400 backdrop-blur-sm shadow-[0_0_20px_rgba(249,115,22,0.15)] animate-fade-in-up">
             <span class="w-2 h-2 rounded-full bg-orange-500 animate-blink shadow-[0_0_8px_rgba(249,115,22,0.8)]"></span>
             Professional PUBG Mobile Tournament Broadcast System
         </div>
 
-        <div class="mb-10 animate-pulse-glow">
-            <img class="h-[70px] md:h-[110px] drop-shadow-[0_0_30px_rgba(249,115,22,0.5)]" src="{{ asset('img/logo.png') }}" alt="BroadKaster">
+        <div class="mb-10 animate-fade-in-up delay-200">
+            <img class="h-[70px] md:h-[110px] animate-breathe" src="{{ asset('img/logo.png') }}" alt="BroadKaster">
         </div>
 
-        <p class="max-w-[700px] mx-auto text-lg md:text-[22px] font-light leading-relaxed text-slate-300 mb-12">
+        <p class="max-w-[700px] mx-auto text-lg md:text-[22px] font-light leading-relaxed text-slate-300 mb-12 animate-fade-in-up delay-300">
             Command every match moment. Real-time OBS overlays, live rankings, and seamless
             director controls — all in one powerful broadcasting engine.
         </p>
 
-        <div class="flex flex-col md:flex-row gap-4 mb-16 w-full md:w-auto px-4">
+        <div class="flex flex-col md:flex-row gap-4 mb-16 w-full md:w-auto px-4 reveal-on-scroll delay-400">
             <a href="{{ url('/maidan') }}" class="flex items-center justify-center gap-2 px-8 py-4 text-[14px] md:text-[15px] font-bold uppercase tracking-widest text-white bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-[0_0_0_1px_rgba(249,115,22,0.5),0_10px_30px_rgba(249,115,22,0.4)] hover:shadow-[0_0_0_1px_rgba(249,115,22,0.7),0_12px_40px_rgba(249,115,22,0.55)] hover:-translate-y-0.5 transition-all duration-300">
                 <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
@@ -106,7 +120,7 @@
         </div>
 
         <!-- Stats bar -->
-        <div class="flex flex-wrap justify-center gap-3 md:gap-4 max-w-[800px] w-full px-4">
+        <div class="flex flex-wrap justify-center gap-3 md:gap-4 max-w-[800px] w-full px-4 reveal-on-scroll delay-500">
             <div class="flex-1 min-w-[140px] px-4 py-3 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-xl flex flex-col justify-center transition-transform hover:-translate-y-1">
                 <span class="block font-['Rajdhani'] text-[24px] md:text-[32px] font-bold text-white mb-0.5">16+</span>
                 <span class="block text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-slate-400">OBS Overlays</span>
@@ -128,13 +142,13 @@
 
     <!-- ─── FEATURES GRID ─── -->
     <section class="py-24 px-4 relative z-10">
-        <div class="text-center mb-16">
+        <div class="text-center mb-16 reveal-on-scroll delay-200">
             <p class="text-[12px] font-bold uppercase tracking-[0.2em] text-orange-500 mb-3 drop-shadow-[0_0_10px_rgba(249,115,22,0.4)]">Core Capabilities</p>
             <h2 class="font-['Rajdhani'] text-[36px] md:text-[46px] font-bold text-white mb-4">Everything your broadcast needs</h2>
             <p class="text-slate-400 text-[15px] max-w-[600px] mx-auto">From the first whistle to the final kill, BroadKaster keeps your stream production-ready at all times.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-[1200px] mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-[1200px] mx-auto reveal-on-scroll delay-400">
             <!-- Card 1 -->
             <div class="group p-8 rounded-2xl bg-[#0f1117]/80 backdrop-blur-md border border-orange-500/20 shadow-[0_15px_35px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.05)] transition-all duration-400 hover:-translate-y-2 hover:bg-[#161923] hover:border-orange-500/40 relative overflow-hidden">
                 <div class="absolute -top-1/2 -right-1/2 w-full h-full bg-[radial-gradient(circle,rgba(249,115,22,0.1)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
@@ -214,7 +228,7 @@
     <!-- ─── HOW IT WORKS ─── -->
     <section class="py-24 px-4 bg-[#08090b] border-y border-white/5 relative z-10">
         <div class="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div>
+            <div class="reveal-on-scroll delay-200">
                 <p class="text-[12px] font-bold uppercase tracking-[0.2em] text-orange-500 mb-3 drop-shadow-[0_0_10px_rgba(249,115,22,0.4)]">Workflow</p>
                 <h2 class="font-['Rajdhani'] text-[36px] md:text-[46px] font-bold text-white mb-4 leading-tight">Set up in minutes,<br>broadcast all day</h2>
                 <p class="text-slate-400 text-[15px] mb-10">The entire pipeline from match setup to live broadcast is designed to be intuitive and lightning-fast.</p>
@@ -252,7 +266,7 @@
             </div>
 
             <!-- Dashboard Mockup -->
-            <div class="bg-[#161923] border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden transform lg:-rotate-2 transition-transform duration-500 hover:rotate-0">
+            <div class="bg-[#161923] border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden transform lg:-rotate-2 transition-transform duration-500 hover:rotate-0 reveal-on-scroll delay-400">
                 <div class="flex items-center px-4 py-3 bg-[#0a0b0e] border-b border-white/5">
                     <div class="flex gap-2 mr-4">
                         <div class="w-3 h-3 rounded-full bg-[#ff5f57]"></div>
@@ -305,13 +319,13 @@
 
     <!-- ─── REQUEST A DEMO ─── -->
     <section class="py-24 px-4 bg-[#0a0b0e] relative z-10" id="request-demo">
-        <div class="max-w-[1100px] mx-auto text-center mb-12">
+        <div class="max-w-[1100px] mx-auto text-center mb-12 reveal-on-scroll delay-200">
             <p class="text-[12px] font-bold uppercase tracking-[0.2em] text-orange-500 mb-3 drop-shadow-[0_0_10px_rgba(249,115,22,0.4)]">Get Started</p>
             <h2 class="font-['Rajdhani'] text-[36px] md:text-[46px] font-bold text-white mb-4">Request a Demo</h2>
             <p class="text-slate-400 text-[15px] max-w-[600px] mx-auto">Fill in the form and we'll reach out to set you up with a BroadKaster account tailored to your tournament needs.</p>
         </div>
 
-        <div class="max-w-[1100px] mx-auto bg-[#0f1117] border border-white/5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden grid grid-cols-1 lg:grid-cols-2">
+        <div class="max-w-[1100px] mx-auto bg-[#0f1117] border border-white/5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden grid grid-cols-1 lg:grid-cols-2 reveal-on-scroll delay-400">
             <!-- Left: Value props -->
             <div class="p-10 lg:p-12 border-b lg:border-b-0 lg:border-r border-white/5 bg-[#12151d]">
                 <img src="{{ asset('img/symbol.png') }}" alt="BroadKaster" class="w-16 h-16 object-contain mb-6 drop-shadow-[0_0_20px_rgba(249,115,22,0.3)]">
@@ -401,12 +415,12 @@
     <!-- ─── CONTACT SECTION ─── -->
     <section class="pt-24 pb-12 px-4 relative z-10 overflow-hidden" id="contact">
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[radial-gradient(circle,rgba(249,115,22,0.08)_0%,transparent_60%)] rounded-full pointer-events-none -z-10 animate-pulse-glow"></div>
-        <div class="text-center mb-12">
+        <div class="text-center mb-12 reveal-on-scroll delay-200">
             <h2 class="font-['Rajdhani'] text-[42px] font-bold text-white mb-3">Let's <span class="bg-gradient-to-br from-orange-500 to-amber-500 text-transparent bg-clip-text">Connect</span></h2>
             <p class="text-[16px] text-slate-400 max-w-[500px] mx-auto">Have questions or need a custom setup? Reach out to OxyZone directly via any platform below.</p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-[1000px] mx-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-[1000px] mx-auto reveal-on-scroll delay-400">
             <!-- Name/Profile -->
             <div class="group flex flex-col items-center p-8 bg-[#0f1117]/60 backdrop-blur-md border border-white/5 rounded-2xl text-center relative overflow-hidden transition-all duration-400 hover:-translate-y-2.5 hover:border-orange-500/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6),0_0_20px_rgba(249,115,22,0.15)] hover:bg-[#0f1117]/90 cursor-default">
                 <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-orange-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
@@ -473,7 +487,7 @@
     </section>
 
     <!-- ─── FOOTER ─── -->
-    <footer class="relative z-10 border-t border-white/5 bg-[#0a0b0e]/90">
+    <footer class="relative z-10 border-t border-white/5 bg-[#0a0b0e]/90 animate-fade-in">
         <div class="max-w-7xl mx-auto p-8 flex justify-between items-center flex-wrap gap-4">
             <div class="flex items-center gap-2.5">
                 <img src="{{ asset('img/logo.png') }}" alt="BroadKaster" class="h-5 opacity-60">
@@ -483,7 +497,52 @@
         </div>
     </footer>
 
+    <!-- Mouse Trail Container -->
+    <div id="mouse-trail-container" class="fixed inset-0 pointer-events-none z-50 overflow-hidden hidden md:block mix-blend-screen"></div>
+
     <script>
+        // Cinematic Preloader Logic
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            const line = document.getElementById('preloader-line');
+            const top = document.getElementById('preloader-top');
+            const bottom = document.getElementById('preloader-bottom');
+            const text = document.getElementById('preloader-text');
+            
+            if(preloader && line && top && bottom && text) {
+                // Step 1: Expand line and fade in text
+                setTimeout(() => {
+                    text.style.opacity = '1';
+                    line.style.width = '100vw';
+                }, 100);
+                
+                // Step 2: Open shutter
+                setTimeout(() => {
+                    text.style.opacity = '0';
+                    line.style.opacity = '0';
+                    top.style.transform = 'translateY(-100%)';
+                    bottom.style.transform = 'translateY(100%)';
+                }, 1000);
+                
+                // Step 3: Remove from DOM completely
+                setTimeout(() => {
+                    preloader.remove();
+                }, 2200);
+            }
+        });
+
+        // Scroll Reveal Logic
+        const revealElements = document.querySelectorAll('.reveal-on-scroll');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
         document.getElementById('mobile-menu-btn').addEventListener('click', function() {
             const menu = document.getElementById('mobile-menu');
             if(menu.classList.contains('hidden')){
@@ -494,6 +553,50 @@
                 menu.classList.remove('flex');
             }
         });
+
+        // Snake Mouse Trail logic
+        if (window.matchMedia("(pointer: fine)").matches) {
+            const container = document.getElementById('mouse-trail-container');
+            const dots = [];
+            const numDots = 15;
+            
+            for(let i=0; i<numDots; i++) {
+                let dot = document.createElement('div');
+                dot.className = "absolute w-4 h-4 rounded-full bg-orange-500 will-change-transform";
+                dot.style.opacity = Math.max(0.1, 1 - (i / numDots));
+                dot.style.transform = `scale(${1 - (i / numDots)})`;
+                dot.style.filter = `blur(${i * 0.4}px)`;
+                container.appendChild(dot);
+                dots.push({ el: dot, x: window.innerWidth / 2, y: window.innerHeight / 2 });
+            }
+            
+            let mouseX = window.innerWidth / 2;
+            let mouseY = window.innerHeight / 2;
+            
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            
+            function animateTrail() {
+                let x = mouseX;
+                let y = mouseY;
+                
+                dots.forEach((dot, index) => {
+                    const nextDot = dots[index + 1] || dots[0];
+                    dot.x = x;
+                    dot.y = y;
+                    dot.el.style.left = (x - 8) + 'px';
+                    dot.el.style.top = (y - 8) + 'px';
+                    
+                    x += (nextDot.x - x) * 0.4;
+                    y += (nextDot.y - y) * 0.4;
+                });
+                
+                requestAnimationFrame(animateTrail);
+            }
+            animateTrail();
+        }
     </script>
 </body>
 </html>

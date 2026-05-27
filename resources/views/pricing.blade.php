@@ -31,6 +31,20 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-['Inter'] bg-[#0a0b0e] text-slate-200 min-h-screen overflow-x-hidden antialiased relative">
+    <!-- Cinematic Preloader -->
+    <div id="preloader" class="fixed inset-0 z-[99999] pointer-events-none flex flex-col">
+        <div id="preloader-top" class="flex-1 bg-[#050508] transition-transform duration-1000 ease-[cubic-bezier(0.85,0,0.15,1)] border-b border-orange-500/20"></div>
+        <div id="preloader-bottom" class="flex-1 bg-[#050508] transition-transform duration-1000 ease-[cubic-bezier(0.85,0,0.15,1)] border-t border-orange-500/20"></div>
+        
+        <!-- The glowing line in the center -->
+        <div id="preloader-line" class="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 h-[2px] bg-orange-500 shadow-[0_0_20px_rgba(249,115,22,1)] w-0 transition-all duration-700 ease-in-out z-10"></div>
+        
+        <!-- Tech text -->
+        <div id="preloader-text" class="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-orange-500 font-mono text-[10px] md:text-[12px] uppercase tracking-[0.3em] md:tracking-[0.5em] opacity-0 transition-opacity duration-300 z-20 whitespace-nowrap">
+            System Initializing...
+        </div>
+    </div>
+
     <!-- Background overlay -->
     <div class="fixed inset-0 opacity-[0.025] pointer-events-none z-0" style="background-image: url(&quot;data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E&quot;);"></div>
 
@@ -76,15 +90,15 @@
 
     <!-- ─── PAGE HEADER ─── -->
     <div class="relative z-10 text-center pt-[80px] px-8 pb-[60px]">
-        <div class="inline-flex items-center gap-2 px-4 py-[7px] mb-7 bg-orange-500/10 border border-orange-500/20 rounded-full text-[10px] font-bold uppercase tracking-[0.22em] text-orange-500">
+        <div class="inline-flex items-center gap-2 px-4 py-[7px] mb-7 bg-orange-500/10 border border-orange-500/20 rounded-full text-[10px] font-bold uppercase tracking-[0.22em] text-orange-500 reveal-on-scroll">
             <span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-blink"></span>
             Transparent Pricing
         </div>
-        <h1 class="font-['Rajdhani'] text-[clamp(36px,6vw,64px)] font-bold text-slate-100 leading-[1.05] mb-5 tracking-[-0.02em]">
+        <h1 class="font-['Rajdhani'] text-[clamp(36px,6vw,64px)] font-bold text-slate-100 leading-[1.05] mb-5 tracking-[-0.02em] reveal-on-scroll delay-200">
             Plans for Every<br>
             <span class="bg-gradient-to-br from-orange-500 to-amber-500 text-transparent bg-clip-text">Tournament Scale</span>
         </h1>
-        <p class="text-[16px] text-slate-400 max-w-[520px] mx-auto leading-[1.7]">
+        <p class="text-[16px] text-slate-400 max-w-[520px] mx-auto leading-[1.7] reveal-on-scroll delay-300">
             From a single day event to a full esports season — choose the plan that fits your production needs. All plans include OBS overlays and real-time sync.
         </p>
     </div>
@@ -237,7 +251,7 @@
 
     <!-- ─── NOTE SECTION ─── -->
     <div class="relative z-10 text-center px-8 pb-[80px]">
-        <div class="max-w-[700px] mx-auto bg-orange-500/5 border border-orange-500/10 rounded-[16px] px-9 py-7">
+        <div class="max-w-[700px] mx-auto bg-orange-500/5 border border-orange-500/10 rounded-[16px] px-9 py-7 reveal-on-scroll delay-300">
             <p class="text-[14px] text-slate-400 leading-[1.7]">
                 All plans are activated manually by our team after verifying your payment. Once logged in, head to your dashboard and submit a subscription request with your transaction screenshot.
                 Have questions? <a href="/#contact" class="text-orange-500 font-semibold no-underline hover:underline">Contact us</a> and we'll help you choose the right plan.
@@ -246,11 +260,56 @@
     </div>
 
     <!-- ─── FOOTER ─── -->
-    <footer class="relative z-10 border-t border-white/5 px-8 py-8 text-center">
+    <footer class="relative z-10 border-t border-white/5 px-8 py-8 text-center animate-fade-in">
         <p class="text-[12px] text-slate-500 tracking-[0.05em]">&copy; {{ date('Y') }} BroadKaster &mdash; All rights reserved.</p>
     </footer>
 
+    <!-- Mouse Trail Container -->
+    <div id="mouse-trail-container" class="fixed inset-0 pointer-events-none z-50 overflow-hidden hidden md:block mix-blend-screen"></div>
+
     <script>
+        // Cinematic Preloader Logic
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            const line = document.getElementById('preloader-line');
+            const top = document.getElementById('preloader-top');
+            const bottom = document.getElementById('preloader-bottom');
+            const text = document.getElementById('preloader-text');
+            
+            if(preloader && line && top && bottom && text) {
+                // Step 1: Expand line and fade in text
+                setTimeout(() => {
+                    text.style.opacity = '1';
+                    line.style.width = '100vw';
+                }, 100);
+                
+                // Step 2: Open shutter
+                setTimeout(() => {
+                    text.style.opacity = '0';
+                    line.style.opacity = '0';
+                    top.style.transform = 'translateY(-100%)';
+                    bottom.style.transform = 'translateY(100%)';
+                }, 1000);
+                
+                // Step 3: Remove from DOM completely
+                setTimeout(() => {
+                    preloader.remove();
+                }, 2200);
+            }
+        });
+
+        // Scroll Reveal Logic
+        const revealElements = document.querySelectorAll('.reveal-on-scroll');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
         document.getElementById('mobile-menu-btn').addEventListener('click', function() {
             const menu = document.getElementById('mobile-menu');
             if(menu.classList.contains('hidden')){
@@ -261,6 +320,50 @@
                 menu.classList.remove('flex');
             }
         });
+
+        // Snake Mouse Trail logic
+        if (window.matchMedia("(pointer: fine)").matches) {
+            const container = document.getElementById('mouse-trail-container');
+            const dots = [];
+            const numDots = 15;
+            
+            for(let i=0; i<numDots; i++) {
+                let dot = document.createElement('div');
+                dot.className = "absolute w-4 h-4 rounded-full bg-orange-500 will-change-transform";
+                dot.style.opacity = Math.max(0.1, 1 - (i / numDots));
+                dot.style.transform = `scale(${1 - (i / numDots)})`;
+                dot.style.filter = `blur(${i * 0.4}px)`;
+                container.appendChild(dot);
+                dots.push({ el: dot, x: window.innerWidth / 2, y: window.innerHeight / 2 });
+            }
+            
+            let mouseX = window.innerWidth / 2;
+            let mouseY = window.innerHeight / 2;
+            
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            
+            function animateTrail() {
+                let x = mouseX;
+                let y = mouseY;
+                
+                dots.forEach((dot, index) => {
+                    const nextDot = dots[index + 1] || dots[0];
+                    dot.x = x;
+                    dot.y = y;
+                    dot.el.style.left = (x - 8) + 'px';
+                    dot.el.style.top = (y - 8) + 'px';
+                    
+                    x += (nextDot.x - x) * 0.4;
+                    y += (nextDot.y - y) * 0.4;
+                });
+                
+                requestAnimationFrame(animateTrail);
+            }
+            animateTrail();
+        }
     </script>
 </body>
 </html>
